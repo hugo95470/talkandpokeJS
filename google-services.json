@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "936713133990",
+    "project_id": "talkandpoke-e6c12",
+    "storage_bucket": "talkandpoke-e6c12.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:936713133990:android:3d6fc3dbe99ed0562ff967",
+        "android_client_info": {
+          "package_name": "com.equi.talkandpoke"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "936713133990-qc5anon1tnkq6hu6po4nkla7j9h90lq5.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyB2LstvlKin27Qm5JFGJgSUFXwd0Zct4-A"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "936713133990-qc5anon1tnkq6hu6po4nkla7j9h90lq5.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
