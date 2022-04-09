@@ -1,5 +1,6 @@
 import { StyleSheet, View, Image, TouchableOpacity, Text, ImageBackground, Dimensions } from 'react-native';
 
+import globalStyles from '../Styles/globalStyles';
 
 export default function AfficheMedium(props) {
 
@@ -15,9 +16,9 @@ export default function AfficheMedium(props) {
         
         return(
             <TouchableOpacity activeOpacity={1} onPress={() => props.navigation.navigate('DetailsOeuvrePage', {AfficheId: AfficheId, _Image: image})}>
-                <View style={styles.shadow}>
+                <View style={[globalStyles.shadows, {margin: 3}]}>
 
-                        <ImageBackground isBackground imageStyle={{ borderRadius: 15}} source={{uri: image}} resizeMode="cover" style={styles.affiche}>
+                        <ImageBackground isBackground imageStyle={{ borderRadius: 15}} source={{uri: image}} resizeMode="cover" style={[styles.affiche, globalStyles.borderRadius]}>
                             <Image style={{position: 'absolute', top: 10, left: 10, height: 50, width: 50, borderRadius: 100}} source={{uri: imageSup}}/>
                             <View intensity={250} style={styles.TitreContainer}>
                                 <Text style={styles.Titre}>{afficheTitre}</Text>
@@ -86,25 +87,6 @@ const styles = StyleSheet.create({
         width: Dimensions.get('window').width/2 -7,
         backgroundColor: '#ddd',
         borderRadius: 19,
-    },
-
-    shadow: {
-        borderRadius: 19,
-        marginTop: 5,
-        marginLeft: 3,
-        marginRight: 3,
-        height: 300,
-        width: Dimensions.get('window').width/2 -7,
-        backgroundColor : '#0000',
-        shadowColor: 'black',
-        shadowOffset: {
-            width: 1,
-            height: 1,
-        },
-        shadowOpacity: 1,
-        shadowRadius: 8,
-
-        elevation: 15, 
     },
 })
 

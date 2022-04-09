@@ -1,29 +1,37 @@
-import {fetchtalkandpokeapi} from './Fetcher';
+import {fetchtalkandpokeapi, fetchtalkandpokeapiNoJson} from './Fetcher';
 
 
-//LOAD
-export const loadUtilisateurInformations = async (tokenUtilisateur) => {
-    return await fetchtalkandpokeapi('Utilisateur/GetUtilisateur.php', [["TokenUtilisateur", tokenUtilisateur]])
+//GET
+export const getUtilisateurInformations = async (utilisateurId) => {
+    return await fetchtalkandpokeapi('Utilisateur/GetUtilisateur.php', [["UtilisateurId", utilisateurId]])
 };
 
-export const loadUtilisateurFollowers = async (utilisateurId) => {
+export const getUtilisateurFollowers = async (utilisateurId) => {
     return await fetchtalkandpokeapi('Utilisateur/GetFollowers.php', [["UtilisateurId", utilisateurId]])
 };
 
-export const loadUtilisateurFollowing = async (utilisateurId) => {
+export const getUtilisateurFollowing = async (utilisateurId) => {
     return await fetchtalkandpokeapi('Utilisateur/GetFollowing.php', [["UtilisateurId", utilisateurId]])
 };
 
-export const loadUtilisateurAffinites = async (utilisateurToken) => {
+export const getUtilisateurAffinites = async (utilisateurToken) => {
     return await fetchtalkandpokeapi('Utilisateur/GetAffinite.php', [["TokenUtilisateur", utilisateurToken], ["Nombre", "20"]])
 };
 
-export const loadUtilisateurIdentifiants = async (mail) => {
+export const getContactAffinites = async (utilisateurToken, utilisateurId, contactId) => {
+    return await fetchtalkandpokeapi('Utilisateur/GetAffinite.php', [["TokenUtilisateur", utilisateurToken], ["UtilisateurId", utilisateurId], ["ContactId", contactId]])
+};
+
+export const getContactFriend = async (utilisateurToken, utilisateurId, friendId) => {
+    return await fetchtalkandpokeapi('Utilisateur/GetAffinite.php', [["TokenUtilisateur", utilisateurToken], ["UtilisateurId", utilisateurId], ["FriendId", friendId]])
+};
+
+export const getUtilisateurIdentifiants = async (mail) => {
     return await fetchtalkandpokeapi('Utilisateur/GetIdentifiants.php', [["Mail", mail]])
 };
 
-export const loadUtilisateurToken = async (utilisateurId, password) => {
-    return await fetchtalkandpokeapi('Utilisateur/SetTokenUtilisateur.php', [["UtilisateurId", utilisateurId], ["Password", password]])
+export const getUtilisateurToken = async (utilisateurId, password) => {
+    return await fetchtalkandpokeapiNoJson('Utilisateur/SetTokenUtilisateur.php', [["UtilisateurId", utilisateurId], ["Password", password]])
 };
 
 export const getUtilisateurPassword = async (utilisateurToken) => {

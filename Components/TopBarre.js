@@ -3,22 +3,20 @@ import { StyleSheet, View, Image, TouchableOpacity } from 'react-native';
 import { useEffect, useState } from 'react';
 
 import Context from '../navigation/userContext';
+import { getUtilisateurNotification } from '../service/MessageService';
 
-function TopBarre(props) {
+export default function TopBarre(props) {
 
     const context = useContext(Context)
 
     var [notif, setNotif] = useState(false);
 
-    useEffect(() => {
-        if(context.utilisateurId != "" && context.utilisateurToken != "")
-            recupNotif()
-    }, [context.utilisateurId, context.tokenUtilisateur]);
+    useEffect(async () => {
+        await recupNotif()
+    }, []);
 
-    function recupNotif() {
-        var uri = global.apiUrl + 'Message/GetNotification.php?UtilisateurId=' + context.utilisateurId + '&TokenUtilisateur=' + context.utilisateurToken
-        fetch(uri)
-        .then((data) => setNotif(data))
+    async function recupNotif() {
+        setNotif(await getUtilisateurNotification(context.utilisateurToken));
         
         setTimeout(recupNotif, 10000);
     }
@@ -78,6 +76,3 @@ const styles = StyleSheet.create({
         alignItems: 'center'
     }
 })
-
-
-export default TopBarre

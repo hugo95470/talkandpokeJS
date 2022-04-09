@@ -1,6 +1,7 @@
 import React from 'react';
 import { StyleSheet, View, TouchableOpacity, FlatList, Text, ImageBackground} from 'react-native';
 import { useEffect, useState } from 'react';
+import { getAffichesLiens } from '../service/AfficheService';
 
 function NewsCollectionView(props) {
 
@@ -9,11 +10,9 @@ function NewsCollectionView(props) {
         var [affiche, setAffiche] = useState("");
 
 
-        useEffect(() => {
-            fetch(global.apiUrl + 'Affiche/GetLiens.php?AfficheId=' + props.AfficheId + "&Appartient=true")
-            .then((response) => response.json())
-            .then((data) => setAffiche(data));
-        }, [props.AfficheId]);
+        useEffect(async () => {
+            setAffiche(await getAffichesLiens(props.AfficheId, "true"));
+        }, []);
 
                 
         var ItemNews = ({AfficheId, title, description, image, date }) => {
@@ -37,8 +36,6 @@ function NewsCollectionView(props) {
             );
         }
 
-
-
         var renderItemNews = ({ item }) => (
             <ItemNews AfficheId={item.AfficheId} title={item.AfficheTitre} description={item.Description} image={item.Image} date={item.Date}/>
         );
@@ -54,7 +51,6 @@ function NewsCollectionView(props) {
 }
 
 const styles = StyleSheet.create({
-    
     affiche: {
         height: 80,
         width: 60,
@@ -62,8 +58,7 @@ const styles = StyleSheet.create({
         left: 10,
         justifyContent: 'flex-end',
     },
-
-      shadow: {
+    shadow: {
         borderRadius: 19,
         margin: 20,
         marginTop: 5,

@@ -7,6 +7,10 @@ import CheckBox from 'expo-checkbox';
 
 import CGU from '../CGU.js';
 
+
+//TODO: TO REFACTOR
+
+
 export default function CreationCompte({ navigation}) {
 
     const cgu = CGU;
@@ -22,8 +26,6 @@ export default function CreationCompte({ navigation}) {
     var [sexe, setSexe] = useState(false);
     var [checkBox, setCheckBox] = useState(true);
     var [verifPhoto, setVerifPhoto] = useState(false);
-
-    var [state, setState] = useState(true);
 
     var [index, setIndex] = useState(1);
 
@@ -189,11 +191,6 @@ export default function CreationCompte({ navigation}) {
             quality: 1,
             base64: true,
           })
-
-        setState({
-            imageSource: _image.uri,
-            data: _image.data
-        });
         
         setImage(_image);
         setImageUri(_image.uri);

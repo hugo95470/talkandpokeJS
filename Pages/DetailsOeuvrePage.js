@@ -12,7 +12,10 @@ import CommentairesCollectionView from '../Components/CommentairesCollectionView
 import Context from '../navigation/userContext';
 
 
-const DetailsOeuvrePage = ({ route, navigation }) => {
+//TODO: REFACTOR
+
+
+export default function DetailsOeuvrePage ({ route, navigation }) {
 
         const context = useContext(Context)
 
@@ -45,33 +48,12 @@ const DetailsOeuvrePage = ({ route, navigation }) => {
             .then((data) => setFollow(data));
 
         }, [context.utilisateurId, context.utilisateurId]);
-    
-        //pour aller vers spotify https://open.spotify.com/search/test
-
-        var FollowText = () => {
-            if(!follow){
-                return(
-                    <Text style={styles.follow}>Suivre</Text>
-                )
-                
-            }else{
-                return(
-                    <Text style={styles.follow}>Suivit</Text>
-                )
-            }
-        };
-
-        function followCommand(){
-            setFollow(!follow)
-            fetch(global.apiUrl + 'Affiche/SetFollow.php?UtilisateurId=' + context.utilisateurId + '&AfficheId=' + AfficheId + '&TokenUtilisateur=' + context.utilisateurToken)
-        }
 
         return (
 
             <View>
 
                 <View style={styles.container}>
-                    {/* <TopBarre/> */}
 
                     <ImageBackground source={{uri : image}} style={styles.image}>
 
@@ -171,16 +153,5 @@ const styles = StyleSheet.create({
         marginBottom: 10,
         fontSize: 25,
         color: 'black'
-    },  
-    follow: {
-        marginRight: 'auto',
-        marginLeft: 'auto',
-        marginTop: 'auto',
-        marginBottom: 'auto',
-        fontSize: 22,
-        color: 'white',
-    }
+    },
   });
-
-  
-export default DetailsOeuvrePage

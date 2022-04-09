@@ -1,20 +1,28 @@
 import React, { useContext } from 'react';
 import { StyleSheet, TouchableOpacity, FlatList, Text, Image, View} from 'react-native';
-import { useEffect, useState } from 'react';
-import * as SecureStore from 'expo-secure-store';
+import { useEffect, useState, useRef  } from 'react';
 
 import Context from '../navigation/userContext';
-import { loadUtilisateurAffinites } from '../service/UtilisateurService';
+import { getUtilisateurAffinites } from '../service/UtilisateurService';
 
-function AffinitesCollectionView(props) {
+export default function AffinitesCollectionView(props) {
     
     const context = useContext(Context)
 
     //AFFICHAGE DES AFFINITES
     var [affinites, setAffinites] = useState("");
     
+    const mounted = useRef(false);
+
     useEffect(async () => {
-        await loadAffinites()
+        mounted.current = true;
+
+        if(context.utilisateurToken != "")
+            await loadAffinites()
+
+        return () => {
+            mounted.current = false;
+        };
     }, []);
 
     useEffect(async () => {
@@ -24,7 +32,7 @@ function AffinitesCollectionView(props) {
     }, [props.reload])
 
     async function loadAffinites() {
-        setAffinites(await loadUtilisateurAffinites(context.utilisateurToken));
+        setAffinites(await getUtilisateurAffinites(context.utilisateurToken));
     }
             
     var ItemAffinite = ({ pseudo, image, pourcentage, contactId }) => (
@@ -83,4 +91,3 @@ const styles = StyleSheet.create({
     },
 })
 
-export default AffinitesCollectionView

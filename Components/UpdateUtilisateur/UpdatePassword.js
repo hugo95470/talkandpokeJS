@@ -1,5 +1,6 @@
 import React, { useContext } from 'react';
-import { StyleSheet, View, TextInput, TouchableOpacity } from 'react-native';
+import { StyleSheet, View, Text, TextInput, TouchableOpacity } from 'react-native';
+import { useState } from 'react';
 
 import Context from '../../navigation/userContext';
 import { getUtilisateurPassword, updateUtilisateurPassword } from '../../service/UtilisateurService.js';

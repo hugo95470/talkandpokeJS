@@ -4,27 +4,18 @@ import { useEffect, useState } from 'react';
 
 import Context from '../navigation/userContext';
 import AlertText from './AlertText'
+import { getUtilisateurMes } from '../service/ReactionService';
 
-function DescribMeView(props) {
+export default function DescribMeView(props) {
 
     const context = useContext(Context)
 
     //AFFICHAGE DES AFFINITES
     var [pokes, setPokes] = useState("");
-            
-    
-    var DeleteButton = ({ newsId }) => {
-        if(props.utilisateurId == context.utilisateurId){
-            return(
-                <TouchableOpacity onPress={() => fetch(global.apiUrl + 'Reaction/DeleteDescribMe.php?UtilisateurId=' + props.utilisateurId + '&NewsId=' + newsId + '&TokenUtilisateur=' + context.utilisateurToken).then(getDescribeMe())} style={{position: 'absolute', right: 0, height: 25, width: 25, borderRadius: 100, backgroundColor: 'orange'}}>
-                    <Text style={{position: 'absolute', color: 'white', left: 9, bottom: 5}}>x</Text>
-                </TouchableOpacity>
-            );
-        }else{
-            return(<View></View>)
-        }
-        
-    }
+
+    useEffect(() => {
+        setPokes(getUtilisateurMes(context.utilisateurToken));
+    }, [props.utilisateurId]);
 
     var ItemAffiche = ({ image, AfficheId }) => {
         return(
@@ -40,17 +31,6 @@ function DescribMeView(props) {
             <ItemAffiche style={styles.containerAffiches} image={item.Image} AfficheId={item.AfficheId} />
             )
     };
-
-
-    useEffect(() => {
-        getDescribeMe()
-    }, [props.utilisateurId]);
-
-    function getDescribeMe(){
-        fetch(global.apiUrl + 'Reaction/GetDescribMe.php?UtilisateurId=' + props.utilisateurId + '&TokenUtilisateur=' + context.utilisateurToken)
-        .then((response) => response.json())
-        .then((data) => setPokes(data));  
-    }
 
     if(pokes != "")
         return (
@@ -96,6 +76,3 @@ const styles = StyleSheet.create({
         justifyContent: 'flex-end',
     },
 })
-
-
-export default DescribMeView

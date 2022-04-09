@@ -2,21 +2,16 @@ import React from 'react';
 import { StyleSheet, View, TouchableOpacity, FlatList, Text, ImageBackground} from 'react-native';
 import { useEffect, useState } from 'react';
 
-function ImagesCollectionView(props) {
+import { getAffichesPhoto } from '../service/AfficheService';
 
-        //AFFICHAGE DES NEWS
+export default function ImagesCollectionView(props) {
         
         //Affiches
         var [news, setNews] = useState("");
 
-        useEffect(() => {
-        
-            fetch(global.apiUrl + 'Affiche/GetPhotoAffiche.php?AfficheId=' + props.AfficheId)
-            .then((response) => response.json())
-            .then((data) => setNews(data));
-            
-    
-        }, [props.oeuvreId]);
+        useEffect(async () => {
+            setNews(await getAffichesPhoto(props.AfficheId));         
+        }, []);
                 
         var ItemNews = ({ image }) => {
 
@@ -45,46 +40,10 @@ function ImagesCollectionView(props) {
 }
 
 const styles = StyleSheet.create({
-    
-    TitreContainer: {
-        padding: 0,
-        paddingHorizontal: 5,
-        paddingVertical: 5,
-        minWidth: 100,
-        marginRight: -9,
-        position: 'absolute', right: '5%', bottom: '10%',
-        borderTopLeftRadius: 100,
-        borderBottomLeftRadius: 100,
-        elevation: 3,
-    },
-    Titre: {
-        borderRadius: 19,
-        padding: 10,
-        width: 'auto',
-    },
     affiche: {
         height: 140,
         width: 85,
         justifyContent: 'flex-end',
-    },
-
-      shadow: {
-          borderRadius: 19,
-        marginTop: 20,
-        marginLeft: 10,
-        marginRight: 10,
-        height: 280,
-        width: 170,
-        backgroundColor : '#0000',
-        shadowColor: 'black',
-        shadowOffset: {
-            width: 1,
-            height: 1,
-        },
-        shadowOpacity: 1,
-        shadowRadius: 8,
-
-        elevation: 15, 
     },
     TitreNoir: {
         margin: 30,
@@ -92,6 +51,3 @@ const styles = StyleSheet.create({
         color: 'black'
     },
 })
-
-
-export default ImagesCollectionView

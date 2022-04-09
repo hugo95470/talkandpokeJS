@@ -5,6 +5,9 @@ import { useEffect, useState, useRef } from 'react';
 import Context from '../navigation/userContext';
 
 
+//TODO: REFACTOR
+
+
 function MessagePage(props) {
 
         const context = useContext(Context)

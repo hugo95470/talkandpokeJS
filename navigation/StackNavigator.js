@@ -14,7 +14,6 @@ import MessagePage from '../Pages/MessagePage';
 import ConnexionPage from '../Pages/ConnexionPage';
 import CreationComptePage from '../Pages/CreationComptePage';
 import OeuvresPages from '../Pages/OeuvresPage';
-import ReactionPage from '../Pages/ReactionPage';
 import FollowersPage from '../Pages/FollowersPage';
 import FollowingPage from '../Pages/FollowingPage';
 
@@ -58,7 +57,6 @@ const ProfilStackNavigator = () => {
       <Stack.Screen name="MessageriePage" component={MessageriePage} options={{ headerShown: false }}/>
       <Stack.Screen name="MessagePage" component={MessagePage} options={{ headerShown: false }}/>
       <Stack.Screen name="DetailsOeuvrePage" component={DetailsOeuvrePage} options={{ headerShown: false }}/>
-      <Stack.Screen name="ReactionPage" component={ReactionPage} options={{ headerShown: false }}/>
       <Stack.Screen name="FollowersPage" component={FollowersPage} options={{ headerShown: false }}/>
       <Stack.Screen name="FollowingPage" component={FollowingPage} options={{ headerShown: false }}/>
     </Stack.Navigator>

@@ -7,9 +7,13 @@ import { LinearGradient } from "expo-linear-gradient";
 
 import Context from '../navigation/userContext';
 import CGU from '../CGU.js';
-import { loadUtilisateurInformations } from '../service/AfficheService';
+import { getUtilisateurInformations } from '../service/AfficheService';
 import UpdatePassword from '../Components/UpdateUtilisateur/UpdatePassword';
 import UpdateSexe from '../Components/UpdateUtilisateur/UpdateSexe';
+
+
+//TO REFACTOR
+
 
 export default function ChangeProfilPage(props) {
 
@@ -39,7 +43,7 @@ export default function ChangeProfilPage(props) {
 
     //Loading Utilisateur Informations
     useEffect(async () => {
-        setUtilisateur(await loadUtilisateurInformations(context.utilisateurToken));
+        setUtilisateur(await getUtilisateurInformations(context.utilisateurId));
     }, []);
 
     useEffect(() => {

@@ -2,8 +2,9 @@ import React from 'react';
 import { StyleSheet, TouchableOpacity, FlatList, Text, ImageBackground, View} from 'react-native';
 import { useEffect, useState } from 'react';
 
+import { getAffichesLiens } from '../service/AfficheService';
 
-function LiensView(props) {
+export default function LiensView(props) {
 
         //AFFICHAGE DES AFFINITES
         var [liens, setLiens] = useState("");
@@ -24,15 +25,12 @@ function LiensView(props) {
             )
         }
 
-
-        useEffect(() => {
-            fetch(global.apiUrl + 'Affiche/GetLiens.php?AfficheId=' + props.AfficheId)
-            .then((response) => response.json())
+        useEffect(async () => {
+            await getAffichesLiens(props.AfficheId)
             .then((data) => {
                 
                 const _liens = Object.entries(data).map(obj => {
                     var rObj = {};
-                    //alert(JSON.stringify(obj))
                     rObj['title'] = obj[1].Lien;
                     rObj['data'] = [{AfficheId: obj[1].AfficheId, Image: obj[1].Image}];
                     return rObj;
@@ -64,44 +62,15 @@ function LiensView(props) {
 }
 
 const styles = StyleSheet.create({
-
-    item: {
-        backgroundColor: '#f9c2ff',
-        padding: 10,
-        maxWidth: 150,
-        marginVertical: 8,
-        marginHorizontal: 16,
-      },
-      header: {
-        fontSize: 32,
-        backgroundColor: "#fff"
-      },
-      title: {
-        fontSize: 25,
-        marginLeft: 30,
-        color: 'black',
-      },
-      affiniteImage: {
-          height: 80,
-          width: 80,
-          marginTop: 20,
-          marginBottom: 5,
-          marginLeft: 'auto',
-          marginRight: 'auto',
-          justifyContent: 'flex-end',
-      },
+    title: {
+    fontSize: 25,
+    marginLeft: 30,
+    color: 'black',
+    },
     containerAffiches: {
         flexDirection:'row',
         justifyContent: 'center',
         alignItems: 'center',
-      },
-      TitreContainer: {
-        padding: 10,
-        paddingHorizontal: 20,
-        borderRadius: 100,
-    },
-    Titre: {
-        fontSize: 10,
     },
     affiche: {
         height: 100,
@@ -113,6 +82,3 @@ const styles = StyleSheet.create({
         justifyContent: 'flex-end',
     },
 })
-
-
-export default LiensView

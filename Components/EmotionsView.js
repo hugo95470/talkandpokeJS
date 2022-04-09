@@ -4,6 +4,10 @@ import { useEffect, useState } from 'react';
 
 import Context from '../navigation/userContext';
 
+
+// TO REMOVE
+
+
 function EmotionsView(props) {
 
         const context = useContext(Context)

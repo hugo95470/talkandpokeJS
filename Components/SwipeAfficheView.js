@@ -6,7 +6,10 @@ import Context from '../navigation/userContext';
 import ImagePourcentage from '../Components/ImagePourcentage';
 import { loadTagUtilisateurDescription } from '../service/TagService';
 
-function SwipeAfficheView(props) {
+
+//TO REFACTOR
+
+export default function SwipeAfficheView(props) {
 
   const context = useContext(Context)
 
@@ -36,7 +39,7 @@ function SwipeAfficheView(props) {
   }, [context.utilisateurId]);
 
 
-  function loadAffiches(lastCardId = 0) {
+  function getAffiches(lastCardId = 0) {
       fetch(global.apiUrl + 'Affiche/GetSwipeAffiches.php?Nombre=1&TokenUtilisateur=' + context.utilisateurToken)
       .then((response) => response.json())
       .then((data) => {
@@ -44,7 +47,7 @@ function SwipeAfficheView(props) {
           let newstate = [...cards, ...data]
           setCards(newstate);
         }else{
-          loadAffiches(lastCardId);
+          getAffiches(lastCardId);
         }
       });            
   }
@@ -119,7 +122,7 @@ function SwipeAfficheView(props) {
 
         })
 
-        loadAffiches(cards[state].AfficheId)
+        getAffiches(cards[state].AfficheId)
         loadSuggestion()
         fetch(global.apiUrl + 'Reaction/AddReaction.php?AfficheId=' + cards[state].AfficheId + '&Emotion=like&UtilisateurId=' + context.utilisateurId + '&TokenUtilisateur=' + context.utilisateurToken)
       }else if (gestureState.dx < -60) {
@@ -138,7 +141,7 @@ function SwipeAfficheView(props) {
         })
         fetch(global.apiUrl + 'Reaction/AddReaction.php?AfficheId=' + cards[state].AfficheId + '&Emotion=dislike&UtilisateurId=' + context.utilisateurId + '&TokenUtilisateur=' + context.utilisateurToken)
         loadSuggestion()
-        loadAffiches(cards[state].AfficheId)
+        getAffiches(cards[state].AfficheId)
         //alert("ici l'evennement pour la gauche")
 
       }else if (gestureState.dy < -60) {
@@ -156,7 +159,7 @@ function SwipeAfficheView(props) {
         })
         fetch(global.apiUrl + 'Reaction/AddReaction.php?AfficheId=' + cards[state].AfficheId + '&Emotion=coeur&UtilisateurId=' + context.utilisateurId + '&TokenUtilisateur=' + context.utilisateurToken)
         loadSuggestion()
-        loadAffiches(cards[state].AfficheId)
+        getAffiches(cards[state].AfficheId)
 
       }else {
         Animated.spring(pan, {
@@ -373,7 +376,7 @@ function SwipeAfficheView(props) {
   }else{
     return (
       <View style={{ height: 60, left: 180, bottom: -100, zIndex: 10, elevation: 1, position: 'absolute' }}>
-        <TouchableOpacity onPress={() => {setState(state + 1); loadAffiches()}} style={{backgroundColor: 'lightgrey', padding: 10, borderRadius: 100, paddingHorizontal: 30}}>
+        <TouchableOpacity onPress={() => {setState(state + 1); getAffiches()}} style={{backgroundColor: 'lightgrey', padding: 10, borderRadius: 100, paddingHorizontal: 30}}>
           <Text style={{fontSize: 25, fontWeight: '700', fontFamily: 'sans-serif-light'}}>Suivant</Text>
         </TouchableOpacity>
       </View>
@@ -448,30 +451,6 @@ function SwipeAfficheView(props) {
 }
 
 const styles = StyleSheet.create({
-    cardsText: {
-        fontSize: 22,
-      },
-    Titre: {
-        borderRadius: 100,
-        padding: 10,
-        paddingHorizontal: 30,
-        width: 'auto',
-        fontSize: 25,
-    },
-    TitreContainer: {
-        padding: 10,
-        marginBottom: -20,
-        marginRight: -20,
-        position: 'absolute', right: '0%', bottom: '0%',
-    },
-    affiche: {
-      height: 450,
-      width: 300,
-      marginTop: 20,
-      marginLeft: 10,
-      marginRight: 10,
-      justifyContent: 'flex-end',
-  },
   background: {
     position: 'absolute',
     opacity: 0.8,
@@ -484,18 +463,6 @@ const styles = StyleSheet.create({
     bottom: 0,
     right: 0
 },
-  TitreContainer: {
-    padding: 0,
-    paddingHorizontal: 15,
-    marginBottom: 20,
-    position: 'absolute', right: '0%', bottom: '0%',
-    borderTopLeftRadius: 100,
-    borderBottomLeftRadius: 100,
-},
-container: {
-  justifyContent: "center",
-  alignItems: "center",
-},
 box: {
   width: Dimensions.get('window').width - 42,
   height: Dimensions.get('window').height - 200,
@@ -503,6 +470,3 @@ box: {
   position: 'absolute'
 },
 })
-
-
-export default SwipeAfficheView

@@ -6,8 +6,9 @@ import { useState, useEffect } from 'react';
 import images from '../Components/ImageTag';
 import AlertText from '../Components/AlertText';
 import AfficheMedium from '../Components/AfficheMedium';
+import { getAffichesByTag } from '../service/AfficheService';
 
-function OeuvresPage({ route, navigation }) {
+export default function OeuvresPage({ route, navigation }) {
     
     const { TagId } = route.params;
     const { OeuvreTypeLibelle } = route.params;    
@@ -15,15 +16,8 @@ function OeuvresPage({ route, navigation }) {
 
     var [affiches, setAffiches] = useState("");
 
-    let mounted = false;
-    useEffect(()=> {
-        if(!mounted) {
-            fetch(global.apiUrl + 'Affiche/GetAfficheByTag.php?TagId=' + TagId)
-            .then((response) => response.json())
-            .then((data) => setAffiches(data));
-        }
-
-        return () => mounted = true;
+    useEffect(async ()=> {
+        setAffiches(await getAffichesByTag(TagId));
     }, [])
 
     var ImageTag = ({image}) => {
@@ -55,7 +49,6 @@ function OeuvresPage({ route, navigation }) {
     }
     
     return (
-
         <View>
 
             <View style={styles.container}>
@@ -83,8 +76,6 @@ function OeuvresPage({ route, navigation }) {
                             </View>
                         </View>
                         
-
-                        
                     </ScrollView>
             </View>
         </View>
@@ -97,36 +88,6 @@ const styles = StyleSheet.create({
       height: '100%',
       width: '100%',
     },
-    image: {
-        position: 'absolute',
-        height: '70%',
-        width: '100%',
-        resizeMode: 'cover',
-        justifyContent: 'center',
-    },
-    title: {
-        fontSize: 25,
-        marginLeft: 10,
-        color: 'black',
-      },
-    TitreBlanc: {
-        margin: 30,
-        fontSize: 20,
-        color: 'white',
-    },
-    TitreNoir: {
-        margin: 30,
-        fontSize: 20,
-        color: 'black'
-    },
-    follow: {
-        marginRight: 'auto',
-        marginLeft: 'auto',
-        marginTop: 'auto',
-        marginBottom: 'auto',
-        fontSize: 20,
-        color: 'white',
-    },
     categorie: {
         height: Dimensions.get('window').height,
         width: Dimensions.get('window').width,
@@ -135,6 +96,3 @@ const styles = StyleSheet.create({
         top: -200,
     },
   })
-
-  export default OeuvresPage;
-

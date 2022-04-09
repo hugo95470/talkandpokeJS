@@ -3,6 +3,7 @@ import { StyleSheet, View, Image, TouchableOpacity, FlatList, Text, ImageBackgro
 import { useEffect, useState } from 'react';
 
 import Context from '../navigation/userContext';
+import { getUtilisateursContacts } from '../service/MessageService';
 
 export default function ContactsCollectionView(props) {
 
@@ -11,14 +12,9 @@ export default function ContactsCollectionView(props) {
         //Affiches
         var [contacts, setContacts] = useState("");
 
-        useEffect(() => {
-        
-            fetch(global.apiUrl + 'Message/GetContacts.php?Nombre=10&UtilisateurId=' + context.utilisateurId + '&TokenUtilisateur=' + context.utilisateurToken)
-            .then((response) => response.json())
-            .then((data) => setContacts(data));
-            
-    
-        }, [context.utilisateurId]);
+        useEffect(async () => {
+            setContacts(await getUtilisateursContacts(context.utilisateurToken));
+        }, []);
 
                 
         var ItemNews = ({ image, contactId }) => {
@@ -33,8 +29,6 @@ export default function ContactsCollectionView(props) {
                 </TouchableOpacity>
             );
         }
-
-
 
         var renderItemNews = ({ item }) => (
             <ItemNews image={item.Image} contactId={item.UtilisateurId}/>

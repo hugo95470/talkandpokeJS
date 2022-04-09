@@ -7,7 +7,11 @@ import TopBarre from '../Components/TopBarre';
 import UtilisateurTagView from '../Components/UtilisateurTagView';
 import AlertText from '../Components/AlertText';
 
-function Menu(props) {
+
+//TODO: REFACTOR
+
+
+export default function Menu(props) {
 
     const context = useContext(Context)
 
@@ -146,6 +150,3 @@ const styles = StyleSheet.create({
         top: -70
     }
   })
-
-  export default Menu;
-

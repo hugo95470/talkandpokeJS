@@ -5,36 +5,27 @@ import { useEffect, useState } from 'react';
 import Context from '../navigation/userContext';
 import AlertText from './AlertText'
 
-function PokesView(props) {
+
+//TO REMOVE ? 
+
+
+export default function PokesView(props) {
 
         const context = useContext(Context);
 
+        useEffect(async () => {
+            setPokes(await getUtilisateurPokes(context.utilisateurToken))
+            //getPokes()
+        }, [props.utilisateurId, context.utilisateurToken]);
+
         //AFFICHAGE DES AFFINITES
         var [pokes, setPokes] = useState("");
-        
-        var DeleteButton = ({ afficheId }) => {
-            if(props.utilisateurId == context.utilisateurId){
-                return(
-                    <TouchableOpacity onPress={() => fetch(global.apiUrl + 'Reaction/DeletePoke.php?UtilisateurId=' + props.utilisateurId + '&AfficheId=' + afficheId + '&TokenUtilisateur=' + context.utilisateurToken).then(getPokes())} style={{position: 'absolute', right: 0, height: 25, width: 25, borderRadius: 100, backgroundColor: 'orange'}}>
-                        <Text style={{position: 'absolute', color: '#fff', left: 9, bottom: 5}}>x</Text>
-                    </TouchableOpacity>
-                );
-            }else{
-                return(<View></View>)
-            }
-            
-        }
 
         var ItemAffiche = ({ image, afficheId }) => {
             return(
-
-                
                 <TouchableOpacity  activeOpacity={1} style={{marginRight: 'auto', marginLeft: 'auto', backgroundColor: 'transparent', padding: 4, borderRadius: 19}} onPress={() => props.navigation.push('DetailsOeuvrePage', {AfficheId: afficheId, _Image: image})}>
-                
                     <ImageBackground imageStyle={{ borderRadius: 15, height: 150, width: 100}} source={{uri: image}} resizeMode="cover" style={styles.Affiche}>
                     </ImageBackground>
-
-                    {/* <DeleteButton afficheId={afficheId}/> */}
                 </TouchableOpacity>
             );
         }
@@ -44,17 +35,6 @@ function PokesView(props) {
                 <ItemAffiche style={styles.containerAffiches} image={item.Image} afficheId={item.AfficheId} />
                 )
         };
-
-
-        useEffect(() => {
-            getPokes()
-        }, [props.utilisateurId, context.utilisateurToken]);
-
-        function getPokes(){
-            fetch(global.apiUrl + 'Reaction/GetPokes.php?UtilisateurId=' + props.utilisateurId + '&TokenUtilisateur=' + context.utilisateurToken)
-            .then((response) => response.json())
-            .then((data) => setPokes(data)); 
-        }
 
         if(pokes != "")
             return (
@@ -89,57 +69,10 @@ const styles = StyleSheet.create({
         width: 68,
         height: 68,
     },
-    emoji: {
-        height: 40,
-        width: 40, 
-        margin: 15,
-    },
-    item: {
-        backgroundColor: 'transparent',
-        padding: 10,
-        maxWidth: 150,
-        marginVertical: 8,
-        marginHorizontal: 16,
-      },
-      header: {
-        fontSize: 32,
-        backgroundColor: "#fff"
-      },
-      title: {
-        fontSize: 25,
-        marginLeft: 30,
-        color: 'black',
-      },
-      affiniteImage: {
-          height: 80,
-          width: 80,
-          marginTop: 20,
-          marginBottom: 5,
-          marginLeft: 'auto',
-          marginRight: 'auto',
-          justifyContent: 'flex-end',
-      },
     containerAffiches: {
         flexDirection:'row',
         justifyContent: 'center',
         alignItems: 'center',
-      },
-      TitreContainer: {
-        padding: 10,
-        paddingHorizontal: 20,
-        borderRadius: 100,
-    },
-    Titre: {
-        fontSize: 10,
-    },
-    affiche: {
-        height: 100,
-        width: 100,
-        marginTop: 20,
-        marginLeft: 'auto',
-        marginRight: 'auto',
-        marginBottom: 50,
-        justifyContent: 'flex-end',
     },
     Affiche: {
         height: 100,
@@ -150,6 +83,3 @@ const styles = StyleSheet.create({
         justifyContent: 'flex-end',
     },
 })
-
-
-export default PokesView

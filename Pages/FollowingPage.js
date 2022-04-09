@@ -4,14 +4,14 @@ import { useEffect, useState } from 'react';
 
 import AlertText from '../Components/AlertText';
 import TopBarre from '../Components/TopBarre';
-import { loadUtilisateurFollowing } from '../service/UtilisateurService';
+import { getUtilisateurFollowing } from '../service/UtilisateurService';
 
 export default function FollowingPage(props) {   
 
     let [followers, setFollowers] = useState("");
 
     useEffect(async () => {
-        setFollowers(await loadUtilisateurFollowing(props.route.params.utilisateurId))
+        setFollowers(await getUtilisateurFollowing(props.route.params.utilisateurId))
     }, []);
 
     var renderItemUtilisateur = ({ item }) => (
@@ -28,7 +28,7 @@ export default function FollowingPage(props) {
 
             <AlertText title={'Following'} description={'La liste de toutes les personnes que ce compte suit'}/>
 
-            <FlatList data={followers} renderItem={renderItemUtilisateur} keyExtractor={item => item.Identifier} 
+            <FlatList data={followers} renderItem={renderItemUtilisateur} keyExtractor={item => item.UtilisateurId}
               numColumns="1">
             </FlatList>
 

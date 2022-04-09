@@ -4,14 +4,14 @@ import { useEffect, useState } from 'react';
 
 import AlertText from '../Components/AlertText';
 import TopBarre from '../Components/TopBarre';
-import { loadUtilisateurFollowers } from '../service/UtilisateurService';
+import { getUtilisateurFollowers } from '../service/UtilisateurService';
 
 export default function FollowersPage(props) {   
 
     let [followers, setFollowers] = useState("");
 
     useEffect(async () => {
-        setFollowers(await loadUtilisateurFollowers(props.route.params.utilisateurId))
+        setFollowers(await getUtilisateurFollowers(props.route.params.utilisateurId))
     }, []);
 
     var renderItemUtilisateur = ({ item }) => (

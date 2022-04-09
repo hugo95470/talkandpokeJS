@@ -4,24 +4,22 @@ import { useEffect, useState } from 'react';
 
 import TopBarre from '../Components/TopBarre';
 import Context from '../navigation/userContext';
+import { getUtilisateursContacts } from '../service/MessageService';
 
-function MessageriePage(props) {
+
+//TODO: REFACTOR
+
+
+export default function MessageriePage(props) {
 
         const context = useContext(Context)
 
-        useEffect(() => {
-            if(context.utilisateurId != null && context.utilisateurToken != null){
-                loadContacts()    
-            }
-        }, [context.utilisateurId, context. utilisateurToken]);
+        useEffect(async () => {
+            await loadContacts()    
+        }, []);
 
-        function loadContacts(){
-
-            fetch(global.apiUrl + 'Message/GetContacts.php?UtilisateurId=' + context.utilisateurId + '&TokenUtilisateur=' + context.utilisateurToken)
-            .then((response) => response.json())
-            .then((data) => {
-                setcontacts(data)
-            }); 
+        async function loadContacts(){
+            setcontacts(await getUtilisateursContacts(context.utilisateurToken));
         }
 
         //Affiches
@@ -83,19 +81,14 @@ function MessageriePage(props) {
         var renderItemAffiche = ({ item }) => (
             <ItemAffiche style={styles.containerAffiches} _expediteurId={item.UtilisateurId} image={item.Image} pseudo={item.Pseudo} message={item.Message} date={item.CreatedDate} expediteurId={item.ExpediteurId} etat={item.Etat} />
         );
-
-        //Refresh
-        const wait = (timeout) => {
-            return new Promise(resolve => setTimeout(resolve, timeout));
-        }
         
-        const onRefresh = React.useCallback(() => {
+        const onRefresh = React.useCallback(async () => {
             setRefreshing(true);
 
             setcontacts("");
-            loadContacts();
 
-            wait(2000).then(() => setRefreshing(false));
+            await loadContacts()
+            .then(() => setRefreshing(false));
         }, []);
 
         const [refreshing, setRefreshing] = React.useState(false);    
@@ -174,6 +167,3 @@ const styles = StyleSheet.create({
         height: '100%',
     },  
   })
-
-  export default MessageriePage;
-

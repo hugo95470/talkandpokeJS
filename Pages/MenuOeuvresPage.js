@@ -5,6 +5,10 @@ import images from '../Components/ImageTag'
 import AlertText from '../Components/AlertText';
 import AfficheMedium from '../Components/AfficheMedium';
 
+
+//TODO: REFACTOR
+
+
 export default function MenuOeuvres(props) {
 
     var [categories, setCategories] = useState(JSON.parse('[{"TagId":"8d3aa496-561b-11ec-9700-ee87d8a3a860","Tag":"Animaux","CreatedDate":"2022-02-07 21:14:33","IsMain":"1","TagPrecision":"1","NombreAffiche":"18","Image":"animaux"},{"TagId":"29bddfa9-561b-11ec-9700-ee87d8a3a860","Tag":"Architecture","CreatedDate":"2022-02-07 21:14:33","IsMain":"1","TagPrecision":"0","NombreAffiche":"6","Image":"architecture"},{"TagId":"930a69a7-8fdf-11ec-99ab-f6a869132479","Tag":"Citation","CreatedDate":"2022-02-17T08:22:04Z","IsMain":"1","TagPrecision":"0","NombreAffiche":"0","Image":"citation"},{"TagId":"b9e81702-561b-11ec-9700-ee87d8a3a860","Tag":"Concept","CreatedDate":"2022-02-07 21:14:33","IsMain":"1","TagPrecision":"0","NombreAffiche":"26","Image":"concept"},{"TagId":"d9cfa8b5-5c58-11ec-9700-ee87d8a3a860","Tag":"Evenement","CreatedDate":"2022-02-07 21:14:33","IsMain":"1","TagPrecision":"0","NombreAffiche":"3","Image":"evenement"},{"TagId":"11960fd5-561b-11ec-9700-ee87d8a3a860","Tag":"Film","CreatedDate":"2022-02-07 21:14:33","IsMain":"1","TagPrecision":"1","NombreAffiche":"0","Image":"film"},{"TagId":"a818b089-561b-11ec-9700-ee87d8a3a860","Tag":"Jeux","CreatedDate":"2022-02-07 21:14:33","IsMain":"1","TagPrecision":"0","NombreAffiche":"4","Image":"jeux"},{"TagId":"7226b2ff-561b-11ec-9700-ee87d8a3a860","Tag":"Lieu","CreatedDate":"2022-02-07 21:14:33","IsMain":"1","TagPrecision":"0","NombreAffiche":"7","Image":"lieu"},{"TagId":"8700bbae-561b-11ec-9700-ee87d8a3a860","Tag":"Musique","CreatedDate":"2022-02-07 21:14:33","IsMain":"1","TagPrecision":"0","NombreAffiche":"0","Image":"musique"},{"TagId":"64d2da4a-561b-11ec-9700-ee87d8a3a860","Tag":"Nourriture","CreatedDate":"2022-02-07 21:14:33","IsMain":"1","TagPrecision":"0","NombreAffiche":"28","Image":"nourriture"},{"TagId":"7d9b2fa0-561b-11ec-9700-ee87d8a3a860","Tag":"Sport","CreatedDate":"2022-02-07 21:14:33","IsMain":"1","TagPrecision":"1","NombreAffiche":"14","Image":"sport"}]'));

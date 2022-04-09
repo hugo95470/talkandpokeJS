@@ -2,6 +2,8 @@ import React from 'react';
 import { StyleSheet, View, TouchableOpacity, FlatList, Text, ImageBackground} from 'react-native';
 import { useEffect, useState } from 'react';
 
+import { getAfficheMessage } from '../service/MessageService';
+
 function CommentairesCollectionView(props) {
 
    
@@ -9,14 +11,9 @@ function CommentairesCollectionView(props) {
         var [news, setNews] = useState("");
 
 
-        useEffect(() => {
-        
-            fetch(global.apiUrl + 'Message/GetMessagesAffiche.php?AfficheId=' + props.AfficheId + "&Limite=5")
-            .then((response) => response.json())
-            .then((data) => setNews(data));
-            
-    
-        }, [props.oeuvreId]);
+        useEffect(async () => {
+            setNews(await getAfficheMessage(props.AfficheId, 5));
+        }, []);
                 
         var ItemNews = ({ title, text, image, date }) => {
 
@@ -38,8 +35,6 @@ function CommentairesCollectionView(props) {
                 </TouchableOpacity>
             );
         }
-
-
 
         var renderItemNews = ({ item }) => (
             <ItemNews title={item.Pseudo} text={item.Message} image={item.Image} date={item.CreatedDate}/>

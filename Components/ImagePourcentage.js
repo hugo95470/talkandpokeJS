@@ -59,15 +59,15 @@ export default function ImagePourcentage(props) {
 
   useEffect(async () => {
 
-    async function recupMessage() {
+    async function addPourcentage() {
       setPourcentage(pourcentage++)
       if(pourcentage <= finalValue) {
-        setTimeout(async () => await recupMessage(), 0.1);
+        setTimeout(async () => await addPourcentage(), 0.1);
       }
     }
 
     if(finalValue != undefined) {
-      await recupMessage()
+      await addPourcentage()
     }
     
   }, [])
@@ -107,7 +107,7 @@ export default function ImagePourcentage(props) {
         }
     };
 
-    var ImageTag = ({image, title}) => {
+    var ImageTag = ({image}) => {
       if(image.includes('http')) {
           return (
               <ImageBackground isBackground imageStyle={{ borderRadius: 100, backgroundColor: '#aaa', width: diametre-10, height: diametre-10, margin: 5}} source={{uri: image}} resizeMode="cover" style={styles.categorie}>
