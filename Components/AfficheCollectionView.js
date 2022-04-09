@@ -1,12 +1,12 @@
 import React, { useContext } from 'react';
 import { StyleSheet, ScrollView, Image, RefreshControl, View, TouchableOpacity, FlatList } from 'react-native';
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useRef  } from 'react';
 
 import AffinitesCollectionView from '../Components/AffinitesCollectionView';
 import AfficheMedium from '../Components/AfficheMedium';
 import Loading from '../Components/Loading';
 import AlertText from './AlertText';
-import { loadAffiches } from '../service/AfficheService.js';
+import { getAffiches, getAffichesByTag } from '../service/AfficheService.js';
 
 export default function AfficheCollectionView(props) {
 
@@ -16,8 +16,16 @@ export default function AfficheCollectionView(props) {
     let [affiches, setAffiches] = useState("");
     let [reload, setReload] = useState(false);
 
+    const mounted = useRef(false);
+
     useEffect(async () => {
+        mounted.current = true;
+
         loadData();
+
+        return () => {
+            mounted.current = false;
+        };
     }, []);
 
     useEffect(() => {
@@ -29,39 +37,33 @@ export default function AfficheCollectionView(props) {
 
 
     const [refreshing, setRefreshing] = React.useState(false);
+    
 
     async function loadData() {
         if(props.Categorie != undefined){
-            fetch(global.apiUrl + 'Affiche/GetAfficheByTag.php?Tag=' + props.Categorie)
-            .then((response) => response.json())
-            .then((data) => {
-                let newstate = [...affiches, ...data]
-
-                setAffiches(newstate);
-            }); 
+            let data = await getAffichesByTag(props.Categorie);
+            setAffiches([...affiches, ...data]);
         }else{
-            let data = await loadAffiches("20");
+            let data = await getAffiches("20");
             setAffiches([...affiches, ...data]);
         }
     }
 
-    async function reloadAffiches() {
+    async function regetAffiches() {
         setReload(true)
         if(props.Categorie != undefined){
-            fetch(global.apiUrl + 'Affiche/GetAfficheByTag.php?Tag=' + props.Categorie)
-            .then((response) => response.json())
-            .then((data) => setAffiches(data)); 
+            setAffiches(await getAffichesByTag(props.Categorie));
         }else{
-            setAffiches(await loadAffiches("20"));
+            setAffiches(await getAffiches("20"));
         }
     }
     
     const onRefresh = React.useCallback(async () => {
         setRefreshing(true);
 
-        //ICI FAIRE LE REFRESH DES AFFICHES
+        //AFFICHES REFRESH
         setAffiches("");
-        await reloadAffiches();
+        await regetAffiches();
         setRefreshing(false);
         
     }, []);
