@@ -27,16 +27,15 @@ export default function SwipeAfficheView(props) {
   useEffect(() => {
     let mounted = true;
 
-      if(context.utilisateurId != ""){
-        fetch(global.apiUrl + 'Affiche/GetSwipeAffiches.php?Nombre=20&TokenUtilisateur=' + context.utilisateurToken)
-          .then((response) => response.json())
-          .then((data) => {
-              setCards(data);
-          });
-      }
+      fetch(global.apiUrl + 'Affiche/GetSwipeAffiches.php?Nombre=20&TokenUtilisateur=' + context.utilisateurToken)
+      .then((response) => response.json())
+      .then((data) => {
+          setCards(data);
+      });
+
       return () => mounted = false;
 
-  }, [context.utilisateurId]);
+  }, []);
 
 
   function getAffiches(lastCardId = 0) {

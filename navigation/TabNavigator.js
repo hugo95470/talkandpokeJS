@@ -13,7 +13,7 @@ const BottomTabNavigator = () => {
 
   const context = useContext(Context)
 
-  if(context.utilisateurId == null || context.utilisateurId == null){
+  if(context.utilisateurId == null || context.utilisateurId == null || context.utilisateurId !== false || context.utilisateurId !== false){
     return (
       <Tab.Navigator>
 
