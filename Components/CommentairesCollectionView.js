@@ -3,6 +3,7 @@ import { StyleSheet, View, TouchableOpacity, FlatList, Text, ImageBackground} fr
 import { useEffect, useState } from 'react';
 
 import { getAfficheMessage } from '../service/MessageService';
+import globalStyles from '../Styles/globalStyles';
 
 function CommentairesCollectionView(props) {
 
@@ -19,8 +20,8 @@ function CommentairesCollectionView(props) {
 
             return(
                 <TouchableOpacity activeOpacity={1} onPress={() => props.navigation.navigate('MessagePage', { _isOeuvre: true,  _oeuvreId: props.oeuvreId})}>
-                    <View style={styles.shadow}>
-                        <View style={{flexDirection: 'row'}}>
+                    <View style={[globalStyles.shadows, {borderRadius: 19, marginLeft: 'auto', marginRight: 'auto', marginBottom: 10, marginTop: 5, width: '90%', minHeight: 70, backgroundColor : '#fff', padding: 10}]}>
+                        <View style={{flexDirection: 'row', marginBottom: 15}}>
                             <ImageBackground imageStyle={{ borderRadius: 100}} source={{uri: image}} resizeMode="cover" style={styles.affiche}/>
 
                             <View style={{flexDirection: 'column', maxWidth: '80%', marginLeft: 20, marginTop: 3}}>
@@ -57,25 +58,6 @@ const styles = StyleSheet.create({
         top: 15,
         left: 10,
         justifyContent: 'flex-end',
-    },
-    shadow: {
-        borderRadius: 19,
-        marginLeft: 'auto',
-        marginRight: 'auto',
-        marginBottom: 10,
-        marginTop: 5,
-        width: '90%',
-        minHeight: 70,
-        backgroundColor : '#eee',
-        shadowColor: 'black',
-        shadowOffset: {
-            width: 1,
-            height: 1,
-        },
-        shadowOpacity: 1,
-        shadowRadius: 8,
-
-        elevation: 15, 
     },
     TitreNoir: {
         margin: 30,

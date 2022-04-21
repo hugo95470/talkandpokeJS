@@ -4,12 +4,12 @@ import { useEffect, useState } from 'react';
 
 import Context from '../navigation/userContext';
 import { getUtilisateursContacts } from '../service/MessageService';
+import globalStyles from '../Styles/globalStyles';
 
 export default function ContactsCollectionView(props) {
 
         const context = useContext(Context)
 
-        //Affiches
         var [contacts, setContacts] = useState("");
 
         useEffect(async () => {
@@ -21,7 +21,7 @@ export default function ContactsCollectionView(props) {
 
             return(
                 <TouchableOpacity activeOpacity={1} onPress={() => props.navigation.navigate('MessagePage', {_expediteurId: contactId, _image: props.Image, _message: 'regardes ca !'})}>
-                    <View style={styles.shadow}>
+                    <View style={[globalStyles.shadows, {borderRadius: 100, margin: 10, marginBottom: 25, height: 70, width: 70, backgroundColor : '#fff'}]}>
                         <View style={{flexDirection: 'column'}}>
                             <ImageBackground imageStyle={{ borderRadius: 100}} source={{uri: image}} resizeMode="cover" style={styles.affiche}/>
                         </View>
@@ -50,22 +50,5 @@ const styles = StyleSheet.create({
         top: 3,
         left: 3,
         justifyContent: 'flex-end',
-    },
-    shadow: {
-        borderRadius: 100,
-        margin: 10,
-        marginBottom: 25,
-        height: 70,
-        width: 70,
-        backgroundColor : '#fff',
-        shadowColor: 'black',
-        shadowOffset: {
-            width: 1,
-            height: 1,
-        },
-        shadowOpacity: 1,
-        shadowRadius: 8,
-
-        elevation: 15, 
     },
 })

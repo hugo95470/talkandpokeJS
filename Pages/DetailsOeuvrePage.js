@@ -43,11 +43,11 @@ export default function DetailsOeuvrePage ({ route, navigation }) {
         }, [AfficheId]);
 
         useEffect(() => {
+            console.log(context.utilisateurToken)
             fetch(global.apiUrl + 'Affiche/Follow.php?UtilisateurId=' + context.utilisateurId + '&AfficheId=' + AfficheId + '&TokenUtilisateur=' + context.utilisateurToken)
             .then((response) => response.json())
             .then((data) => setFollow(data));
-
-        }, [context.utilisateurId, context.utilisateurId]);
+        }, []);
 
         return (
 
@@ -55,7 +55,7 @@ export default function DetailsOeuvrePage ({ route, navigation }) {
 
                 <View style={styles.container}>
 
-                    <ImageBackground source={{uri : image}} style={styles.image}>
+                    <ImageBackground source={{uri : _Image}} style={styles.image}>
 
                         <ScrollView >
 

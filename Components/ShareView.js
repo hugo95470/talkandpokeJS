@@ -5,6 +5,7 @@ import { LinearGradient } from "expo-linear-gradient";
 
 import Context from '../navigation/userContext';
 import { getNombreReaction } from '../service/ReactionService';
+import { updateFriend } from '../service/UtilisateurService';
 
 export default function ShareView(props) {
 
@@ -31,7 +32,7 @@ export default function ShareView(props) {
     }, []);
 
     function beFriend(){
-        fetch(global.apiUrl + 'Utilisateur/SetFriends.php?UtilisateurId=' + context.utilisateurId + '&FriendId=' + props.profilId + '&TokenUtilisateur=' + context.utilisateurToken)
+        updateFriend(context.utilisateurToken, props.profilId)
         setFriend(!friend)
     }
 

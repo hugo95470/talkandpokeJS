@@ -22,16 +22,16 @@ const fetchtalkandpokeapi = async (endpoint, params = undefined, header = undefi
     const resp = await fetch(url)
     .then((response) => response.json())
     .then((data) => {
+        //alert(JSON.stringify(data))
         console.log("=================================================================");
         console.log(url);
         console.log(data);
         return data;
     })
-    .catch(
-        alert('there was an error fetching our server, please try again later')
-    );
+    .catch(() => {
+        //alert('there was an error fetching our server, please try again later')
+    });
     
-
     return await resp;
 };
 

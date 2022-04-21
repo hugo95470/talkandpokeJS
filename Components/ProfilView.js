@@ -9,6 +9,7 @@ import Context from '../navigation/userContext';
 import ImagePourcentage from './ImagePourcentage';
 import {getUtilisateurCoeurs, getUtilisateurLikes, getUtilisateurDislikes,getUtilisateurMes, getUtilisateurPokes} from '../service/ReactionService';
 import { getContactAffinites, getContactFriend, getUtilisateurInformations } from '../service/UtilisateurService';
+import globalStyles from '../Styles/globalStyles';
 
 export default function ProfilPage(props) {
 
@@ -33,15 +34,15 @@ export default function ProfilPage(props) {
         
         switch(reaction) {
             case 'Coeur' :
-                setAffiches(await getUtilisateurCoeurs(props.profilId))
+                setAffiches(await getUtilisateurCoeurs(props.profilId, context.utilisateurId))
                 break;
             
             case 'Like' :
-                setAffiches(await getUtilisateurLikes(props.profilId))
+                setAffiches(await getUtilisateurLikes(props.profilId, context.utilisateurId))
                 break;
             
             case 'Dislike' :
-                setAffiches(await getUtilisateurDislikes(props.profilId))
+                setAffiches(await getUtilisateurDislikes(props.profilId, context.utilisateurId))
                 break;
 
             case 'Me' :
@@ -50,6 +51,10 @@ export default function ProfilPage(props) {
 
             case 'Poke' :
                 setAffiches(await getUtilisateurPokes(props.profilId))
+                break;
+
+            case 'Mine' :
+                setAffiches("")
                 break;
 
             default:
@@ -101,19 +106,35 @@ export default function ProfilPage(props) {
 
     var renderItemAffiche = ({ item }) => {
         return (
-            <TouchableOpacity activeOpacity={1} onPress={() => props.navigation.navigate('DetailsOeuvrePage', {AfficheId: item.AfficheId, _Image: item.Image})} style={{height: 180, width: '32%', margin: '0.5%', backgroundColor: '#ddd', borderRadius: 15}}>
+            <TouchableOpacity activeOpacity={1} onPress={() => props.navigation.navigate('DetailsOeuvrePage', {AfficheId: item.AfficheId, _Image: item.Image})} style={{height: 180, width: '32%', borderWidth: item.MaReaction=='orange'?4:0, borderColor: 'orange', margin: '0.5%', backgroundColor: '#ddd', borderRadius: 18}}>
                 <ImageBackground isBackground style={{width: '100%', height: '100%'}} imageStyle={{ borderRadius: 15}} source={{uri: item.Image}} resizeMode="cover">
                 </ImageBackground>
             </TouchableOpacity>
             
         )
     }
+
+    var Mine = () => {
+        if(reaction == "Mine") {
+            return (
+                <View style={[globalStyles.center]}>
+                    <Text style={{fontSize: 20, margin: 20, textAlign: 'center'}}>Bientot ici vous pourez publier vos propre affiches !</Text>
+                    <Text style={{fontSize: 20, margin: 20, textAlign: 'center'}}>Les gens pourront y réagir et vous pourrez enfin vous faire connaitre : )</Text>
+                </View>
+            )
+        }else {
+            return (
+                <View></View>
+            )
+        }
+        
+    }
      
     return(
         <View style={{position: 'absolute', top: _height, width: '100%'}}>
             <ScrollView style={{height: 900}}>
 
-                <BackArrowView profilId={props.profilId}/>
+                <BackArrowView profilId={props.profilId} navigation={props.navigation}/>
 
                 <View style={{marginBottom: 100}}>
                     <ImageProfil/>
@@ -121,7 +142,7 @@ export default function ProfilPage(props) {
 
                 <ShareView profilId={props.profilId} navigation={props.navigation} photo={photo}/>
 
-                <View style={{flexDirection: 'row'}}>
+                <View style={{flexDirection: 'row', justifyContent: 'space-evenly'}}>
                     <TouchableOpacity onPress={() => setReaction("Poke")} style={{flexDirection: 'row', marginRight: 20, marginLeft: 10, borderBottomWidth: reaction=="Poke"?3:0, borderBottomColor: 'rgb(254, 165, 42)'}}>
                         <Image style={{height: 20, width: 20, margin: 10, marginHorizontal: 0, marginRight: 3}} source={require('../Images/Poke.png')}/>
                         <Text style={{marginTop: 'auto', marginBottom: 'auto'}}>Poke</Text>
@@ -132,6 +153,14 @@ export default function ProfilPage(props) {
                         <Text style={{marginTop: 'auto', marginBottom: 'auto'}}>Me</Text>
                     </TouchableOpacity>
 
+                    <TouchableOpacity onPress={() => setReaction("Mine")} style={{flexDirection: 'row', marginRight: 20, borderBottomWidth: reaction=="Mine"?3:0, borderBottomColor: 'rgb(254, 165, 42)'}}>
+                        <Image style={{height: 20, width: 20, margin: 10, marginHorizontal: 0, borderRadius: 100, marginRight: 3}} source={props.profilId != context.utilisateurId?{uri: props.Image}:{uri: context.utilisateurPhoto}}/>
+                        <Text style={{marginTop: 'auto', marginBottom: 'auto'}}>Mine</Text>
+                    </TouchableOpacity>
+
+                </View>
+
+                <View style={{flexDirection: 'row', justifyContent: 'space-around', marginBottom: 10}}>
                     <TouchableOpacity onPress={() => setReaction("Coeur")} style={{flexDirection: 'row', marginRight: 20, borderBottomWidth: reaction=="Coeur"?3:0, borderBottomColor: 'rgb(254, 165, 42)'}}>
                         <Image style={{height: 20, width: 20, margin: 10, marginHorizontal: 0, marginRight: 3}} source={{uri: 'https://i.pinimg.com/originals/17/72/8f/17728faefb1638f17586ea58645b4e7e.png'}}/>
                         <Text style={{marginTop: 'auto', marginBottom: 'auto'}}>Coeur</Text>
@@ -147,9 +176,13 @@ export default function ProfilPage(props) {
                         <Text style={{marginTop: 'auto', marginBottom: 'auto'}}>Dislike</Text>
                     </TouchableOpacity>
                 </View>
-                
+
+                <Text style={globalStyles.title}>{reaction}</Text>
+
                 <FlatList data={affiches} renderItem={renderItemAffiche} keyExtractor={item => item.AfficheId} 
                         numColumns="3"></FlatList>
+
+                <Mine/>
 
                 <View style={{height: 300}}></View>
             </ScrollView>

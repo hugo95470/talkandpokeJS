@@ -4,6 +4,7 @@ import { useEffect, useState } from 'react';
 
 import Context from '../navigation/userContext';
 import { getUtilisateurNotification } from '../service/MessageService';
+import globalStyles from '../Styles/globalStyles';
 
 export default function TopBarre(props) {
 
@@ -41,7 +42,7 @@ export default function TopBarre(props) {
                 <Image style={{height: 50, width: 50, borderRadius: 100, marginLeft: 30, marginTop: 0, backgroundColor: 'rgba(255, 255, 255, 0)',}} source={require('../assets/GrandLogoTP.png')}/>
 
                 <TouchableOpacity onPress={() => props.navigation.navigate('MessageriePage')}>
-                    <View style={styles.logo}>
+                    <View style={[globalStyles.shadows,, globalStyles.cercle, styles.logo]}>
                         <Image style={{height: 45, width: 45, borderRadius: 100, backgroundColor: 'rgba(255, 255, 255, 0)', marginTop: 'auto', marginBottom: 'auto'}} source={{uri : "https://media.istockphoto.com/vectors/send-message-mail-icon-button-sign-paper-plane-navigation-logo-symbol-vector-id1227514358?k=6&m=1227514358&s=170667a&w=0&h=zK01wrL-BiUQIQv3JAEoUG2AdnDHE0JmWODhU6T2yNE="}}/>
                         <Notif/>
                     </View>
@@ -65,14 +66,8 @@ const styles = StyleSheet.create({
         backgroundColor: 'white',
         height: 45, 
         width: 45, 
-        borderRadius: 100, 
         margin: 8, 
-        marginRight: 20, 
-        elevation: 10, 
-        shadowColor: '#000',
-        shadowOffset: { width: 0, height: 1 },
-        shadowOpacity: 0.8,
-        shadowRadius: 1,  
+        marginRight: 20,
         alignItems: 'center'
     }
 })

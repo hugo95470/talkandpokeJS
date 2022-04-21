@@ -107,13 +107,18 @@ export default function ChangeProfilPage(props) {
     }
 
     function deconnexion(){
-        SecureStore.deleteItemAsync('utilisateurToken');
-        SecureStore.deleteItemAsync('utilisateurMail');
-        SecureStore.deleteItemAsync('utilisateurPassword');
-        SecureStore.deleteItemAsync('utilisateurId');
-        SecureStore.deleteItemAsync('utilisateurPhoto');
-        SecureStore.deleteItemAsync('Affiches');
-        SecureStore.deleteItemAsync('Affinites');
+        try {
+            SecureStore.deleteItemAsync('utilisateurToken');
+            SecureStore.deleteItemAsync('utilisateurMail');
+            SecureStore.deleteItemAsync('utilisateurPassword');
+            SecureStore.deleteItemAsync('utilisateurId');
+            SecureStore.deleteItemAsync('utilisateurPhoto');
+            SecureStore.deleteItemAsync('Affiches');
+            SecureStore.deleteItemAsync('Affinites');
+        }catch(error) {
+            alert("can't remove ID" + error)
+        }
+        
 
         context.setUtilisateurId(null);
         context.setUtilisateurToken(null);
@@ -185,6 +190,10 @@ export default function ChangeProfilPage(props) {
     var Deconnexion = () => {
         return(
             <View style={{marginTop: 50, marginBottom: 80}}>
+                <TouchableOpacity style={{marginTop: 20, backgroundColor: 'white', elevation: 5, borderRadius: 100,paddingHorizontal: 20, paddingVertical: 10, marginBottom: 'auto', marginLeft: 'auto', marginRight: 'auto',}} onPress={() => context.setIntro(null)}>
+                    <Text>Revoir l'introduction !</Text>
+                </TouchableOpacity>
+
                 <TouchableOpacity style={{marginTop: 20, borderRadius: 100,paddingHorizontal: 20, paddingVertical: 10, marginBottom: 'auto', marginLeft: 'auto', marginRight: 'auto',}} onPress={() => alert(cgu)}>
                     <Text style={{textDecorationLine: 'underline'}}>Conditions générales d'utilisation</Text>
                 </TouchableOpacity>

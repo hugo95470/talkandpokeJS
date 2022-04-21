@@ -5,7 +5,8 @@ import { useEffect, useState, useRef } from 'react';
 import Context from '../navigation/userContext';
 import ImagePourcentage from '../Components/ImagePourcentage';
 import { loadTagUtilisateurDescription } from '../service/TagService';
-
+import { getSwipeAffiches } from '../service/AfficheService';
+import globalStyles from '../Styles/globalStyles';
 
 //TO REFACTOR
 
@@ -25,39 +26,28 @@ export default function SwipeAfficheView(props) {
 
   //CHARGER LES AFFICHES
   useEffect(() => {
-    let mounted = true;
-
-      fetch(global.apiUrl + 'Affiche/GetSwipeAffiches.php?Nombre=20&TokenUtilisateur=' + context.utilisateurToken)
-      .then((response) => response.json())
-      .then((data) => {
-          setCards(data);
-      });
-
-      return () => mounted = false;
-
+    getAffiches(5)
   }, []);
 
 
-  function getAffiches(lastCardId = 0) {
-      fetch(global.apiUrl + 'Affiche/GetSwipeAffiches.php?Nombre=1&TokenUtilisateur=' + context.utilisateurToken)
-      .then((response) => response.json())
-      .then((data) => {
-        if((lastCards.find(element => element == data[0].AfficheId) == undefined && data[0].AfficheId != lastCardId) || data[0].AfficheId == 0){
-          let newstate = [...cards, ...data]
+   function getAffiches(nombre = 1) {
+    getSwipeAffiches(nombre, context.utilisateurToken)
+    .then((response) => {
+      if(JSON.stringify(response) == '[]'){
+        let newstate = [...cards, ...[{"Identifier":"bc3df039-174a-11ec-995a-f5a558c8e420","AfficheId":"0","Description":"Vous avez déjà réagis à toutes ce qu'on pouvait vous proposer ! revenez prochainement pour de nouvelles","Image":"https://hugocabaret.onthewifi.com/TalkAndPoke/Affiches/Fin.png","AfficheTitre":"Plus d'oeuvre : ("}]]
+        setCards(newstate)
+      }else{
+        if(cards == '') {
+          setCards(response);
+        } else {
+          let newstate = [...cards, ...response]
           setCards(newstate);
-        }else{
-          getAffiches(lastCardId);
         }
-      });            
+      }
+    });
   }
 
-  var [ position, setPosition ] = useState(false);
-
   const pan = useRef(new Animated.ValueXY()).current;
-
-  useEffect(() => {
-    setPosition(new Animated.ValueXY());
-  }, [])
 
   var [ state, setState ] = useState(0);
 
@@ -65,26 +55,24 @@ export default function SwipeAfficheView(props) {
     setCount(count+1)
 
     if(count >= 4) {
-      fetch('https://hugocabaret.onthewifi.com/TalkAndPoke/talkandpokeapi/requetes/Tag/GetUtilisateurTagScoreByUtilisateur.php?TokenUtilisateur=' + context.utilisateurToken + '&Limit=20&Contact=true')
+      fetch(global.apiUrl + 'Tag/GetUtilisateurTagScoreByUtilisateur.php?TokenUtilisateur=' + context.utilisateurToken + '&Limit=3&Contact=true')
       .then((response) => response.json())
       .then((data) => {
         setSuggestion(data);
-      })
-      .then(() => {
-        fetch('https://hugocabaret.onthewifi.com/TalkAndPoke/talkandpokeapi/requetes/Tag/GetUtilisateurTagScore.php?TokenUtilisateur=' + context.utilisateurToken + '&Limit=8')
+
+        fetch(global.apiUrl + 'Tag/GetUtilisateurTagScore.php?TokenUtilisateur=' + context.utilisateurToken + '&Limit=8')
         .then((response) => response.json())
         .then(async (dataTags) => {
-          setSuggestionTags(dataTags);
-          setUtilisateurTagDescription(await loadTagUtilisateurDescription(10, context.utilisateurToken));
-        })
-        .then(() => {
-          setCount(0);
-          setShowSuggestion(true);
+          if(parseInt(data[0].Pourcentage) >= 60) {
+            setSuggestionTags(dataTags);
+            setUtilisateurTagDescription(await loadTagUtilisateurDescription(10, context.utilisateurToken));
+            setCount(0);
+            setShowSuggestion(true);
+          }
+          
         });
-      });
 
-      
-
+      })
     }    
   }
 
@@ -121,7 +109,7 @@ export default function SwipeAfficheView(props) {
 
         })
 
-        getAffiches(cards[state].AfficheId)
+        getAffiches(1)
         loadSuggestion()
         fetch(global.apiUrl + 'Reaction/AddReaction.php?AfficheId=' + cards[state].AfficheId + '&Emotion=like&UtilisateurId=' + context.utilisateurId + '&TokenUtilisateur=' + context.utilisateurToken)
       }else if (gestureState.dx < -60) {
@@ -140,7 +128,7 @@ export default function SwipeAfficheView(props) {
         })
         fetch(global.apiUrl + 'Reaction/AddReaction.php?AfficheId=' + cards[state].AfficheId + '&Emotion=dislike&UtilisateurId=' + context.utilisateurId + '&TokenUtilisateur=' + context.utilisateurToken)
         loadSuggestion()
-        getAffiches(cards[state].AfficheId)
+        getAffiches(1)
         //alert("ici l'evennement pour la gauche")
 
       }else if (gestureState.dy < -60) {
@@ -158,7 +146,7 @@ export default function SwipeAfficheView(props) {
         })
         fetch(global.apiUrl + 'Reaction/AddReaction.php?AfficheId=' + cards[state].AfficheId + '&Emotion=coeur&UtilisateurId=' + context.utilisateurId + '&TokenUtilisateur=' + context.utilisateurToken)
         loadSuggestion()
-        getAffiches(cards[state].AfficheId)
+        getAffiches(1)
 
       }else {
         Animated.spring(pan, {
@@ -229,7 +217,7 @@ export default function SwipeAfficheView(props) {
                     />
 
                 <TouchableOpacity style={{height: 30, borderRadius: 100, width: 100, backgroundColor: 'lightgrey', position: 'absolute', bottom: 10, left: 10}} onPress={() => props.navigation.push('DetailsOeuvrePage', {AfficheId: item[1].AfficheId, _Image: item[1].Image})}>
-                  <Text style={{marginLeft: 'auto', marginRight: 'auto', marginTop: 'auto', marginBottom: 'auto', fontWeight: '700', fontFamily: 'sans-serif-light'}}>Info</Text>
+                  <Text style={{marginLeft: 'auto', marginRight: 'auto', marginTop: 'auto', marginBottom: 'auto', fontWeight: '700', fontFamily: 'sans-serif-light'}}>+ Info</Text>
                 </TouchableOpacity>
 
                 <View style={{backgroundColor: 'lightgrey', opacity: 0.8, borderBottomLeftRadius: 50, borderTopLeftRadius: 50, height: 70, position: 'absolute', right: 0, bottom: 100}}>
@@ -252,6 +240,7 @@ export default function SwipeAfficheView(props) {
                     left: -180,
                     borderWidth: 1,
                     padding: 10,
+                    borderWidth: 0,
                     height: 150,
                     width: 150
                   }} source={{uri: 'https://emojis.wiki/emoji-pics/apple/thumbs-up-apple.png'}}/>
@@ -268,6 +257,7 @@ export default function SwipeAfficheView(props) {
                     left: 400,
                     borderWidth: 1,
                     padding: 10,
+                    borderWidth: 0,
                     height: 150,
                     width: 150
                   }} source={{uri: 'https://emojis.wiki/emoji-pics/apple/thumbs-down-apple.png'}}/>
@@ -284,6 +274,7 @@ export default function SwipeAfficheView(props) {
                     left: 100,
                     borderWidth: 1,
                     padding: 10,
+                    borderWidth: 0,
                     height: 150,
                     width: 150
                   }} source={{uri: 'https://i.pinimg.com/originals/17/72/8f/17728faefb1638f17586ea58645b4e7e.png'}}/>
@@ -328,7 +319,7 @@ export default function SwipeAfficheView(props) {
  let Loading = () => {
    if(cards == ""){
      return (
-        <View style={{flexDirection: 'row', backgroundColor: '#eee', elevation: 3, zIndex: 9, borderRadius: 19, width: Dimensions.get('window').width - 42, height: Dimensions.get('window').height - 200, position: 'absolute'}}>
+        <View style={[globalStyles.shadows, {flexDirection: 'row', backgroundColor: '#DDD', zIndex: 9, borderRadius: 19, width: Dimensions.get('window').width - 42, height: Dimensions.get('window').height - 200, position: 'absolute'}]}>
           <Text style={{marginLeft: 'auto', marginRight: 20, marginTop: 'auto', marginBottom: 'auto', fontSize: 22}}>Chargement</Text>
           <ActivityIndicator style={{marginRight: 'auto'}} size="large" color="#FEA52A" />
         </View>
@@ -359,7 +350,7 @@ export default function SwipeAfficheView(props) {
  
   var renderItemTag = ({ item }) => {
     return (
-    <View style={{marginLeft: 10}}>
+    <View style={{marginLeft: 10, height: 150}}>
       <ImagePourcentage pourcentage={item.Pourcentage} taille={80} image={item.Image} name={item.Tag} showPourcentage={true}/>
     </View>
     )
@@ -375,12 +366,17 @@ export default function SwipeAfficheView(props) {
   }else{
     return (
       <View style={{ height: 60, left: 180, bottom: -100, zIndex: 10, elevation: 1, position: 'absolute' }}>
-        <TouchableOpacity onPress={() => {setState(state + 1); getAffiches()}} style={{backgroundColor: 'lightgrey', padding: 10, borderRadius: 100, paddingHorizontal: 30}}>
+        <TouchableOpacity onPress={() => {setState(state + 1); getAffiches(1)}} style={{backgroundColor: 'lightgrey', padding: 10, borderRadius: 100, paddingHorizontal: 30}}>
           <Text style={{fontSize: 25, fontWeight: '700', fontFamily: 'sans-serif-light'}}>Suivant</Text>
         </TouchableOpacity>
       </View>
     )
   }
+}
+
+function seeProfil(){
+  setShowSuggestion(false);
+  props.navigation.navigate('ContactPage', {_profilId: suggestion[0].UtilisateurId, _image: suggestion[0].Image});
 }
 
   return(
@@ -399,30 +395,29 @@ export default function SwipeAfficheView(props) {
       <Modal animationType="slide" transparent={true} visible={showSuggestion}>
           <View style={styles.background}></View>
 
-          <View style={{zIndex: 100, backgroundColor: '#FFF', borderRadius: 19, marginVertical: 200, width: '90%', margin: '5%', height: '50%'}}>
+          <View style={[globalStyles.center, {zIndex: 100, backgroundColor: '#FFF', borderRadius: 19, width: '90%'}]}>
             
             <View style={{top: -15, left: -15, position: 'absolute', elevation: 3, backgroundColor: '#FFF', padding: 10, borderRadius: 100}}>
               <Text>Suggestion utilisateur</Text>
             </View>
 
-            <View style={{margin: 30, maxWidth: '50%'}}>
-              <UtilisateurTagDescriptionView/>
-            </View>
+            <View style={{flexDirection: 'row', marginTop: 10, justifyContent: 'space-between'}}>
+              <View style={{margin: 20}}>
+                <UtilisateurTagDescriptionView/>
+              </View>
 
-            <View style={{position: 'absolute', right: 30, top: 30}}>
+              <View style={{margin: 20}}>
                 <ImagePourcentage pourcentage={suggestion!=""?suggestion[0].Pourcentage:0} taille={80} image={suggestion!=""?suggestion[0].Image:0} name={suggestion!=""?suggestion[0].Pseudo:0} showPourcentage={true}/>
+              </View>
             </View>
 
-            <View style={{height: '20%'}}>
-
-            </View>
-
-            <View style={{flexDirection: 'row', justifyContent: 'space-around'}}>
+            <View style={{flexDirection: 'row', marginTop: 30, justifyContent: 'space-around'}}>
               <Text style={{borderBottomColor: '#fff', borderRadius: 5, paddingHorizontal: 30, borderBottomWidth: 1}}>Affinitées</Text>
-              <Text style={{opacity: 0.2, borderBottomColor: '#fff', borderRadius: 5, paddingHorizontal: 40, borderBottomWidth: 1}}>Photo</Text>
+              <Text></Text>
+              {/* <Text style={{opacity: 0.2, borderBottomColor: '#fff', borderRadius: 5, paddingHorizontal: 40, borderBottomWidth: 1}}>Photo</Text> */}
             </View>
             
-            <View style={{marginTop: 30, flexDirection: 'row'}}>
+            <View style={{marginTop: 30, height: 210, flexDirection: 'row'}}>
               <ScrollView horizontal={true} style={{height: 130, marginTop: 5}} showsHorizontalScrollIndicator={false}>
                 <FlatList data={suggestionTags} renderItem={renderItemTag} keyExtractor={item => item.Identifier} numColumns="8"></FlatList>
               </ScrollView>
@@ -433,7 +428,7 @@ export default function SwipeAfficheView(props) {
                 <Text>Nop</Text>
               </TouchableOpacity>
 
-              <TouchableOpacity onPress={() => props.navigation.navigate('ContactPage', {_profilId: suggestion[0].UtilisateurId, _image: suggestion[0].Image})} style={{marginLeft: 'auto', backgroundColor: '#FEA52A', borderRadius: 19, paddingHorizontal: 20, paddingVertical: 10, marginRight: 'auto'}}>
+              <TouchableOpacity onPress={() => seeProfil()} style={{marginLeft: 'auto', backgroundColor: '#FEA52A', borderRadius: 19, paddingHorizontal: 20, paddingVertical: 10, marginRight: 'auto'}}>
                 <Text>Voir plus 😏</Text>
               </TouchableOpacity>
             </View>

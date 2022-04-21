@@ -2,6 +2,7 @@ import React from 'react';
 import { StyleSheet, View, TouchableOpacity, FlatList, Text, ImageBackground} from 'react-native';
 import { useEffect, useState } from 'react';
 import { getAffichesLiens } from '../service/AfficheService';
+import globalStyles from '../Styles/globalStyles';
 
 function NewsCollectionView(props) {
 
@@ -19,7 +20,7 @@ function NewsCollectionView(props) {
 
             return(
                 <TouchableOpacity activeOpacity={1} onPress={() => props.navigation.push('DetailsOeuvrePage', {AfficheId: AfficheId, _Image: image})}>
-                    <View style={styles.shadow}>
+                    <View style={[globalStyles.shadows, {borderRadius: 19, margin: 20, marginTop: 5, height: 100, width: '90%', backgroundColor : '#fff'}]}>
                         <View style={{flexDirection: 'row'}}>
                             <ImageBackground imageStyle={{ borderRadius: 15}} source={{uri: image}} resizeMode="cover" style={styles.affiche}/>
 

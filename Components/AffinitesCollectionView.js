@@ -4,6 +4,7 @@ import { useEffect, useState, useRef  } from 'react';
 
 import Context from '../navigation/userContext';
 import { getUtilisateurAffinites } from '../service/UtilisateurService';
+import globalStyles from '../Styles/globalStyles';
 
 export default function AffinitesCollectionView(props) {
     
@@ -37,9 +38,11 @@ export default function AffinitesCollectionView(props) {
             
     var ItemAffinite = ({ pseudo, image, pourcentage, contactId }) => (
         
-        <TouchableOpacity style={{marginLeft: 10, marginRight: 10, marginBottom: 40, marginTop: 10}} onPress={() => props.navigation.navigate('ContactPage', {_profilId: contactId, _image: image})}>
-            <View style={styles.shadow}>
-                <Image source={{uri: image}} resizeMode="cover" style={styles.affiniteImage}/>
+        <TouchableOpacity style={[{marginLeft: 10, marginRight: 10, marginBottom: 40, marginTop: 10}]} onPress={() => props.navigation.navigate('ContactPage', {_profilId: contactId, _image: image})}>
+            <View>
+                <View style={[globalStyles.shadows, globalStyles.cercle]}>
+                    <Image source={{uri: image}} resizeMode="cover" style={styles.affiniteImage}/>
+                </View>
                 <Text style={{marginLeft: 'auto', marginRight: 'auto', color: 'black', textAlign: 'center', fontSize: 14, fontFamily: 'sans-serif-light',}}>{pourcentage} %</Text>
                 <Text style={{marginLeft: 'auto', marginRight: 'auto', color: 'black', textAlign: 'center', fontSize: 14, fontFamily: 'sans-serif-light',}}>{pseudo}</Text>
             </View>
@@ -76,18 +79,6 @@ const styles = StyleSheet.create({
         flexDirection:'row',
         justifyContent: 'center',
         alignItems: 'center',
-    },
-    shadow: {
-        height: 84,
-        width: 84,
-        padding: 2,
-        backgroundColor: 'white',
-        borderRadius: 100, 
-        elevation: 10, 
-        shadowColor: '#000',
-        shadowOffset: { width: 0, height: 1 },
-        shadowOpacity: 1,
-        shadowRadius: 1,  
-    },
+    }
 })
 

@@ -4,6 +4,7 @@ import { useEffect, useState } from 'react';
 
 import Context from '../navigation/userContext';
 import { getUtilisateurTagScoreByTag } from '../service/UtilisateurTagScoreService';
+import globalStyles from '../Styles/globalStyles';
 
 export default function UtilisateurTagView(props) {
 
@@ -38,7 +39,7 @@ export default function UtilisateurTagView(props) {
     var ItemAffiche = ({ image, utilisateurId, pseudo, pourcentage}) => {
         return(
             <TouchableOpacity style={{marginLeft: 10, marginRight: 10, marginBottom: 40, marginTop: 10}} onPress={() => props.navigation.navigate('ContactPage', {_profilId: utilisateurId, _image: image})}>
-                <View style={styles.shadow}>
+                <View style={globalStyles.shadows}>
                     <Image source={{uri: image}} resizeMode="cover" style={styles.affiniteImage}/>
                     <Text style={{marginLeft: 'auto', marginRight: 'auto', color: 'black', textAlign: 'center', fontSize: 14, fontFamily: 'sans-serif-light',}}>{pourcentage} %</Text>
                     <Text style={{marginLeft: 'auto', marginRight: 'auto', color: 'black', textAlign: 'center', fontSize: 16, fontFamily: 'sans-serif-light',}}>{pseudo}</Text>
@@ -60,7 +61,7 @@ export default function UtilisateurTagView(props) {
                     <TouchableOpacity activeOpacity={1} onPress={() => alert('Lorsqu\'une affiche est surligné de orange, cela signifie que cette personne a eu la même réaction que vous !')}>
                         <Text style={{marginBottom: 'auto', marginTop: 'auto', marginLeft: 10, fontSize: 20, width: 200}}>{data[0]}</Text>
                     </TouchableOpacity>
-                    <ScrollView horizontal={true} style={{height: 130, marginTop: 5}} showsHorizontalScrollIndicator={false}>
+                    <ScrollView horizontal={true} style={{height: 150, marginTop: 5}} showsHorizontalScrollIndicator={false}>
                         <FlatList data={data[1]} renderItem={renderItemAffiche} keyExtractor={item => item.Identifier} numColumns="10"/>                
                     </ScrollView>
                 </View>
@@ -83,17 +84,5 @@ const styles = StyleSheet.create({
         flexDirection:'row',
         justifyContent: 'center',
         alignItems: 'center',
-    },
-    shadow: {
-        height: 84,
-        width: 84,
-        padding: 2,
-        backgroundColor: 'white',
-        borderRadius: 100, 
-        elevation: 10, 
-        shadowColor: '#000',
-        shadowOffset: { width: 0, height: 1 },
-        shadowOpacity: 1,
-        shadowRadius: 1,  
     },
 })

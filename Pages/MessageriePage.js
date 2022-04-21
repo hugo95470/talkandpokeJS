@@ -5,6 +5,7 @@ import { useEffect, useState } from 'react';
 import TopBarre from '../Components/TopBarre';
 import Context from '../navigation/userContext';
 import { getUtilisateursContacts } from '../service/MessageService';
+import globalStyles from '../Styles/globalStyles';
 
 
 //TODO: REFACTOR
@@ -64,14 +65,14 @@ export default function MessageriePage(props) {
 
             return(
                 <TouchableOpacity onPress={() => props.navigation.navigate('MessagePage', {_expediteurId: _expediteurId})}>
-                    <View style={styles.shadow}>
+                    <View style={[{marginBottom: 20}]}>
                         <Image style={{height: 65, width: 65, marginBottom: 'auto', marginTop: 'auto', marginLeft: 10, marginRight: 20, borderRadius: 100}} source={{uri: image}}/>
 
                         <Text style={styles.Titre}>{pseudo}</Text>
                         <Text style={styles.Message}>{toi}{message}</Text>
-                        <Text style={{position: 'absolute', right: 15, bottom: 5, fontSize: 10}}>{_dateString}</Text>
+                        <Text style={{marginLeft: 'auto', marginTop: 10, marginRight: 10, fontSize: 10}}>{_dateString}</Text>
                         <Notif etat={etat} expediteurId={expediteurId}/>
-
+                        <View style={[globalStyles.center, {marginTop: 10, width: '80%', height: 1, backgroundColor: "#fff"}]}></View>
                     </View>
 
                 </TouchableOpacity>
@@ -79,7 +80,7 @@ export default function MessageriePage(props) {
         }
 
         var renderItemAffiche = ({ item }) => (
-            <ItemAffiche style={styles.containerAffiches} _expediteurId={item.UtilisateurId} image={item.Image} pseudo={item.Pseudo} message={item.Message} date={item.CreatedDate} expediteurId={item.ExpediteurId} etat={item.Etat} />
+            <ItemAffiche _expediteurId={item.UtilisateurId} image={item.Image} pseudo={item.Pseudo} message={item.Message} date={item.CreatedDate} expediteurId={item.ExpediteurId} etat={item.Etat} />
         );
         
         const onRefresh = React.useCallback(async () => {
@@ -144,26 +145,4 @@ const styles = StyleSheet.create({
         fontFamily: 'sans-serif-light',
         maxWidth: 250,
     },
-    shadow: {
-        borderRadius: 19,
-        marginBottom: 20,
-        marginLeft: 'auto',
-        marginRight: 'auto',
-        height: 80,
-        width: '90%',
-        backgroundColor : '#fff',
-        shadowColor: 'black',
-        shadowOffset: {
-        width: 10,
-        height: 10,
-        
-      },
-      flexDirection: 'row',
-      shadowOpacity: 1,
-      shadowRadius: 9.51,
-      elevation: 15, 
-    },
-    containerAffiches: {
-        height: '100%',
-    },  
   })

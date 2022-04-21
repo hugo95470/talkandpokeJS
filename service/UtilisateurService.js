@@ -31,7 +31,7 @@ export const getUtilisateurIdentifiants = async (mail) => {
 };
 
 export const getUtilisateurToken = async (utilisateurId, password) => {
-    return await fetchtalkandpokeapiNoJson('Utilisateur/SetTokenUtilisateur.php', [["UtilisateurId", utilisateurId], ["Password", password]])
+    return await fetchtalkandpokeapi('Utilisateur/SetTokenUtilisateur.php', [["UtilisateurId", utilisateurId], ["Password", password]])
 };
 
 export const getUtilisateurPassword = async (utilisateurToken) => {
@@ -54,4 +54,8 @@ export const updateUtilisateurPassword = async (utilisateurToken, password) => {
 
 export const updateUtilisateurSexe = async (utilisateurToken, sexe) => {
     return await fetchtalkandpokeapi('Utilisateur/UpdateSexe.php', [["TokenUtilisateur", utilisateurToken], ["Sexe", sexe]])
+};
+
+export const updateFriend = async (utilisateurToken, friendId) => {
+    return await fetchtalkandpokeapi('Utilisateur/SetFriends.php', [["TokenUtilisateur", utilisateurToken], ["FriendId", friendId]])
 };

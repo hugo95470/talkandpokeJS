@@ -25,14 +25,14 @@ export default function ImagePourcentage(props) {
     categorie: {
       height: 80,
       width: 80,
-      borderRadius: 100,
+      borderRadius: 1000,
       position: 'absolute',
   },
     image: {
       position: 'absolute',
       height: '90%', 
       width: '90%', 
-      borderRadius: 100, 
+      borderRadius: 1000, 
       margin: '5%',
     },
     circularRightCompleted: {

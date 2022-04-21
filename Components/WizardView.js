@@ -1,4 +1,5 @@
-import React, { useRef } from "react";
+import React, { useContext, useRef } from "react";
+import * as SecureStore from 'expo-secure-store';
 import {
   SafeAreaView,
   ScrollView,
@@ -7,15 +8,50 @@ import {
   View,
   ImageBackground,
   Animated,
-  useWindowDimensions
+  useWindowDimensions,
+  Dimensions,
+  TouchableOpacity,
 } from "react-native";
+import globalStyles from "../Styles/globalStyles";
 
-const images = new Array(6).fill('https://images.unsplash.com/photo-1556740749-887f6717d7e4');
+import Context from '../navigation/userContext';
+
+
+const images = ['https://images.unsplash.com/photo-1556740749-887f6717d7e4',
+                'https://images.unsplash.com/photo-1556740749-887f6717d7e4',
+                'https://images.unsplash.com/photo-1556740749-887f6717d7e4',
+                'https://images.unsplash.com/photo-1556740749-887f6717d7e4',
+                'https://images.unsplash.com/photo-1556740749-887f6717d7e4',
+                'https://images.unsplash.com/photo-1556740749-887f6717d7e4'];
 
 const WizardView = () => {
+
+  const context = useContext(Context)
+
   const scrollX = useRef(new Animated.Value(0)).current;
 
   const { width: windowWidth } = useWindowDimensions();
+
+  async function begin() {
+    await context.setIntro(0);
+    await SecureStore.setItemAsync('intro', '0')
+  }
+
+  var LastCard = (imageIndex) => {
+    if(imageIndex.imageIndex >= 5) {
+      return(
+        <TouchableOpacity onPress={async () => await begin()} style={{position: 'absolute', right: 20, bottom: -60, height: 50, borderRadius: 100, width: 150, backgroundColor: 'white'}}>
+          <Text style={globalStyles.center}>Commencez !</Text>
+        </TouchableOpacity>
+      )
+      
+    } else {
+      return(
+        <View></View>
+      )
+    }
+    
+  };
 
   return (
     <SafeAreaView style={styles.container}>
@@ -38,16 +74,17 @@ const WizardView = () => {
           {images.map((image, imageIndex) => {
             return (
               <View
-                style={{ width: windowWidth, height: 250 }}
+                style={[{ width: windowWidth, height: 250 }, globalStyles.center]}
                 key={imageIndex}
               >
-                <ImageBackground source={{ uri: image }} style={styles.card}>
+                <ImageBackground source={{ uri: image }} style={[styles.card]}>
                   <View style={styles.textContainer}>
                     <Text style={styles.infoText}>
                       {"Image - " + imageIndex}
                     </Text>
                   </View>
                 </ImageBackground>
+                <LastCard imageIndex={imageIndex}/>
               </View>
             );
           })}
@@ -80,10 +117,10 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     alignItems: "center",
-    justifyContent: "center"
+    justifyContent: "center",
   },
   scrollContainer: {
-    height: 300,
+    height: Dimensions.get('window').height - 150,
     alignItems: "center",
     justifyContent: "center"
   },

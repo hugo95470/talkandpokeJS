@@ -3,12 +3,14 @@ import { StyleSheet, Text, View, FlatList, TouchableOpacity, Image, TextInput, S
 import { useEffect, useState, useRef } from 'react';
 
 import Context from '../navigation/userContext';
-
+import { getUtilisateurInformations } from '../service/UtilisateurService';
+import { getAfficheMessageByDate, getUtilisateurMessages, readMessage } from '../service/MessageService';
+import globalStyles from '../Styles/globalStyles';
 
 //TODO: REFACTOR
 
 
-function MessagePage(props) {
+export default function MessagePage(props) {
 
         const context = useContext(Context)
 
@@ -29,7 +31,7 @@ function MessagePage(props) {
         //Affiches
         var [messages, setMessages] = useState("");
         var d = new Date();
-        var [date, setDate] = useState(d.getFullYear() + "-" + (d.getUTCMonth() + 1) + "-" + d.getDate() + ' ' + ((d.getUTCHours() + 2)%24) + ':' + d.getUTCMinutes() + ':' + d.getUTCSeconds());
+        var [date, setDate] = useState("");
         var [utilisateur, setUtilisateur] = useState("");
         var [oeuvre, setOeuvre] = useState("");
         var [message, setMessage] = useState("");
@@ -37,28 +39,16 @@ function MessagePage(props) {
 
         var [moiInfo, setMoiInfo] = useState("");
 
-        let mountedmoi = true;
-        useEffect(() => {
-            if(mountedmoi){
-                fetch(global.apiUrl + 'Utilisateur/GetUtilisateur.php?UtilisateurId=' + context.utilisateurId + '&TokenUtilisateur=' + context.utilisateurToken)
-                .then((response) => response.json())
-                .then((data) => setMoiInfo(data));
-            }
-            return () => mountedmoi = false;
-        }, [context.utilisateurId, context.utilisateurToken])
-
         let mountedMessage = true;
-        useEffect(() => {
 
-            function recupMessage() {
-                var uri = global.apiUrl + 'Message/GetMessagesDiscussion.php?DestinataireId=' + _expediteurId + '&ExpediteurId=' + context.utilisateurId +'&Nombre=20&DateEnvoi=' + date + '&TokenUtilisateur=' + context.utilisateurToken
-                fetch(uri)
-                .then((response) => response.json())
+        useEffect(async () => {
+
+            async function recupMessage() {
+                await getUtilisateurMessages(_expediteurId, 20, context.utilisateurToken, date)
                 .then((data) => {
                     if(data != ""){
-                        setDate(data[Object.keys(data).length -1].CreatedDate)
+                        setDate(JSON.stringify(data[Object.keys(data).length -1].CreatedDate))
                         let newstate = [...messages, ...data]
-        
                         setMessages(newstate);
                     }
                 })
@@ -67,12 +57,10 @@ function MessagePage(props) {
             }
 
             function recupMessageOeuvre() {
-                var uri = global.apiUrl + 'Message/GetMessagesAffiche.php?AfficheId=' + _oeuvreId + '&Date=' + date + '&Limite=20'
-                fetch(uri)
-                .then((response) => response.json())
+                getAfficheMessageByDate(_oeuvreId, 20, date)
                 .then((data) => {
                     if(data != ""){
-                        setDate(data[Object.keys(data).length -1].CreatedDate)
+                        setDate(JSON.stringify(data[Object.keys(data).length -1].CreatedDate))
                         let newstate = [...messages, ...data]
         
                         setMessages(newstate);
@@ -82,18 +70,16 @@ function MessagePage(props) {
                     setTimeout(recupMessageOeuvre, 5000);
             }
 
-            if(context.utilisateurId != "" && context.utilisateurToken != "" && !isOeuvre){
-                recupMessage()
-            }else if (context.utilisateurId != "" && context.utilisateurToken != "" && isOeuvre){
+            setMoiInfo(await getUtilisateurInformations(context.utilisateurToken));
+
+            if(!isOeuvre){
+                await recupMessage()
+                await readMessage(context.utilisateurToken, _expediteurId)
+            }else{
                 recupMessageOeuvre()
             }
     
-          return () => mountedMessage = false;
         }, [])
-
-        useEffect(() => {
-            fetch(global.apiUrl + 'Message/ReadMessage.php?UtilisateurId=' + context.utilisateurId + '&ContactId=' + _expediteurId + '&TokenUtilisateur=' + context.utilisateurToken)
-        }, [context.utilisateurId, context.utilisateurToken])
 
         function sendMessage(_message, _isOeuvre) {
             if(_message != ""){
@@ -108,7 +94,7 @@ function MessagePage(props) {
                 }
                 if(messages == ""){
                     let mess = [{"Message" : message,"CreatedDate" : date,"ExpediteurId" : context.utilisateurId}]
-                    setDate(mess[Object.keys(mess).length -1].CreatedDate)
+                    setDate(JSON.stringify(mess[Object.keys(mess).length -1].CreatedDate))
                     let newstate = [...messages, ...mess]
     
                     setMessages(newstate);
@@ -141,7 +127,7 @@ function MessagePage(props) {
 
             if(expediteurId == context.utilisateurId){
                 return(
-                    <View style={styles.shadowRight}>
+                    <View style={[styles.messageRight, globalStyles.shadows]}>
                         <Message _message={message}/>
                     </View>
                 );
@@ -149,7 +135,7 @@ function MessagePage(props) {
                 if(isOeuvre){
                     return(
                         <View style={{marginTop: 15, marginLeft: 10}}>
-                            <View style={styles.shadowLeft}>
+                            <View style={[globalStyles.shadows, styles.messageLeft]}>
                                 <TouchableOpacity style={{position: 'absolute', top: -15, left: -15}} onPress={() => {props.navigation.navigate('ProfilPage', {_profilId: expediteurId})}}>
                                     <Image style={{height: 40, width: 40, borderRadius: 100, marginRight: 10}} source={{uri: photo}}/>
                                 </TouchableOpacity>
@@ -161,7 +147,7 @@ function MessagePage(props) {
                     );
                 }else{
                     return(
-                        <View style={styles.shadowLeft}>
+                        <View style={[globalStyles.shadows, styles.messageLeft]}>
                             <Message _message={message}/>
                         </View>
                     );
@@ -225,7 +211,7 @@ function MessagePage(props) {
                     .then((data) => {
                         if(data != ""){
                             setMessages(data)
-                            setDate(data[Object.keys(data).length -1].CreatedDate)
+                            setDate(JSON.stringify(data[Object.keys(data).length -1].CreatedDate))
                         }
                     });
     
@@ -241,7 +227,7 @@ function MessagePage(props) {
                     .then((data) => {
                         if(data != ""){
                             setMessages(data)
-                            setDate(data[Object.keys(data).length -1].CreatedDate)
+                            setDate(JSON.stringify(data[Object.keys(data).length -1].CreatedDate))
                         }
                     });     
                     
@@ -255,7 +241,7 @@ function MessagePage(props) {
             
             return () => mounted = false;
             
-        }, [context.utilisateurId, _expediteurId, isOeuvre, context.utilisateurToken]);
+        }, [_expediteurId, isOeuvre]);
 
         async function sendPushNotification(_expoPushToken, _message) {
             const message = {
@@ -313,7 +299,7 @@ function MessagePage(props) {
                     {/* barre de messages */}
                     <View style={{width: '100%', bottom: 5, position: 'absolute', left:0}}>
 
-                        <View style={{flexDirection: 'row', zIndex: 100, justifyContent: 'flex-end', width: '100%', paddingLeft: 15, backgroundColor: 'white', borderRadius: 100, elevation: 5, padding: 0, paddingRight: 30}}>
+                        <View style={{flexDirection: 'row', zIndex: 100, justifyContent: 'flex-end', width: '100%', paddingLeft: 15, backgroundColor: 'white', borderRadius: 100, elevation: 5, padding: 0, paddingRight: 15}}>
                         
                             <ImageToSend/>
                             
@@ -322,7 +308,7 @@ function MessagePage(props) {
                             </View>
 
                             <TouchableOpacity style={{ padding: 15, paddingRight: 0}} onPress={() => sendMessage(message, isOeuvre)}>
-                                <Image style={{height: 20, width: 20, marginTop: 'auto', marginBottom: 'auto'}} source={{uri: 'https://image.flaticon.com/icons/png/512/561/561104.png'}}/>
+                                <Image style={{height: 20, width: 20, marginTop: 'auto', marginBottom: 'auto'}} source={require('../Images/sendMessageIcone.jpeg')}/>
                             </TouchableOpacity>
                         </View>
 
@@ -350,11 +336,6 @@ const styles = StyleSheet.create({
         resizeMode: 'cover',
         justifyContent: 'center',
     },
-    title: {
-        fontSize: 25,
-        marginLeft: 10,
-        color: 'white',
-    },
     Titre: {
         maxWidth: '80%',
         fontSize: 14,
@@ -367,53 +348,27 @@ const styles = StyleSheet.create({
         fontFamily: 'sans-serif-light',
         margin: 10,
     },
-    affiche: {
-        height: 70,
-        width: 300,
-        justifyContent: 'flex-end',
-    },
-    shadowLeft: {
+    messageLeft: {
         marginHorizontal: 10,
         borderRadius: 19,
         marginBottom: 10,
         marginRight: 'auto',
         padding: 10,
         backgroundColor : '#fff',
-        shadowColor: 'black',
-        shadowOffset: {
-        width: 5,
-        height: 5,
-      },
-      zIndex: 0,
-      flexDirection: 'row',
-      shadowOpacity: 0.2,
-      shadowRadius: 3,
-      elevation: 15, 
+        zIndex: 0,
+        flexDirection: 'row',
     },
-
-    shadowRight: {
+    messageRight: {
         marginHorizontal: 10,
         borderRadius: 19,
         marginBottom: 10,
         marginLeft: 'auto',
         backgroundColor : '#fff',
         padding: 10,
-        shadowColor: 'black',
-        shadowOffset: {
-        width: 5,
-        height: 5,
-        
-      },
-      flexDirection: 'row',
-      shadowOpacity: 0.2,
-      shadowRadius: 3,
-      elevation: 15, 
+        flexDirection: 'row',
     },
     containerAffiches: {
         height: '100%',
     },
   
   })
-
-  export default MessagePage;
-

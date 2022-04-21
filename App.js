@@ -12,10 +12,11 @@ import { registerNotification } from './service/NotificationService';
 
 export default function App() {
 
-  var [utilisateurId, setUtilisateurId] = useState("");
-  var [utilisateurToken, setUtilisateurToken] = useState("");
-  var [utilisateurPassword, setUtilisateurPassword] = useState("");
-  var [utilisateurPhoto, setUtilisateurPhoto] = useState("");
+  let [utilisateurId, setUtilisateurId] = useState("");
+  let [utilisateurToken, setUtilisateurToken] = useState("");
+  let [utilisateurPassword, setUtilisateurPassword] = useState("");
+  let [utilisateurPhoto, setUtilisateurPhoto] = useState("");
+  let [intro, setIntro] = useState("");
 
   const mounted = useRef(false);
 
@@ -28,6 +29,7 @@ export default function App() {
       let _utilisateurPassword = null;
       let _utilisateurMail = null;
       let _utilisateurPhoto = 'https://media.graphcms.com/HVBvcvHSY2y2xC5rcmXW';
+      let _intro = null;
 
       try {
         _utilisateurId = await SecureStore.getItemAsync('utilisateurId');
@@ -35,6 +37,8 @@ export default function App() {
         _utilisateurPassword = await SecureStore.getItemAsync('utilisateurPassword');
         _utilisateurMail = await SecureStore.getItemAsync('utilisateurMail');
         _utilisateurPhoto = await SecureStore.getItemAsync('utilisateurPhoto');
+        _intro = await SecureStore.getItemAsync('intro');
+
       } catch (e) {
         // Restoring token failed
       }
@@ -46,8 +50,13 @@ export default function App() {
           if(bcrypt.compareSync(_utilisateurPassword, data.MotDePasse)){
             await getUtilisateurToken(data.UtilisateurId, _utilisateurPassword)
             .then(async (dataToken) => {
-              await SecureStore.setItemAsync('utilisateurToken', dataToken);
-              await SecureStore.setItemAsync('utilisateurPhoto', data.Image);
+              try {
+                await SecureStore.setItemAsync("utilisateurToken", dataToken);
+                await SecureStore.setItemAsync("utilisateurPhoto", data.Image);
+              }catch(error) {
+                console.log("can't save ID")
+              }
+              
               _utilisateurToken = dataToken;
             })
 
@@ -67,6 +76,7 @@ export default function App() {
         setUtilisateurToken(_utilisateurToken);
         setUtilisateurPassword(_utilisateurPassword);
         setUtilisateurPhoto(_utilisateurPhoto);
+        setIntro(_intro);
       }
     };
 
@@ -78,6 +88,7 @@ export default function App() {
 
   }, []);
 
+  
   let utilisateur = { utilisateurId: utilisateurId, 
                       setUtilisateurId: setUtilisateurId, 
                       utilisateurPhoto: utilisateurPhoto, 
@@ -85,7 +96,9 @@ export default function App() {
                       utilisateurToken: utilisateurToken, 
                       setUtilisateurToken: setUtilisateurToken, 
                       utilisateurPassword: utilisateurPassword, 
-                      setUtilisateurPassword: setUtilisateurPassword}
+                      setUtilisateurPassword: setUtilisateurPassword,
+                      intro: intro,
+                      setIntro: setIntro}
 
   return (
 

@@ -6,6 +6,7 @@ import Context from '../navigation/userContext';
 import TopBarre from '../Components/TopBarre';
 import UtilisateurTagView from '../Components/UtilisateurTagView';
 import AlertText from '../Components/AlertText';
+import globalStyles from '../Styles/globalStyles';
 
 
 //TODO: REFACTOR
@@ -50,7 +51,7 @@ export default function Menu(props) {
     var First = () => {
         if(compatibilites != undefined && compatibilites != ""){
             return (
-                <TouchableOpacity onPress={() => props.navigation.navigate('ContactPage', {_profilId: compatibilites[0].UtilisateurId, _image: compatibilites[0].Image})} style={styles.firstAffin}>
+                <TouchableOpacity onPress={() => props.navigation.navigate('ContactPage', {_profilId: compatibilites[0].UtilisateurId, _image: compatibilites[0].Image})} style={[styles.firstAffin, globalStyles.shadows]}>
                     <Image style={{height: 120, width: 120, borderRadius: 100, marginTop: 10, marginBottom: 'auto'}} source={{uri: compatibilites[0].Image}}/>
                     <Text style={{marginLeft: 'auto', marginRight: 'auto'}}>{compatibilites[0].Pourcentage} %</Text>
                     <Text style={{marginLeft: 'auto', marginRight: 'auto'}}>{compatibilites[0].Pseudo}</Text>
@@ -69,7 +70,7 @@ export default function Menu(props) {
     var Second = () => {
         if(compatibilites[1] != undefined){
             return (
-                <TouchableOpacity style={{left: 30, top: -70}} onPress={() => props.navigation.navigate('ContactPage', {_profilId: compatibilites[1].UtilisateurId, _image: compatibilites[1].Image})}>
+                <TouchableOpacity style={[{left: 30, top: -70}, globalStyles.shadows]} onPress={() => props.navigation.navigate('ContactPage', {_profilId: compatibilites[1].UtilisateurId, _image: compatibilites[1].Image})}>
                     <Image style={{height: 120, width: 120, borderRadius: 100, marginTop: 10, marginBottom: 'auto'}} source={{uri: compatibilites[1].Image}}/>
                     <Text style={{marginLeft: 'auto', marginRight: 'auto'}}>{compatibilites[1].Pourcentage} %</Text>
                     <Text style={{marginLeft: 'auto', marginRight: 'auto'}}>{compatibilites[1].Pseudo}</Text>
@@ -86,7 +87,7 @@ export default function Menu(props) {
     var Third = () => {
         if(compatibilites[2] != undefined){
             return (
-                <TouchableOpacity style={{position: 'absolute', right: 30, top: -40}} onPress={() => props.navigation.navigate('ContactPage', {_profilId: compatibilites[2].UtilisateurId, _image: compatibilites[2].Image})}>
+                <TouchableOpacity style={[{position: 'absolute', right: 30, top: -40}, globalStyles.shadows]} onPress={() => props.navigation.navigate('ContactPage', {_profilId: compatibilites[2].UtilisateurId, _image: compatibilites[2].Image})}>
                     <Image style={{height: 120, width: 120, borderRadius: 100, marginTop: 10, marginBottom: 'auto'}} source={{uri: compatibilites[2].Image}}/>
                     <Text style={{marginLeft: 'auto', marginRight: 'auto'}}>{compatibilites[2].Pourcentage} %</Text>
                     <Text style={{marginLeft: 'auto', marginRight: 'auto'}}>{compatibilites[2].Pseudo}</Text>

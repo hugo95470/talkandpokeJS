@@ -16,6 +16,8 @@ import CreationComptePage from '../Pages/CreationComptePage';
 import OeuvresPages from '../Pages/OeuvresPage';
 import FollowersPage from '../Pages/FollowersPage';
 import FollowingPage from '../Pages/FollowingPage';
+import TuPreferesPage from '../Pages/TuPreferesPage';
+import StartPage from '../Pages/StartPage';
 
 const Stack = createStackNavigator();
 
@@ -32,6 +34,7 @@ const AcceuilStackNavigator = () => {
       <Stack.Screen name="OeuvresPage" component={OeuvresPages} options={{ headerShown: false }}/>
       <Stack.Screen name="FollowersPage" component={FollowersPage} options={{ headerShown: false }}/>
       <Stack.Screen name="FollowingPage" component={FollowingPage} options={{ headerShown: false }}/>
+      <Stack.Screen name="TuPreferesPage" component={TuPreferesPage} options={{ headerShown: false }}/>
     </Stack.Navigator>
   );
 }
@@ -87,4 +90,12 @@ const ConnexionStackNavigator = () => {
   );
 }
 
-export { AcceuilStackNavigator, SwipeStackNavigator, ProfilStackNavigator, MenuStackNavigator, ConnexionStackNavigator };
+const IntroStackNavigator = () => {
+  return (
+    <Stack.Navigator>
+      <Stack.Screen name="StartPage" component={StartPage} options={{ headerShown: false, animationTypeForReplace: 'push' }}/>
+    </Stack.Navigator>
+  );
+}
+
+export { AcceuilStackNavigator, IntroStackNavigator, SwipeStackNavigator, ProfilStackNavigator, MenuStackNavigator, ConnexionStackNavigator };

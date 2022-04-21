@@ -19,24 +19,33 @@ export default function ConnexionPage(props) {
     async function connectCommand(){
         await getUtilisateurIdentifiants(mail)
         .then(async (data) => {
+            //alert(JSON.stringify(data))
             if(data == false){
                 setErreur("Il doit y avoir une erreur dans vos identifiants")
             }else{
+                setErreur("")
+
                 if(bcrypt.compareSync(motDePasse, data.MotDePasse)){
-                
                     await getUtilisateurToken(data.UtilisateurId, motDePasse)
                     .then(async (dataToken) => {
-                        await SecureStore.setItemAsync('utilisateurToken', dataToken)
-                        await SecureStore.setItemAsync('utilisateurId', data.UtilisateurId)
-                        await SecureStore.setItemAsync('utilisateurMail', mail)
-                        await SecureStore.setItemAsync('utilisateurPassword', motDePasse)
-                        await SecureStore.setItemAsync('utilisateurPhoto', data.Image)
-    
+
+                        try{
+                            await SecureStore.setItemAsync('utilisateurToken', dataToken)
+                            await SecureStore.setItemAsync('utilisateurId', data.UtilisateurId)
+                            await SecureStore.setItemAsync('utilisateurMail', mail)
+                            await SecureStore.setItemAsync('utilisateurPassword', motDePasse)
+                            await SecureStore.setItemAsync('utilisateurPhoto', data.Image)
+                        }
+                        catch(error) {
+                            console.log("can't save your ID" + error)
+                        };
+                        
+
                         context.setUtilisateurId(data.UtilisateurId)
                         context.setUtilisateurPhoto(data.Image)
                         context.setUtilisateurPassword(motDePasse)
                         context.setUtilisateurToken(dataToken)
-    
+
                         await connect(data.UtilisateurId , '1');
                     })
                 }

@@ -1,20 +1,20 @@
 import {fetchtalkandpokeapi} from './Fetcher';
 
 //GET
-export const getUtilisateurCoeurs = async (utilisateurId) => {
-    return await fetchtalkandpokeapi('Reaction/GetCoeurs.php', [["UtilisateurId", utilisateurId]])
+export const getUtilisateurCoeurs = async (utilisateurId, contactId) => {
+    return await fetchtalkandpokeapi('Reaction/GetCoeurs.php', [["UtilisateurId", utilisateurId], ["ContactId", contactId]])
 };
 
-export const getUtilisateurLikes = async (utilisateurId) => {
-    return await fetchtalkandpokeapi('Reaction/GetLikes.php', [["UtilisateurId", utilisateurId]])
+export const getUtilisateurLikes = async (utilisateurId, contactId) => {
+    return await fetchtalkandpokeapi('Reaction/GetLikes.php', [["UtilisateurId", utilisateurId], ["ContactId", contactId]])
 };
 
-export const getUtilisateurDislikes = async (utilisateurId) => {
-    return await fetchtalkandpokeapi('Reaction/GetDislikes.php', [["UtilisateurId", utilisateurId]])
+export const getUtilisateurDislikes = async (utilisateurId, contactId) => {
+    return await fetchtalkandpokeapi('Reaction/GetDislikes.php', [["UtilisateurId", utilisateurId], ["ContactId", contactId]])
 };
 
 export const getUtilisateurMes = async (utilisateurId) => {
-    return await fetchtalkandpokeapi('Reaction/GetDescribMe.php', [["UtilisateurId", utilisateurId]])
+    return await fetchtalkandpokeapi('Reaction/GetMe.php', [["UtilisateurId", utilisateurId]])
 };
 
 export const getUtilisateurPokes = async (utilisateurId) => {
@@ -30,14 +30,27 @@ export const getAfficheUtilisateurReactions = async (afficheId, utilisateurToken
 };
 
 export const getAfficheUtilisateurPoke = async (afficheId, utilisateurToken) => {
-    return await fetchtalkandpokeapi('Reaction/GetPokes.php', [["AfficheId", afficheId], ["TokenUtilisateur", utilisateurToken]])
+    return await fetchtalkandpokeapi('Reaction/GetAffichePoke.php', [["AfficheId", afficheId], ["TokenUtilisateur", utilisateurToken]])
 };
 
 export const getAfficheUtilisateurMe = async (afficheId, utilisateurToken) => {
-    return await fetchtalkandpokeapi('Reaction/GetDescribMe.php', [["AfficheId", afficheId], ["TokenUtilisateur", utilisateurToken]])
+    return await fetchtalkandpokeapi('Reaction/GetAfficheMe.php', [["AfficheId", afficheId], ["TokenUtilisateur", utilisateurToken]])
 };
 
 //DELETE
 
+
+//ADD
+export const addAfficheMe = async (afficheId, utilisateurToken) => {
+    return await fetchtalkandpokeapi('Reaction/AddDescribMe.php', [["AfficheId", afficheId], ["TokenUtilisateur", utilisateurToken]])
+};
+
+export const addReaction = async (emotion, afficheId, utilisateurToken) => {
+    return await fetchtalkandpokeapi('Reaction/AddReaction.php', [["Emotion", emotion], ["AfficheId", afficheId], ["TokenUtilisateur", utilisateurToken]])
+};
+
+export const addPoke = async (afficheId, utilisateurToken) => {
+    return await fetchtalkandpokeapi('Reaction/AddPoke.php', [["AfficheId", afficheId], ["TokenUtilisateur", utilisateurToken]])
+};
 
 
