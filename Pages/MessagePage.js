@@ -4,7 +4,7 @@ import { useEffect, useState, useRef } from 'react';
 
 import Context from '../navigation/userContext';
 import { getUtilisateurInformations } from '../service/UtilisateurService';
-import { getAfficheMessageByDate, getUtilisateurMessages, readMessage } from '../service/MessageService';
+import { getAfficheMessageByDate, getMessageAfficheAssociation, getUtilisateurMessages, readMessage } from '../service/MessageService';
 import globalStyles from '../Styles/globalStyles';
 
 //TODO: REFACTOR
@@ -106,16 +106,24 @@ export default function MessagePage(props) {
 
         var flatlistRef = useRef();
                     
-        var Message = ({_message}) => {
+        var Message = ({_message, messageId, expediteurId}) => {
             if(JSON.stringify(_message).includes("#!#")){
                 let messageSplitted = _message.split('#!#');
 
                 return (
                     <View style={{maxWidth: '80%'}}>
                         <Text>{messageSplitted[0]}</Text>
-                        <Image style={{height: 200, width: 150, margin: 10, marginBottom: 0, marginLeft: 'auto', marginRight: 'auto', borderRadius: 12}} source={{uri: messageSplitted[1]}}/>
+                        <Image style={{height: 300, width: 200, margin: 10, marginBottom: 0, marginLeft: 'auto', marginRight: 'auto', borderRadius: 12}} source={{uri: messageSplitted[1]}}/>
                     </View>
                 );
+            }else if (JSON.stringify(_message).includes("#@#")) {
+                return (
+                    <TouchableOpacity style={{flexDirection: 'row'}} onPress={() => props.navigation.navigate('TuPreferesHistoriquePage', {MessageId: messageId, ExpediteurId: expediteurId})}>
+                        <Text style={[globalStyles.center, {fontSize: 18, marginLeft: 10}]}>Tu preferes </Text>
+                        <Image style={{height: 50, width: 50, opacity: 0.5, transform: [{ rotate: '180deg' }]}} source={{uri: 'https://www.esnaturopathiemaroc.com/wp-content/uploads/2017/11/chevron_left_black.png'}}/>
+                    </TouchableOpacity>
+                )
+                
             }else{
                 return (
                     <Text style={styles.Titre}>{_message}</Text>
@@ -123,12 +131,11 @@ export default function MessagePage(props) {
             }
         }
 
-        var ItemAffiche = ({ message, CreatedDate, photo, expediteurId }) => {
-
+        var ItemAffiche = ({message, CreatedDate, photo, expediteurId, messageId}) => {
             if(expediteurId == context.utilisateurId){
                 return(
                     <View style={[styles.messageRight, globalStyles.shadows]}>
-                        <Message _message={message}/>
+                        <Message _message={message} messageId={messageId} expediteurId={expediteurId}/>
                     </View>
                 );
             }else{
@@ -148,7 +155,7 @@ export default function MessagePage(props) {
                 }else{
                     return(
                         <View style={[globalStyles.shadows, styles.messageLeft]}>
-                            <Message _message={message}/>
+                            <Message _message={message} messageId={messageId}/>
                         </View>
                     );
                 }
@@ -179,6 +186,9 @@ export default function MessagePage(props) {
                 return(
                     <View style={{elevation: 3, backgroundColor: '#eee', borderBottomRightRadius: 19, borderBottomLeftRadius: 19}}>
                         
+                        <TouchableOpacity style={[styles.logo, {position: 'absolute', top: 70, right: 20, backgroundColor: '#FEA52AAA', borderRadius: 5, padding: 3}]} onPress={() => props.navigation.navigate('TuPreferesPage')}>
+                            <Image style={{height: 40, width: 40, opacity: 1, marginBottom: 'auto'}} source={require('../Images/SquareMenu.png')}/>
+                        </TouchableOpacity>
 
                         <TouchableOpacity onPress={() => props.navigation.pop()}>
                             <Image style={{marginLeft: 'auto', marginRight: 'auto', marginTop: 50, height: 70, width: 70, borderRadius: 100}} source={{uri: image}}/>
@@ -198,7 +208,7 @@ export default function MessagePage(props) {
         
 
         var renderItemAffiche = ({ item }) => (
-            <ItemAffiche style={styles.containerAffiches} photo={item.Image} message={item.Message} CreatedDate={item.CreatedDate} expediteurId={item.ExpediteurId}/>
+            <ItemAffiche style={styles.containerAffiches} messageId={item.MessageId} photo={item.Image} message={item.Message} CreatedDate={item.CreatedDate} expediteurId={item.ExpediteurId}/>
         );
 
         let mounted = true;

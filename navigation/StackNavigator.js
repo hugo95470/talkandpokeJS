@@ -18,6 +18,7 @@ import FollowersPage from '../Pages/FollowersPage';
 import FollowingPage from '../Pages/FollowingPage';
 import TuPreferesPage from '../Pages/TuPreferesPage';
 import StartPage from '../Pages/StartPage';
+import TuPreferesHistoriquePage from '../Pages/TuPreferesHistoriquePage';
 
 const Stack = createStackNavigator();
 
@@ -35,6 +36,7 @@ const AcceuilStackNavigator = () => {
       <Stack.Screen name="FollowersPage" component={FollowersPage} options={{ headerShown: false }}/>
       <Stack.Screen name="FollowingPage" component={FollowingPage} options={{ headerShown: false }}/>
       <Stack.Screen name="TuPreferesPage" component={TuPreferesPage} options={{ headerShown: false }}/>
+      <Stack.Screen name="TuPreferesHistoriquePage" component={TuPreferesHistoriquePage} options={{ headerShown: false }}/>
     </Stack.Navigator>
   );
 }

@@ -87,9 +87,6 @@ export default function AfficheCollectionView(props) {
                     <View style={{position: 'relative'}}>
                         <AlertText style={styles.title} title={"Affiches"} description={"Ici vous pouvez avoir un aperçu général de toutes les affiches et les nouveautés"}/>
                     </View>
-                    <TouchableOpacity style={[styles.logo, {backgroundColor: '#FEA52AAA', borderRadius: 5, padding: 3}]} onPress={() => props.navigation.navigate('TuPreferesPage')}>
-                        <Image style={{height: 40, width: 40, opacity: 1, marginBottom: 'auto'}} source={require('../Images/SquareMenu.png')}/>
-                    </TouchableOpacity>
 
                     <TouchableOpacity style={[styles.logo, {backgroundColor: '#FEA52AAA', borderRadius: 5, padding: 3}]} onPress={() => props.navigation.navigate('MenuOeuvresPage')}>
                         <Image style={{height: 40, width: 40, opacity: 1, marginBottom: 'auto'}} source={require('../Images/SquareMenu.png')}/>

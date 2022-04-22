@@ -1,6 +1,7 @@
 import { View, Text, TouchableOpacity, StyleSheet, Modal } from 'react-native';
 import { useState } from 'react';
 import globalStyles from '../Styles/globalStyles';
+import { backgroundColor } from 'react-native/Libraries/Components/View/ReactNativeStyleAttributes';
 
 
 export default function AlertText(props) {
@@ -24,7 +25,7 @@ export default function AlertText(props) {
                                     <Text style={[globalStyles.mediumText, {margin: 10, marginVertical: 5, fontWeight: '600'}]}>{props.title}</Text>
                                 </View>
 
-                                <Text style={[globalStyles.mediumText, {padding: 30}]}>{props.description}</Text>
+                                <Text style={[globalStyles.mediumText, globalStyles.borderRadius, {padding: 30, backgroundColor: 'white'}]}>{props.description}</Text>
 
                                 <TouchableOpacity onPress={() => setShow(!show)} style={globalStyles.button}>
                                     <Text>OK</Text>

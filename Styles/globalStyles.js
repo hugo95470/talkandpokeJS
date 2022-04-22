@@ -77,6 +77,9 @@ const globalStyles = StyleSheet.create({
     smallCard: {
         borderRadius: 19,
     },
+    fontFamily: {
+        fontFamily: 'sans-serif-light',
+    },
     title: {
         fontFamily: 'sans-serif-light',
         fontSize: 25,

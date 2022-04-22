@@ -21,6 +21,10 @@ export const getUtilisateurNotification = async (tokenUtilisateur) => {
     return await fetchtalkandpokeapi('Message/GetNotification.php', [["TokenUtilisateur", tokenUtilisateur]])
 };
 
+export const getMessageAfficheAssociation = async (messageId, tokenUtilisateur) => {
+    return await fetchtalkandpokeapi('Message/GetMessageAfficheAssociation.php', [["MessageId", messageId], ["TokenUtilisateur", tokenUtilisateur]])
+};
+
 //Read
 export const readMessage = async (tokenUtilisateur, contactId) => {
     return await fetchtalkandpokeapi('Message/GetNotification.php', [["TokenUtilisateur", tokenUtilisateur], ["ContactId", contactId]])
