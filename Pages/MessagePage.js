@@ -185,10 +185,6 @@ export default function MessagePage(props) {
 
                 return(
                     <View style={{elevation: 3, backgroundColor: '#eee', borderBottomRightRadius: 19, borderBottomLeftRadius: 19}}>
-                        
-                        <TouchableOpacity style={[styles.logo, {position: 'absolute', top: 70, right: 20, backgroundColor: '#FEA52AAA', borderRadius: 5, padding: 3}]} onPress={() => props.navigation.navigate('TuPreferesPage')}>
-                            <Image style={{height: 40, width: 40, opacity: 1, marginBottom: 'auto'}} source={require('../Images/SquareMenu.png')}/>
-                        </TouchableOpacity>
 
                         <TouchableOpacity onPress={() => props.navigation.pop()}>
                             <Image style={{marginLeft: 'auto', marginRight: 'auto', marginTop: 50, height: 70, width: 70, borderRadius: 100}} source={{uri: image}}/>
@@ -196,6 +192,10 @@ export default function MessagePage(props) {
 
                         <Text style={{marginLeft: 'auto', marginBottom: 10, marginRight: 'auto', fontSize: 20, fontFamily: 'sans-serif-light',}}>{pseudo}, {pourcentage}%</Text>
 
+                        <TouchableOpacity style={[styles.logo, {position: 'absolute', top: 70, right: 20, backgroundColor: '#FEA52AAA', borderRadius: 5, padding: 3}]} onPress={() => props.navigation.navigate('TuPreferesPage', {ContactId: _expediteurId})}>
+                            <Image style={{height: 40, width: 40, opacity: 1, marginBottom: 'auto'}} source={require('../Images/SquareMenu.png')}/>
+                        </TouchableOpacity>
+                        
                         <TouchableOpacity style={{position: 'absolute', backgroundColor: '#fffa', height: 50, width: 50, marginTop: 50, marginLeft: 20, borderRadius: 100}} onPress={() => props.navigation.pop()}>
                             <View style={{height: 50, width: 50, borderRadius: 100, alignSelf: 'flex-end', backgroundColor: 'rgb(254, 165, 42)'}}>
                                 <Image style={{height: 50, width: 50, opacity: 0.5}} source={{uri: 'https://www.esnaturopathiemaroc.com/wp-content/uploads/2017/11/chevron_left_black.png'}}/>
@@ -301,7 +301,6 @@ export default function MessagePage(props) {
                         <View style={{marginBottom: 50}}>
                             <FlatList style={{paddingTop: 10}} data={messages} renderItem={renderItemAffiche} keyExtractor={item => item.Identifier} numColumns="1"/>
                         </View>
-
                     </ScrollView>
 
                     

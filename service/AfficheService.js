@@ -24,5 +24,10 @@ export const getAfficheAssociations = async (nombre) => {
     return await fetchtalkandpokeapi('Affiche/GetAffichesAssociation.php', [['Nombre', nombre]])
 };
 
+//ADD
+export const AddUtilisateurAfficheAssociation = async (tokenUtilisateur, afficheAssociationId, utilisateurMessageId, utilisateurReaction) => {
+    return await fetchtalkandpokeapi('Affiche/AddUtilisateurAfficheAssociationReaction.php', [['TokenUtilisateur', tokenUtilisateur], ['AfficheAssociationId', afficheAssociationId], ['UtilisateurMessageId', utilisateurMessageId], ['UtilisateurReaction', utilisateurReaction]])
+};
+
 
 

@@ -1,21 +1,27 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import { StyleSheet, View, FlatList, ScrollView, Text, TouchableOpacity, Image } from 'react-native';
 import { useEffect, useState } from 'react';
 
+import Context from '../navigation/userContext';
 import TopBarre from '../Components/TopBarre';
 import globalStyles from '../Styles/globalStyles';
-import { getAfficheAssociations } from '../service/AfficheService';
+import { AddUtilisateurAfficheAssociation, getAfficheAssociations } from '../service/AfficheService';
 import AlertText from '../Components/AlertText';
+import { AddTuPreferes } from '../service/MessageService';
 
 export default function TuPreferesPage(props) {
 
-    let [select, setSelect] = useState("none");
-    let [afficheAssociations, setAfficheAssociations] = useState("");
+    const context = useContext(Context)
+
+    const { ContactId } = props.route.params;
+
+    let [messageId, setMessageId] = useState("");
 
     let [images, setImages] = useState("");
     let [image1, setImage1] = useState("");
     let [image2, setImage2] = useState("");
-
+    let [afficheAssociationId, setAfficheAssociationId] = useState("");
+    
     let [afficheId1, setAfficheId1] = useState("");
     let [afficheId2, setAfficheId2] = useState("");
 
@@ -24,33 +30,38 @@ export default function TuPreferesPage(props) {
 
     let [index, setIndex] = useState(0);
 
-
     useEffect(async () => {
-        let tmp = await getAfficheAssociations(5);
-    }, []);
-
-    useEffect(async () => {
-        await getAfficheAssociations(5)
-        .then((data) => {
-            setImage1(data[0].Image1)
-            setImage2(data[0].Image2)
-            setAfficheId1(data[0].AfficheId1)
-            setAfficheId2(data[0].AfficheId2)
-            setImages(data);
-        });
+        await AddTuPreferes(ContactId, context.utilisateurToken)
+        .then(async (resp) => {
+            setMessageId(resp)
+            await getAfficheAssociations(5)
+            .then((data) => {
+                setImage1(data[0].Image1)
+                setImage2(data[0].Image2)
+                setAfficheId1(data[0].AfficheId1)
+                setAfficheId2(data[0].AfficheId2)
+                setAfficheAssociationId(data[0].AfficheAssociationId)
+                setImages(data);
+            });
+        })
+        
     }, []);
     
-    function chooseAffiche(afficheId, image) {
-        if(index < images.length - 1) {
-            let tmp = index;
-            tmp = tmp + 1;
-            setImage1(images[tmp].Image1);
-            setImage2(images[tmp].Image2);
-            setAfficheId1(images[tmp].AfficheId1);
-            setAfficheId2(images[tmp].AfficheId2)
-            setIndex(tmp);
-            setHistorique([...historique, ...[image]])
-        }
+    async function chooseAffiche(afficheId, image) {
+        await AddUtilisateurAfficheAssociation(context.utilisateurToken, afficheAssociationId, messageId, afficheId==afficheId1?"0":"1")
+        .then(() => {
+            if(index < images.length - 1) {
+                let tmp = index;
+                tmp = tmp + 1;
+                setImage1(images[tmp].Image1);
+                setImage2(images[tmp].Image2);
+                setAfficheId1(images[tmp].AfficheId1);
+                setAfficheId2(images[tmp].AfficheId2)
+                setAfficheAssociationId(images[tmp].AfficheAssociationId)
+                setIndex(tmp);
+                setHistorique([...historique, ...[image]])
+            }
+        })
     }
 
     let Versus= () => {
@@ -75,12 +86,12 @@ export default function TuPreferesPage(props) {
 
         <AlertText title={"Tu préfères"}/>
         
-        <TouchableOpacity style={{position: 'absolute', top: 380, left: 80}} onPress={() => chooseAffiche(afficheId1, image1)}>
+        <TouchableOpacity style={{position: 'absolute', top: 380, left: 80}} onPress={async () => chooseAffiche(afficheId1, image1)}>
           <Image style={{height: 300, backgroundColor: '#ddd', width: 200, borderRadius: 19, marginBottom: 'auto'}} source={{uri : image1}}/>
         </TouchableOpacity>
         
         <View style={{position: 'absolute', top: 130, right: 40}} >
-          <TouchableOpacity onPress={() => chooseAffiche(afficheId2, image2)}>
+          <TouchableOpacity onPress={async () => chooseAffiche(afficheId2, image2)}>
               <Image style={{height: 300, backgroundColor: '#ddd', width: 200, borderRadius: 19, marginBottom: 'auto'}} source={{uri : image2}}/>
           </TouchableOpacity>  
           
