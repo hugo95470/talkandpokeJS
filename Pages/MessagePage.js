@@ -26,11 +26,10 @@ export default function MessagePage(props) {
             }
         }, [_message])
 
-        var [isOeuvre, setIsOeuvre] = useState(_isOeuvre);
+        let isOeuvre = _isOeuvre;
 
         //Affiches
         var [messages, setMessages] = useState("");
-        var d = new Date();
         var [date, setDate] = useState("");
         var [utilisateur, setUtilisateur] = useState("");
         var [oeuvre, setOeuvre] = useState("");
@@ -39,47 +38,47 @@ export default function MessagePage(props) {
 
         var [moiInfo, setMoiInfo] = useState("");
 
-        let mountedMessage = true;
+        async function recupMessage() {
+            alert(date)
+            await getUtilisateurMessages(_expediteurId, 40, context.utilisateurToken, date)
+            .then((data) => {
+                if(data != ""){
+                    setDate(JSON.stringify(data[Object.keys(data).length -1].CreatedDate))
+                    let newstate = [...messages, ...data]
+                    setMessages(newstate);
+                }
+            })
+        }
 
-        useEffect(async () => {
-
-            async function recupMessage() {
-                await getUtilisateurMessages(_expediteurId, 20, context.utilisateurToken, date)
-                .then((data) => {
-                    if(data != ""){
-                        setDate(JSON.stringify(data[Object.keys(data).length -1].CreatedDate))
-                        let newstate = [...messages, ...data]
-                        setMessages(newstate);
-                    }
-                })
-                if(mountedMessage)
-                    setTimeout(recupMessage, 3000);
-            }
-
-            function recupMessageOeuvre() {
-                getAfficheMessageByDate(_oeuvreId, 20, date)
-                .then((data) => {
-                    if(data != ""){
-                        setDate(JSON.stringify(data[Object.keys(data).length -1].CreatedDate))
-                        let newstate = [...messages, ...data]
-        
-                        setMessages(newstate);
-                    }
-                })
-                if(mountedMessage)
-                    setTimeout(recupMessageOeuvre, 5000);
-            }
-
-            setMoiInfo(await getUtilisateurInformations(context.utilisateurToken));
-
-            if(!isOeuvre){
-                await recupMessage()
-                await readMessage(context.utilisateurToken, _expediteurId)
-            }else{
-                recupMessageOeuvre()
-            }
+        async function recupMessageOeuvre() {
+            await getAfficheMessageByDate(_oeuvreId, 40, date)
+            .then((data) => {
+                if(data != ""){
+                    setDate(JSON.stringify(data[Object.keys(data).length -1].CreatedDate))
+                    let newstate = [...messages, ...data]
     
-        }, [])
+                    setMessages(newstate);
+                }
+            })
+        }
+
+        useEffect(() => {
+
+            setMoiInfo(getUtilisateurInformations(context.utilisateurToken));
+
+            const interval = setInterval(() => {
+                if(!isOeuvre){
+                    recupMessage()
+                    readMessage(context.utilisateurToken, _expediteurId)
+                }else{
+                    recupMessageOeuvre()
+                }
+            }, 3000);
+
+            return () => {
+                clearInterval(interval);
+            };
+        }, []);
 
         function sendMessage(_message, _isOeuvre) {
             if(_message != ""){
@@ -338,12 +337,6 @@ const styles = StyleSheet.create({
     container: {
       height: '100%',
       width: '100%',
-    },
-    image: {
-        height: '100%',
-        width: '100%',
-        resizeMode: 'cover',
-        justifyContent: 'center',
     },
     Titre: {
         maxWidth: '80%',

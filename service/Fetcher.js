@@ -18,7 +18,6 @@ const fetchtalkandpokeapi = async (endpoint, params = undefined, header = undefi
         }
     }
 
-    console.log(url)
     const resp = await fetch(url)
     .then((response) => response.json())
     .then((data) => {
