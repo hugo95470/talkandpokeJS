@@ -62,7 +62,7 @@ export default function TuPreferesHistoriquePage(props) {
                     </View>
 
                     <TouchableOpacity onPress={() => setIsread(true)} style={{marginLeft: 'auto', backgroundColor: '#FEA52A', borderRadius: 19, paddingHorizontal: 20, paddingVertical: 10, marginRight: 20, marginBottom: 20, marginTop: 20}}>
-                        <Text>Voir plus 😏</Text>
+                        <Text>Ok</Text>
                     </TouchableOpacity>
                 </Modal>
             )
