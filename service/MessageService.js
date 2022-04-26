@@ -25,6 +25,10 @@ export const getMessageAfficheAssociation = async (messageId, tokenUtilisateur) 
     return await fetchtalkandpokeapi('Message/GetMessageAfficheAssociation.php', [["MessageId", messageId], ["TokenUtilisateur", tokenUtilisateur]])
 };
 
+export const GetTuPreferesMessage = async (messageId, tokenUtilisateur) => {
+    return await fetchtalkandpokeapi('Message/GetTuPreferesMessage.php', [["MessageId", messageId], ["TokenUtilisateur", tokenUtilisateur]])
+};
+
 //Add
 export const AddTuPreferes = async (contactId, tokenUtilisateur) => {
     return await fetchtalkandpokeapi('Message/AddTuPreferes.php', [["ContactId", contactId], ["TokenUtilisateur", tokenUtilisateur]])

@@ -36,7 +36,7 @@ export default function OeuvresPage({ route, navigation }) {
 
     var _header = () => {
         return (
-            <View>
+            <View style={{marginVertical: 20}}>
                 <AlertText title={OeuvreTypeLibelle} description={"Vous pouvez retrouver ici toutes les affiches appartenant à la categorie " + OeuvreTypeLibelle}/>
             </View>
         );

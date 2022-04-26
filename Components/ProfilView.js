@@ -19,7 +19,7 @@ export default function ProfilPage(props) {
     var [affinite, setAffinite] = useState(0);
     var [_height, set_Height] = useState(100);
 
-    var [reaction, setReaction] = useState('Poke');
+    var [reaction, setReaction] = useState('Coeur');
     var [affiches, setAffiches] = useState('');
 
     useEffect(async () => {
@@ -142,6 +142,23 @@ export default function ProfilPage(props) {
 
                 <ShareView profilId={props.profilId} navigation={props.navigation} photo={photo}/>
 
+                <View style={{flexDirection: 'row', justifyContent: 'space-around', marginBottom: 10}}>
+                    <TouchableOpacity onPress={() => setReaction("Coeur")} style={{flexDirection: 'row', marginRight: 20, borderBottomWidth: reaction=="Coeur"?3:0, borderBottomColor: 'rgb(254, 165, 42)'}}>
+                        <Image style={{height: 20, width: 20, margin: 10, marginHorizontal: 0, marginRight: 3}} source={{uri: 'https://i.pinimg.com/originals/17/72/8f/17728faefb1638f17586ea58645b4e7e.png'}}/>
+                        <Text style={{marginTop: 'auto', marginBottom: 'auto'}}>Coeur</Text>
+                    </TouchableOpacity>
+
+                    <TouchableOpacity onPress={() => setReaction("Like")} style={{flexDirection: 'row', marginRight: 20, borderBottomWidth: reaction=="Like"?3:0, borderBottomColor: 'rgb(254, 165, 42)'}}>
+                        <Image style={{height: 20, width: 20, margin: 10, marginHorizontal: 0, marginRight: 3}} source={{uri: 'https://emojis.wiki/emoji-pics/apple/thumbs-up-apple.png'}}/>
+                        <Text style={{marginTop: 'auto', marginBottom: 'auto'}}>Like</Text>
+                    </TouchableOpacity>
+
+                    <TouchableOpacity onPress={() => setReaction("Dislike")} style={{flexDirection: 'row', marginRight: 20, borderBottomWidth: reaction=="Dislike"?3:0, borderBottomColor: 'rgb(254, 165, 42)'}}>
+                        <Image style={{height: 20, width: 20, margin: 10, marginHorizontal: 0, marginRight: 3}} source={{uri :'https://emojis.wiki/emoji-pics/apple/thumbs-down-apple.png'}}/>
+                        <Text style={{marginTop: 'auto', marginBottom: 'auto'}}>Dislike</Text>
+                    </TouchableOpacity>
+                </View>
+
                 <View style={{flexDirection: 'row', justifyContent: 'space-evenly'}}>
                     <TouchableOpacity onPress={() => setReaction("Poke")} style={{flexDirection: 'row', marginRight: 20, marginLeft: 10, borderBottomWidth: reaction=="Poke"?3:0, borderBottomColor: 'rgb(254, 165, 42)'}}>
                         <Image style={{height: 20, width: 20, margin: 10, marginHorizontal: 0, marginRight: 3}} source={require('../Images/Poke.png')}/>
@@ -158,23 +175,6 @@ export default function ProfilPage(props) {
                         <Text style={{marginTop: 'auto', marginBottom: 'auto'}}>Mine</Text>
                     </TouchableOpacity>
 
-                </View>
-
-                <View style={{flexDirection: 'row', justifyContent: 'space-around', marginBottom: 10}}>
-                    <TouchableOpacity onPress={() => setReaction("Coeur")} style={{flexDirection: 'row', marginRight: 20, borderBottomWidth: reaction=="Coeur"?3:0, borderBottomColor: 'rgb(254, 165, 42)'}}>
-                        <Image style={{height: 20, width: 20, margin: 10, marginHorizontal: 0, marginRight: 3}} source={{uri: 'https://i.pinimg.com/originals/17/72/8f/17728faefb1638f17586ea58645b4e7e.png'}}/>
-                        <Text style={{marginTop: 'auto', marginBottom: 'auto'}}>Coeur</Text>
-                    </TouchableOpacity>
-
-                    <TouchableOpacity onPress={() => setReaction("Like")} style={{flexDirection: 'row', marginRight: 20, borderBottomWidth: reaction=="Like"?3:0, borderBottomColor: 'rgb(254, 165, 42)'}}>
-                        <Image style={{height: 20, width: 20, margin: 10, marginHorizontal: 0, marginRight: 3}} source={{uri: 'https://emojis.wiki/emoji-pics/apple/thumbs-up-apple.png'}}/>
-                        <Text style={{marginTop: 'auto', marginBottom: 'auto'}}>Like</Text>
-                    </TouchableOpacity>
-
-                    <TouchableOpacity onPress={() => setReaction("Dislike")} style={{flexDirection: 'row', marginRight: 20, borderBottomWidth: reaction=="Dislike"?3:0, borderBottomColor: 'rgb(254, 165, 42)'}}>
-                        <Image style={{height: 20, width: 20, margin: 10, marginHorizontal: 0, marginRight: 3}} source={{uri :'https://emojis.wiki/emoji-pics/apple/thumbs-down-apple.png'}}/>
-                        <Text style={{marginTop: 'auto', marginBottom: 'auto'}}>Dislike</Text>
-                    </TouchableOpacity>
                 </View>
 
                 <Text style={globalStyles.title}>{reaction}</Text>

@@ -3,23 +3,30 @@ import { StyleSheet, View, FlatList, ScrollView, Text, TouchableOpacity, Image }
 import { useEffect, useState } from 'react';
 
 import Context from '../navigation/userContext';
-import TopBarre from '../Components/TopBarre';
+import BackArrowView from '../Components/BackArrowView';
 import globalStyles from '../Styles/globalStyles';
-import { AddUtilisateurAfficheAssociation, getAfficheAssociations } from '../service/AfficheService';
+import { AddUtilisateurAfficheAssociation, getAfficheAssociations, UpdateUtilisateurAfficheAssociation } from '../service/AfficheService';
 import AlertText from '../Components/AlertText';
-import { AddTuPreferes } from '../service/MessageService';
+import { AddTuPreferes, GetTuPreferesMessage } from '../service/MessageService';
+import { sendPushNotification } from '../service/NotificationService';
 
 export default function TuPreferesPage(props) {
 
     const context = useContext(Context)
 
     const { ContactId } = props.route.params;
-
+    const { MessageId } = props.route.params;
+    const { NotificationToken } = props.route.params;
+    const { ContactPseudo } = props.route.params;
+    const { Initialization } = props.route.params;
+    
     let [messageId, setMessageId] = useState("");
 
     let [images, setImages] = useState("");
     let [image1, setImage1] = useState("");
     let [image2, setImage2] = useState("");
+    let [texte1, setTexte1] = useState("");
+    let [texte2, setTexte2] = useState("");
     let [afficheAssociationId, setAfficheAssociationId] = useState("");
     
     let [afficheId1, setAfficheId1] = useState("");
@@ -31,37 +38,83 @@ export default function TuPreferesPage(props) {
     let [index, setIndex] = useState(0);
 
     useEffect(async () => {
-        await AddTuPreferes(ContactId, context.utilisateurToken)
-        .then(async (resp) => {
-            setMessageId(resp)
-            await getAfficheAssociations(5)
+        if(Initialization) {
+            await AddTuPreferes(ContactId, context.utilisateurToken)
+            .then(async (resp) => {
+                setMessageId(resp)
+                await getAfficheAssociations(15)
+                .then(async (data) => {
+                    await sendPushNotification(NotificationToken, 'Acceptez le défi pour mieux connaitre ' + ContactPseudo, 'Vous avez reçu un défi Tu Préfères !');
+
+                    setImage1(data[0].Image1)
+                    setImage2(data[0].Image2)
+                    setAfficheId1(data[0].AfficheId1)
+                    setAfficheId2(data[0].AfficheId2)
+                    setTexte1(data[0].AfficheTitre1)
+                    setTexte2(data[0].AfficheTitre2)
+                    setAfficheAssociationId(data[0].AfficheAssociationId)
+                    setImages(data);
+                });
+            })
+        }else {
+            await sendPushNotification(NotificationToken, ContactPseudo + ' a accepté votre défi Tu préfères ' + ContactPseudo, 'Venez voir vos résultats pour mieux vous connaitre !');
+
+            await GetTuPreferesMessage(MessageId, context.utilisateurToken)
             .then((data) => {
                 setImage1(data[0].Image1)
                 setImage2(data[0].Image2)
                 setAfficheId1(data[0].AfficheId1)
                 setAfficheId2(data[0].AfficheId2)
+                setTexte1(data[0].AfficheTitre1)
+                setTexte2(data[0].AfficheTitre2)
                 setAfficheAssociationId(data[0].AfficheAssociationId)
                 setImages(data);
             });
-        })
+        }
         
     }, []);
     
     async function chooseAffiche(afficheId, image) {
-        await AddUtilisateurAfficheAssociation(context.utilisateurToken, afficheAssociationId, messageId, afficheId==afficheId1?"0":"1")
-        .then(() => {
-            if(index < images.length - 1) {
-                let tmp = index;
-                tmp = tmp + 1;
-                setImage1(images[tmp].Image1);
-                setImage2(images[tmp].Image2);
-                setAfficheId1(images[tmp].AfficheId1);
-                setAfficheId2(images[tmp].AfficheId2)
-                setAfficheAssociationId(images[tmp].AfficheAssociationId)
-                setIndex(tmp);
-                setHistorique([...historique, ...[image]])
-            }
-        })
+        if(Initialization) {
+            await AddUtilisateurAfficheAssociation(context.utilisateurToken, afficheAssociationId, messageId, afficheId==afficheId1?"0":"1")
+            .then(() => {
+                if(index < images.length - 1) {
+                    let tmp = index;
+                    tmp = tmp + 1;
+                    setImage1(images[tmp].Image1);
+                    setImage2(images[tmp].Image2);
+                    setAfficheId1(images[tmp].AfficheId1);
+                    setAfficheId2(images[tmp].AfficheId2);
+                    setTexte1(images[0].AfficheTitre1)
+                    setTexte2(images[0].AfficheTitre2)
+                    setAfficheAssociationId(images[tmp].AfficheAssociationId);
+                    setIndex(tmp);
+                    setHistorique([...historique, ...[image]])
+                }else {
+                    props.navigation.navigate('TuPreferesHistoriquePage', {MessageId: messageId, ExpediteurId: ContactId, Finish: true, ContactPseudo: ContactPseudo})
+                }
+            })
+        }else {
+            await UpdateUtilisateurAfficheAssociation(context.utilisateurToken, afficheAssociationId, MessageId, afficheId==afficheId1?"0":"1")
+            .then(() => {
+                if(index < images.length - 1) {
+                    let tmp = index;
+                    tmp = tmp + 1;
+                    setImage1(images[tmp].Image1);
+                    setImage2(images[tmp].Image2);
+                    setAfficheId1(images[tmp].AfficheId1);
+                    setAfficheId2(images[tmp].AfficheId2)
+                    setTexte1(images[0].AfficheTitre1)
+                    setTexte2(images[0].AfficheTitre2)
+                    setAfficheAssociationId(images[tmp].AfficheAssociationId)
+                    setIndex(tmp);
+                    setHistorique([...historique, ...[image]])
+                }else {
+                    props.navigation.navigate('TuPreferesHistoriquePage', {MessageId: MessageId, ExpediteurId: ContactId, Finish: true, ContactPseudo: ContactPseudo})
+                }
+            })
+        }
+        
     }
 
     let Versus= () => {
@@ -82,23 +135,36 @@ export default function TuPreferesPage(props) {
         
     return (
       <View style={styles.container}>
-        <TopBarre/>
 
-        <AlertText title={"Tu préfères"}/>
+        <View style={{position: 'absolute'}}>
+            <BackArrowView navigation={props.navigation}/>
+        </View>
+        <View style={[globalStyles.center, {marginTop: 30}]}>
+            <AlertText title={"Tu préfères"}/>
+        </View>
+
         
         <TouchableOpacity style={{position: 'absolute', top: 380, left: 80}} onPress={async () => chooseAffiche(afficheId1, image1)}>
-          <Image style={{height: 300, backgroundColor: '#ddd', width: 200, borderRadius: 19, marginBottom: 'auto'}} source={{uri : image1}}/>
+            <Image style={{height: 300, backgroundColor: '#ddd', width: 200, borderRadius: 19, marginBottom: 'auto'}} source={{uri : image1}}/>
+            
+            <View intensity={250} style={styles.TitreContainer}>
+                <Text style={styles.Titre}>{texte1}</Text>
+            </View>
         </TouchableOpacity>
         
         <View style={{position: 'absolute', top: 130, right: 40}} >
           <TouchableOpacity onPress={async () => chooseAffiche(afficheId2, image2)}>
-              <Image style={{height: 300, backgroundColor: '#ddd', width: 200, borderRadius: 19, marginBottom: 'auto'}} source={{uri : image2}}/>
+                <Image style={{height: 300, backgroundColor: '#ddd', width: 200, borderRadius: 19, marginBottom: 'auto'}} source={{uri : image2}}/>
+                
+                <View intensity={250} style={styles.TitreContainer}>
+                    <Text style={styles.Titre}>{texte2}</Text>
+                </View>
           </TouchableOpacity>  
           
           <Versus/>    
         </View>
         
-        <View style={{height: 100, top: '70%'}}>
+        <View style={{position: 'absolute', height: 100, top: '90%'}}>
             <ScrollView horizontal={true}>
                 <FlatList data={historique} renderItem={renderItemAssociation} keyExtractor={item => item} numColumns="100"/>
             </ScrollView>
@@ -126,5 +192,26 @@ const styles = StyleSheet.create({
         padding: 10,
         fontSize: 18,
         height: 44,
+    },
+    TitreContainer: {
+        backgroundColor: "#aaac",
+        padding: 0,
+        paddingHorizontal: 5,
+        paddingVertical: 5,
+        minWidth: 100,
+        marginRight: -9,
+        position: 'absolute', 
+        right: '4%', 
+        bottom: '20%',
+        borderTopLeftRadius: 100,
+        borderBottomLeftRadius: 100,
+        elevation: 3,
+    },
+    Titre: {
+        borderRadius: 19,
+        padding: 10,
+        width: 'auto',
+        fontSize: 17,
+        fontFamily: 'sans-serif-light',
     },
 })

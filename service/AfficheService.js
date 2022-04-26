@@ -8,8 +8,8 @@ export const getSwipeAffiches = async (nombre, tokenUtilisateur) => {
     return await fetchtalkandpokeapi('Affiche/GetSwipeAffiches.php', [['Nombre', nombre], ['TokenUtilisateur', tokenUtilisateur]])
 };
 
-export const getAffichesByTag = async (tag) => {
-    return await fetchtalkandpokeapi('Affiche/GetAfficheByTag.php', [['Tag', tag]])
+export const getAffichesByTag = async (tagId) => {
+    return await fetchtalkandpokeapi('Affiche/GetAfficheByTag.php', [['TagId', tagId]])
 };
 
 export const getAffichesPhoto = async (afficheId) => {
@@ -29,5 +29,9 @@ export const AddUtilisateurAfficheAssociation = async (tokenUtilisateur, affiche
     return await fetchtalkandpokeapi('Affiche/AddUtilisateurAfficheAssociationReaction.php', [['TokenUtilisateur', tokenUtilisateur], ['AfficheAssociationId', afficheAssociationId], ['UtilisateurMessageId', utilisateurMessageId], ['UtilisateurReaction', utilisateurReaction]])
 };
 
+//UPDATE
+export const UpdateUtilisateurAfficheAssociation = async (tokenUtilisateur, afficheAssociationId, utilisateurMessageId, utilisateurReaction) => {
+    return await fetchtalkandpokeapi('Affiche/UpdateUtilisateurAfficheAssociationReaction.php', [['TokenUtilisateur', tokenUtilisateur], ['AfficheAssociationId', afficheAssociationId], ['UtilisateurMessageId', utilisateurMessageId], ['UtilisateurReaction', utilisateurReaction]])
+};
 
 

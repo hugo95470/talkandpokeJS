@@ -4,6 +4,7 @@ import { useState, useEffect } from 'react';
 import images from '../Components/ImageTag'
 import AlertText from '../Components/AlertText';
 import AfficheMedium from '../Components/AfficheMedium';
+import globalStyles from '../Styles/globalStyles';
 
 
 //TODO: REFACTOR
@@ -61,7 +62,7 @@ export default function MenuOeuvres(props) {
 
         return(
             <TouchableOpacity activeOpacity={1}  onPress={() => props.navigation.navigate('OeuvresPage', {TagId: tagId, OeuvreTypeLibelle: title, image: image})}>
-                <View style={styles.shadowCategorie}>
+                <View style={[globalStyles.shadows, styles.categorie]}>
                 
                     <ImageTag image={image} title={title}/>
                     
@@ -91,9 +92,9 @@ export default function MenuOeuvres(props) {
     }
 
     var VoirPlus = () => {
-        if(!isAllTags || recherche == "") {
+        if(!isAllTags) {
             return (
-                <TouchableOpacity style={{backgroundColor: '#FEA52A', marginLeft: 10, width: 130, paddingHorizontal: 25, paddingVertical: 15, borderRadius: 100}} onPress={()=> loadAllTags()}>
+                <TouchableOpacity style={[globalStyles.orangeShadows, {backgroundColor: '#FEA52A', marginLeft: 10, width: 130, paddingHorizontal: 25, paddingVertical: 15, borderRadius: 100}]} onPress={()=> loadAllTags()}>
                     <Text style={{marginLeft: 'auto', marginRight: 'auto', color: '#EEE'}}>Voir plus  + </Text>
                 </TouchableOpacity>
                 
@@ -110,7 +111,7 @@ export default function MenuOeuvres(props) {
     var Menu = () => {
         if(recherche == "") {
             return (
-                <View style={{width: '100%', height: Dimensions.get('window').height}}>
+                <View style={{width: '100%', height: Dimensions.get('window').height-30}}>
                     <FlatList data={categories} ListHeaderComponent={_header} renderItem={renderItemCategorie} keyExtractor={item => item.TagId} numColumns="3"/>
                 </View>
             );
@@ -130,7 +131,7 @@ export default function MenuOeuvres(props) {
 
             <Menu/>
 
-            <View style={{flexDirection: 'row', bottom: 80, width: Dimensions.get('window').width}}>
+            <View style={{position: 'absolute', flexDirection: 'row', top: Dimensions.get('window').height - 80, width: Dimensions.get('window').width}}>
                 <VoirPlus/>
 
                 <View style={{flexDirection: 'row', width: '60%', marginLeft: 'auto', marginRight: 10, backgroundColor: 'white', borderRadius: 100, elevation: 5, padding: 10}}>
@@ -157,38 +158,12 @@ const styles = StyleSheet.create({
         width: Dimensions.get('window').width/3 - 10,
         borderRadius: 100,
     },
-    shadowCategorie: {
+    categorie: {
         borderRadius: 100,
         marginTop: 2,
         marginLeft: 2,
         height: Dimensions.get('window').width/3,
         width: Dimensions.get('window').width/3,
         backgroundColor : '#0000',
-        shadowColor: 'black',
-        shadowOffset: {
-            width: 1,
-            height: 1,
-        },
-        shadowOpacity: 1,
-        shadowRadius: 8,
-
-        elevation: 15, 
     },
-    shadowAffiche: {
-        borderRadius: 100,
-        marginTop: 2,
-        marginLeft: 2,
-        height: Dimensions.get('window').width/2,
-        width: Dimensions.get('window').width/3,
-        backgroundColor : '#0000',
-        shadowColor: 'black',
-        shadowOffset: {
-            width: 1,
-            height: 1,
-        },
-        shadowOpacity: 1,
-        shadowRadius: 8,
-
-        elevation: 15, 
-    }
   })

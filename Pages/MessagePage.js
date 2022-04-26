@@ -6,7 +6,7 @@ import Context from '../navigation/userContext';
 import { getUtilisateurInformations } from '../service/UtilisateurService';
 import { getAfficheMessageByDate, getMessageAfficheAssociation, getUtilisateurMessages, readMessage } from '../service/MessageService';
 import globalStyles from '../Styles/globalStyles';
-
+import { sendPushNotification } from '../service/NotificationService';
 //TODO: REFACTOR
 
 
@@ -39,7 +39,6 @@ export default function MessagePage(props) {
         var [moiInfo, setMoiInfo] = useState("");
 
         async function recupMessage() {
-            alert(date)
             await getUtilisateurMessages(_expediteurId, 40, context.utilisateurToken, date)
             .then((data) => {
                 if(data != ""){
@@ -73,7 +72,7 @@ export default function MessagePage(props) {
                 }else{
                     recupMessageOeuvre()
                 }
-            }, 3000);
+            }, 5000);
 
             return () => {
                 clearInterval(interval);
@@ -88,7 +87,7 @@ export default function MessagePage(props) {
                     fetch(global.apiUrl + 'Message/SendMessage.php?ExpediteurId=' + context.utilisateurId + '&DestinataireId=' + _expediteurId + '&Message=' +  encodeURIComponent(_message + imageToSend) + '&TokenUtilisateur=' + context.utilisateurToken)
 
                     if(utilisateur.Token != ""){
-                        sendPushNotification(utilisateur.Token, _message)
+                        sendPushNotification(utilisateur.Token, _message, 'message de ' + moiInfo.Pseudo)
                     }
                 }
                 if(messages == ""){
@@ -116,12 +115,22 @@ export default function MessagePage(props) {
                     </View>
                 );
             }else if (JSON.stringify(_message).includes("#@#")) {
-                return (
-                    <TouchableOpacity style={{flexDirection: 'row'}} onPress={() => props.navigation.navigate('TuPreferesHistoriquePage', {MessageId: messageId, ExpediteurId: expediteurId})}>
-                        <Text style={[globalStyles.center, {fontSize: 18, marginLeft: 10}]}>Tu preferes </Text>
-                        <Image style={{height: 50, width: 50, opacity: 0.5, transform: [{ rotate: '180deg' }]}} source={{uri: 'https://www.esnaturopathiemaroc.com/wp-content/uploads/2017/11/chevron_left_black.png'}}/>
-                    </TouchableOpacity>
-                )
+                if(JSON.stringify(_message)[JSON.stringify(_message).length-2] == "1" || context.utilisateurId == expediteurId) {
+                    return (
+                        <TouchableOpacity style={{flexDirection: 'row'}} onPress={() => props.navigation.navigate('TuPreferesHistoriquePage', {MessageId: messageId, ExpediteurId: expediteurId, Finish: false, ContactPseudo: utilisateur.Pseudo})}>
+                            <Text style={[globalStyles.center, {fontSize: 18, marginLeft: 10}]}>Tu preferes </Text>
+                            <Image style={{height: 50, width: 50, opacity: 0.5, transform: [{ rotate: '180deg' }]}} source={{uri: 'https://www.esnaturopathiemaroc.com/wp-content/uploads/2017/11/chevron_left_black.png'}}/>
+                        </TouchableOpacity>
+                    )
+                }else {
+                    return(
+                        <TouchableOpacity style={{flexDirection: 'row'}} onPress={() => props.navigation.navigate('TuPreferesPage', {MessageId: messageId, ContactId: _expediteurId, NotificationToken: utilisateur.Token, ContactPseudo: utilisateur.Pseudo, Initialization: false})}>
+                            <Text style={[globalStyles.center, {fontSize: 18, marginLeft: 10}]}>Tu preferes </Text>
+                            <Image style={{height: 50, width: 50, opacity: 0.5, transform: [{ rotate: '180deg' }]}} source={{uri: 'https://www.esnaturopathiemaroc.com/wp-content/uploads/2017/11/chevron_left_black.png'}}/>
+                        </TouchableOpacity>
+                    )
+                }
+                
                 
             }else{
                 return (
@@ -191,7 +200,7 @@ export default function MessagePage(props) {
 
                         <Text style={{marginLeft: 'auto', marginBottom: 10, marginRight: 'auto', fontSize: 20, fontFamily: 'sans-serif-light',}}>{pseudo}, {pourcentage}%</Text>
 
-                        <TouchableOpacity style={[styles.logo, {position: 'absolute', top: 70, right: 20, backgroundColor: '#FEA52AAA', borderRadius: 5, padding: 3}]} onPress={() => props.navigation.navigate('TuPreferesPage', {ContactId: _expediteurId})}>
+                        <TouchableOpacity style={[styles.logo, {position: 'absolute', top: 50, right: 20, backgroundColor: '#FEA52AAA', borderRadius: 5, padding: 3}]} onPress={() => props.navigation.navigate('TuPreferesPage', {MessageId: "", ContactId: _expediteurId, NotificationToken: utilisateur.Token,  ContactPseudo: utilisateur.Pseudo, Initialization: true})}>
                             <Image style={{height: 40, width: 40, opacity: 1, marginBottom: 'auto'}} source={require('../Images/SquareMenu.png')}/>
                         </TouchableOpacity>
                         
@@ -251,26 +260,6 @@ export default function MessagePage(props) {
             return () => mounted = false;
             
         }, [_expediteurId, isOeuvre]);
-
-        async function sendPushNotification(_expoPushToken, _message) {
-            const message = {
-              to: _expoPushToken,
-              sound: 'default',
-              title: 'message de ' + moiInfo.Pseudo,
-              body: _message,
-              data: { someData: 'goes here' },
-            };
-
-            await fetch('https://exp.host/--/api/v2/push/send', {
-                method: 'POST',
-                headers: {
-                    Accept: 'application/json',
-                    'Accept-encoding': 'gzip, deflate',
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify(message),
-            });
-        }
 
         var ImageToSend = () => {
             if(imageToSend.includes('http')) {

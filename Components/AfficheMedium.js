@@ -61,7 +61,7 @@ export default function AfficheMedium(props) {
 const styles = StyleSheet.create({
     
     TitreContainer: {
-        backgroundColor: "#aaa9",
+        backgroundColor: "#aaac",
         padding: 0,
         paddingHorizontal: 5,
         paddingVertical: 5,
