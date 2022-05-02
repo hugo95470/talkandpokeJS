@@ -11,7 +11,7 @@ import {getUtilisateurCoeurs, getUtilisateurLikes, getUtilisateurDislikes,getUti
 import { getContactAffinites, getContactFriend, getUtilisateurInformations } from '../service/UtilisateurService';
 import globalStyles from '../Styles/globalStyles';
 
-export default function ProfilPage(props) {
+export default function (props) {
 
     const context = useContext(Context)
 
@@ -34,23 +34,23 @@ export default function ProfilPage(props) {
         
         switch(reaction) {
             case 'Coeur' :
-                setAffiches(await getUtilisateurCoeurs(props.profilId, context.utilisateurId))
+                setAffiches(await getUtilisateurCoeurs(props.profilId, context.utilisateurId));
                 break;
             
             case 'Like' :
-                setAffiches(await getUtilisateurLikes(props.profilId, context.utilisateurId))
+                setAffiches(await getUtilisateurLikes(props.profilId, context.utilisateurId));
                 break;
             
             case 'Dislike' :
-                setAffiches(await getUtilisateurDislikes(props.profilId, context.utilisateurId))
+                setAffiches(await getUtilisateurDislikes(props.profilId, context.utilisateurId));
                 break;
 
             case 'Me' :
-                setAffiches(await getUtilisateurMes(props.profilId))
+                setAffiches(await getUtilisateurMes(props.profilId));
                 break;
 
             case 'Poke' :
-                setAffiches(await getUtilisateurPokes(props.profilId))
+                setAffiches(await getUtilisateurPokes(props.profilId));
                 break;
 
             case 'Mine' :
@@ -63,16 +63,21 @@ export default function ProfilPage(props) {
 
     }, [reaction]);    
 
-    async function loadProfil() {    
-        setPhoto(await getUtilisateurInformations(props.profilId));
+    async function loadProfil() {
+        try {
+            setPhoto(await getUtilisateurInformations(props.profilId));
 
-        setAffinite(await getContactAffinites(context.utilisateurToken, context.utilisateurId, props.profilId));
+            setAffinite(await getContactAffinites(context.utilisateurToken, context.utilisateurId, props.profilId));
+        }catch(e) {
+            console.log(e)
+        }
+        
     }
 
     var ImageProfil = () => {
         if(props.profilId != context.utilisateurId){
             return(
-                <View style={{width: '98%', marginTop: 20}}>
+                <View style={{width: '98%', marginTop: 10}}>
                     <ImageBackground imageStyle={{ borderRadius: 19}} source={{uri: photo.Baniere}} style={styles.Affiche}>
 
                         <View style={{marginLeft: 'auto', bottom: -100, marginRight: 'auto'}}>
@@ -106,7 +111,7 @@ export default function ProfilPage(props) {
 
     var renderItemAffiche = ({ item }) => {
         return (
-            <TouchableOpacity activeOpacity={1} onPress={() => props.navigation.navigate('DetailsOeuvrePage', {AfficheId: item.AfficheId, _Image: item.Image})} style={{height: 180, width: '32%', borderWidth: item.MaReaction=='orange'?4:0, borderColor: 'orange', margin: '0.5%', backgroundColor: '#ddd', borderRadius: 18}}>
+            <TouchableOpacity activeOpacity={1} onPress={() => props.navigation.navigate('DetailsOeuvrePage', {AfficheId: item.AfficheId, _Image: item.Image})} style={{height: 180, width: '32%', borderWidth: item.MaReaction=='orange'?2:0, borderColor: 'orange', margin: '0.5%', backgroundColor: '#ddd', borderRadius: 18}}>
                 <ImageBackground isBackground style={{width: '100%', height: '100%'}} imageStyle={{ borderRadius: 15}} source={{uri: item.Image}} resizeMode="cover">
                 </ImageBackground>
             </TouchableOpacity>
@@ -136,41 +141,41 @@ export default function ProfilPage(props) {
 
                 <BackArrowView profilId={props.profilId} navigation={props.navigation}/>
 
-                <View style={{marginBottom: 100}}>
+                <View style={{height: 350}}>
                     <ImageProfil/>
                 </View>
 
                 <ShareView profilId={props.profilId} navigation={props.navigation} photo={photo}/>
 
                 <View style={{flexDirection: 'row', justifyContent: 'space-around', marginBottom: 10}}>
-                    <TouchableOpacity onPress={() => setReaction("Coeur")} style={{flexDirection: 'row', marginRight: 20, borderBottomWidth: reaction=="Coeur"?3:0, borderBottomColor: 'rgb(254, 165, 42)'}}>
+                    <TouchableOpacity onPress={() => setReaction("Coeur")} style={{flexDirection: 'row', marginRight: 20, borderBottomWidth: reaction=="Coeur"?2:0, borderBottomColor: 'rgb(254, 165, 42)'}}>
                         <Image style={{height: 20, width: 20, margin: 10, marginHorizontal: 0, marginRight: 3}} source={{uri: 'https://i.pinimg.com/originals/17/72/8f/17728faefb1638f17586ea58645b4e7e.png'}}/>
                         <Text style={{marginTop: 'auto', marginBottom: 'auto'}}>Coeur</Text>
                     </TouchableOpacity>
 
-                    <TouchableOpacity onPress={() => setReaction("Like")} style={{flexDirection: 'row', marginRight: 20, borderBottomWidth: reaction=="Like"?3:0, borderBottomColor: 'rgb(254, 165, 42)'}}>
+                    <TouchableOpacity onPress={() => setReaction("Like")} style={{flexDirection: 'row', marginRight: 20, borderBottomWidth: reaction=="Like"?2:0, borderBottomColor: 'rgb(254, 165, 42)'}}>
                         <Image style={{height: 20, width: 20, margin: 10, marginHorizontal: 0, marginRight: 3}} source={{uri: 'https://emojis.wiki/emoji-pics/apple/thumbs-up-apple.png'}}/>
                         <Text style={{marginTop: 'auto', marginBottom: 'auto'}}>Like</Text>
                     </TouchableOpacity>
 
-                    <TouchableOpacity onPress={() => setReaction("Dislike")} style={{flexDirection: 'row', marginRight: 20, borderBottomWidth: reaction=="Dislike"?3:0, borderBottomColor: 'rgb(254, 165, 42)'}}>
+                    <TouchableOpacity onPress={() => setReaction("Dislike")} style={{flexDirection: 'row', marginRight: 20, borderBottomWidth: reaction=="Dislike"?2:0, borderBottomColor: 'rgb(254, 165, 42)'}}>
                         <Image style={{height: 20, width: 20, margin: 10, marginHorizontal: 0, marginRight: 3}} source={{uri :'https://emojis.wiki/emoji-pics/apple/thumbs-down-apple.png'}}/>
                         <Text style={{marginTop: 'auto', marginBottom: 'auto'}}>Dislike</Text>
                     </TouchableOpacity>
                 </View>
 
                 <View style={{flexDirection: 'row', justifyContent: 'space-evenly'}}>
-                    <TouchableOpacity onPress={() => setReaction("Poke")} style={{flexDirection: 'row', marginRight: 20, marginLeft: 10, borderBottomWidth: reaction=="Poke"?3:0, borderBottomColor: 'rgb(254, 165, 42)'}}>
+                    <TouchableOpacity onPress={() => setReaction("Poke")} style={{flexDirection: 'row', marginRight: 20, marginLeft: 10, borderBottomWidth: reaction=="Poke"?2:0, borderBottomColor: 'rgb(254, 165, 42)'}}>
                         <Image style={{height: 20, width: 20, margin: 10, marginHorizontal: 0, marginRight: 3}} source={require('../Images/Poke.png')}/>
                         <Text style={{marginTop: 'auto', marginBottom: 'auto'}}>Poke</Text>
                     </TouchableOpacity>
 
-                    <TouchableOpacity onPress={() => setReaction("Me")} style={{flexDirection: 'row', marginRight: 20, borderBottomWidth: reaction=="Me"?3:0, borderBottomColor: 'rgb(254, 165, 42)'}}>
+                    <TouchableOpacity onPress={() => setReaction("Me")} style={{flexDirection: 'row', marginRight: 20, borderBottomWidth: reaction=="Me"?2:0, borderBottomColor: 'rgb(254, 165, 42)'}}>
                         <Image style={{height: 20, width: 20, margin: 10, marginHorizontal: 0, marginRight: 3}} source={require('../Images/DescribMe.png')}/>
                         <Text style={{marginTop: 'auto', marginBottom: 'auto'}}>Me</Text>
                     </TouchableOpacity>
 
-                    <TouchableOpacity onPress={() => setReaction("Mine")} style={{flexDirection: 'row', marginRight: 20, borderBottomWidth: reaction=="Mine"?3:0, borderBottomColor: 'rgb(254, 165, 42)'}}>
+                    <TouchableOpacity onPress={() => setReaction("Mine")} style={{flexDirection: 'row', marginRight: 20, borderBottomWidth: reaction=="Mine"?2:0, borderBottomColor: 'rgb(254, 165, 42)'}}>
                         <Image style={{height: 20, width: 20, margin: 10, marginHorizontal: 0, borderRadius: 100, marginRight: 3}} source={props.profilId != context.utilisateurId?{uri: props.Image}:{uri: context.utilisateurPhoto}}/>
                         <Text style={{marginTop: 'auto', marginBottom: 'auto'}}>Mine</Text>
                     </TouchableOpacity>
