@@ -1,6 +1,6 @@
 import React, { useContext } from 'react';
-import { StyleSheet, View, FlatList, ScrollView, Text, TouchableOpacity, Image } from 'react-native';
-import { useEffect, useState } from 'react';
+import { StyleSheet, View, Dimensions, FlatList, ScrollView, Text, TouchableOpacity, Image } from 'react-native';
+import { useEffect, useState, useRef } from 'react';
 
 import Context from '../navigation/userContext';
 import BackArrowView from '../Components/BackArrowView';
@@ -9,6 +9,7 @@ import { AddUtilisateurAfficheAssociation, getAfficheAssociations, UpdateUtilisa
 import AlertText from '../Components/AlertText';
 import { AddTuPreferes, GetTuPreferesMessage } from '../service/MessageService';
 import { sendPushNotification } from '../service/NotificationService';
+import WizardImageView from '../Components/WizardImageView';
 
 export default function TuPreferesPage(props) {
 
@@ -34,6 +35,7 @@ export default function TuPreferesPage(props) {
 
     let [historique, setHistorique] = useState("");
 
+    var flatlistRef = useRef();
 
     let [index, setIndex] = useState(0);
 
@@ -85,13 +87,13 @@ export default function TuPreferesPage(props) {
                     setImage2(images[tmp].Image2);
                     setAfficheId1(images[tmp].AfficheId1);
                     setAfficheId2(images[tmp].AfficheId2);
-                    setTexte1(images[0].AfficheTitre1)
-                    setTexte2(images[0].AfficheTitre2)
+                    setTexte1(images[tmp].AfficheTitre1)
+                    setTexte2(images[tmp].AfficheTitre2)
                     setAfficheAssociationId(images[tmp].AfficheAssociationId);
                     setIndex(tmp);
                     setHistorique([...historique, ...[image]])
                 }else {
-                    props.navigation.navigate('TuPreferesHistoriquePage', {MessageId: messageId, ExpediteurId: ContactId, Finish: true, ContactPseudo: ContactPseudo})
+                    props.navigation.navigate('TuPreferesHistoriquePage', {MessageId: messageId, ExpediteurId: context.utilisateurId, Finish: true, ContactPseudo: ContactPseudo})
                 }
             })
         }else {
@@ -104,8 +106,8 @@ export default function TuPreferesPage(props) {
                     setImage2(images[tmp].Image2);
                     setAfficheId1(images[tmp].AfficheId1);
                     setAfficheId2(images[tmp].AfficheId2)
-                    setTexte1(images[0].AfficheTitre1)
-                    setTexte2(images[0].AfficheTitre2)
+                    setTexte1(images[tmp].AfficheTitre1)
+                    setTexte2(images[tmp].AfficheTitre2)
                     setAfficheAssociationId(images[tmp].AfficheAssociationId)
                     setIndex(tmp);
                     setHistorique([...historique, ...[image]])
@@ -128,10 +130,13 @@ export default function TuPreferesPage(props) {
     var renderItemAssociation = (image) => {
         return (
             <View>
-                <Image style={{height: 80, backgroundColor: 'red', width: 65, margin: 3, borderRadius: 5}} source={{uri: image.item}}/>
+                <Image style={{height: 90, backgroundColor: 'red', width: 65, margin: 3, borderRadius: 5}} source={{uri: image.item}}/>
             </View>
         )
     }
+
+    let images1 = [image1, image1, image1]
+    let images2 = [image2]
         
     return (
       <View style={styles.container}>
@@ -144,28 +149,36 @@ export default function TuPreferesPage(props) {
         </View>
 
         
-        <TouchableOpacity style={{position: 'absolute', top: 380, left: 80}} onPress={async () => chooseAffiche(afficheId1, image1)}>
-            <Image style={{height: 300, backgroundColor: '#ddd', width: 200, borderRadius: 19, marginBottom: 'auto'}} source={{uri : image1}}/>
+        <View style={{position: 'absolute', top: 380, left: 80}}>
+            <WizardImageView images={images1} width={200} height={300}>
+                <TouchableOpacity style={{width: '100%', height: '100%'}} onPress={async () => chooseAffiche(afficheId1, image1)}>
+
+                </TouchableOpacity>
+            </WizardImageView>
             
             <View intensity={250} style={styles.TitreContainer}>
                 <Text style={styles.Titre}>{texte1}</Text>
             </View>
-        </TouchableOpacity>
+        </View>
         
         <View style={{position: 'absolute', top: 130, right: 40}} >
-          <TouchableOpacity onPress={async () => chooseAffiche(afficheId2, image2)}>
-                <Image style={{height: 300, backgroundColor: '#ddd', width: 200, borderRadius: 19, marginBottom: 'auto'}} source={{uri : image2}}/>
-                
+          <View>
+                <WizardImageView chooseAffiche={chooseAffiche} images={images2} width={200} height={300}>
+                    <TouchableOpacity style={{width: '100%', height: '100%'}} onPress={async () => chooseAffiche(afficheId2, image2)}>
+
+                    </TouchableOpacity>
+                </WizardImageView>
+
                 <View intensity={250} style={styles.TitreContainer}>
                     <Text style={styles.Titre}>{texte2}</Text>
                 </View>
-          </TouchableOpacity>  
+          </View>  
           
           <Versus/>    
         </View>
         
         <View style={{position: 'absolute', height: 100, top: '90%'}}>
-            <ScrollView horizontal={true}>
+            <ScrollView horizontal={true} ref={flatlistRef} onContentSizeChange={() =>  flatlistRef.current.scrollToEnd({animated: true})}>
                 <FlatList data={historique} renderItem={renderItemAssociation} keyExtractor={item => item} numColumns="100"/>
             </ScrollView>
         </View>

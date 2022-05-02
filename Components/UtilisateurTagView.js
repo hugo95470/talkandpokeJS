@@ -5,6 +5,7 @@ import { useEffect, useState } from 'react';
 import Context from '../navigation/userContext';
 import { getUtilisateurTagScoreByTag } from '../service/UtilisateurTagScoreService';
 import globalStyles from '../Styles/globalStyles';
+import images from '../Components/ImageTag'
 
 export default function UtilisateurTagView(props) {
 
@@ -24,7 +25,7 @@ export default function UtilisateurTagView(props) {
                 var rObj = {};
 
                 rObj['tag'] = obj[1].Tag;
-                rObj['data'] = [{Identifier: obj[1].Identifier, Pourcentage: obj[1].Pourcentage, Image: obj[1].Image, Pseudo: obj[1].Pseudo, UtilisateurId: obj[1].UtilisateurId}];
+                rObj['data'] = [{TagId: obj[1].TagId, TagImage: obj[1].TagImage, Identifier: obj[1].Identifier, Pourcentage: obj[1].Pourcentage, Image: obj[1].Image, Pseudo: obj[1].Pseudo, UtilisateurId: obj[1].UtilisateurId}];
                 return rObj;
                 })
                 .reduce((item, { tag, data }) => {
@@ -39,7 +40,7 @@ export default function UtilisateurTagView(props) {
     var ItemAffiche = ({ image, utilisateurId, pseudo, pourcentage}) => {
         return(
             <TouchableOpacity style={{marginLeft: 10, marginRight: 10, marginBottom: 40, marginTop: 10}} onPress={() => props.navigation.navigate('ContactPage', {_profilId: utilisateurId, _image: image})}>
-                <View style={globalStyles.shadows}>
+                <View>
                     <Image source={{uri: image}} resizeMode="cover" style={styles.affiniteImage}/>
                     <Text style={{marginLeft: 'auto', marginRight: 'auto', color: 'black', textAlign: 'center', fontSize: 14, fontFamily: 'sans-serif-light',}}>{pourcentage} %</Text>
                     <Text style={{marginLeft: 'auto', marginRight: 'auto', color: 'black', textAlign: 'center', fontSize: 16, fontFamily: 'sans-serif-light',}}>{pseudo}</Text>
@@ -61,7 +62,10 @@ export default function UtilisateurTagView(props) {
                     <TouchableOpacity activeOpacity={1} onPress={() => alert('Lorsqu\'une affiche est surligné de orange, cela signifie que cette personne a eu la même réaction que vous !')}>
                         <Text style={{marginBottom: 'auto', marginTop: 'auto', marginLeft: 10, fontSize: 20, width: 200}}>{data[0]}</Text>
                     </TouchableOpacity>
-                    <ScrollView horizontal={true} style={{height: 150, marginTop: 5}} showsHorizontalScrollIndicator={false}>
+                    <ScrollView horizontal={true} style={{flexDirection: 'row'}} showsHorizontalScrollIndicator={false}>
+                        <TouchableOpacity onPress={() => props.navigation.navigate('OeuvresPage', {TagId: data[1][0].TagId, OeuvreTypeLibelle: data[0], image: data[1][0].TagImage})}>
+                            <Image source={data[1][0].TagImage.includes('http')?{uri: data[1][0].TagImage}:images[data[1][0].TagImage]} resizeMode="cover" style={styles.tagImage}/>
+                        </TouchableOpacity>
                         <FlatList data={data[1]} renderItem={renderItemAffiche} keyExtractor={item => item.Identifier} numColumns="10"/>                
                     </ScrollView>
                 </View>
@@ -85,4 +89,11 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
         alignItems: 'center',
     },
+    tagImage: {
+        marginTop: 20,
+        marginHorizontal: 10,
+        height: 100,
+        width: 100,
+        borderRadius: 10,
+    }
 })

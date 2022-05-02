@@ -51,7 +51,7 @@ export default function Menu(props) {
     var First = () => {
         if(compatibilites != undefined && compatibilites != ""){
             return (
-                <TouchableOpacity onPress={() => props.navigation.navigate('ContactPage', {_profilId: compatibilites[0].UtilisateurId, _image: compatibilites[0].Image})} style={[styles.firstAffin, globalStyles.shadows]}>
+                <TouchableOpacity onPress={() => props.navigation.navigate('ContactPage', {_profilId: compatibilites[0].UtilisateurId, _image: compatibilites[0].Image})} style={[styles.firstAffin]}>
                     <Image style={{height: 120, width: 120, borderRadius: 100, marginTop: 10, marginBottom: 'auto'}} source={{uri: compatibilites[0].Image}}/>
                     <Text style={{marginLeft: 'auto', marginRight: 'auto'}}>{compatibilites[0].Pourcentage} %</Text>
                     <Text style={{marginLeft: 'auto', marginRight: 'auto'}}>{compatibilites[0].Pseudo}</Text>
@@ -70,7 +70,7 @@ export default function Menu(props) {
     var Second = () => {
         if(compatibilites[1] != undefined){
             return (
-                <TouchableOpacity style={[{left: 30, top: -70}, globalStyles.shadows]} onPress={() => props.navigation.navigate('ContactPage', {_profilId: compatibilites[1].UtilisateurId, _image: compatibilites[1].Image})}>
+                <TouchableOpacity style={{marginLeft: 20}} onPress={() => props.navigation.navigate('ContactPage', {_profilId: compatibilites[1].UtilisateurId, _image: compatibilites[1].Image})}>
                     <Image style={{height: 120, width: 120, borderRadius: 100, marginTop: 10, marginBottom: 'auto'}} source={{uri: compatibilites[1].Image}}/>
                     <Text style={{marginLeft: 'auto', marginRight: 'auto'}}>{compatibilites[1].Pourcentage} %</Text>
                     <Text style={{marginLeft: 'auto', marginRight: 'auto'}}>{compatibilites[1].Pseudo}</Text>
@@ -87,7 +87,7 @@ export default function Menu(props) {
     var Third = () => {
         if(compatibilites[2] != undefined){
             return (
-                <TouchableOpacity style={[{position: 'absolute', right: 30, top: -40}, globalStyles.shadows]} onPress={() => props.navigation.navigate('ContactPage', {_profilId: compatibilites[2].UtilisateurId, _image: compatibilites[2].Image})}>
+                <TouchableOpacity style={[{position: 'absolute', right: 20, top: -40}]} onPress={() => props.navigation.navigate('ContactPage', {_profilId: compatibilites[2].UtilisateurId, _image: compatibilites[2].Image})}>
                     <Image style={{height: 120, width: 120, borderRadius: 100, marginTop: 10, marginBottom: 'auto'}} source={{uri: compatibilites[2].Image}}/>
                     <Text style={{marginLeft: 'auto', marginRight: 'auto'}}>{compatibilites[2].Pourcentage} %</Text>
                     <Text style={{marginLeft: 'auto', marginRight: 'auto'}}>{compatibilites[2].Pseudo}</Text>
@@ -103,36 +103,32 @@ export default function Menu(props) {
 
     return (
         <View>
-            <TopBarre navigation={props.navigation}/>
+            <TopBarre title={"Compatibilités"} navigation={props.navigation}/>
 
 
-            <ScrollView style={{height: Dimensions.get('window').height}} refreshControl={<RefreshControl
+            <ScrollView style={{height: '90%'}} refreshControl={<RefreshControl
                     colors={["#FEA52A", "#FEA52A"]}
                     refreshing={refreshing}
                     onRefresh={onRefresh} />}>
                 
-                <AlertText title={"Compatibilités"} description={"Découvrez ici les personnes qui vous correspondent en fonction de vos réactions"}/>
 
                 {/* FIRST AFFINITE  */} 
-                <View style={{left: - Dimensions.get('window').width, width: Dimensions.get('window').width * 3, backgroundColor: '#fff', minHeight: Dimensions.get('window').height, borderTopLeftRadius: 5000, borderTopRightRadius: 5000, top: 100}}>
+                {/* <View style={{left: - Dimensions.get('window').width, width: Dimensions.get('window').width * 3, backgroundColor: '#fff', minHeight: Dimensions.get('window').height, borderTopLeftRadius: 5000, borderTopRightRadius: 5000, top: 100}}>*/}
+                <View>
                     <View>
                         <First/>
                     </View>
 
-                    <View style={{flexDirection: 'row', top: -20, left: Dimensions.get('window').width, width: Dimensions.get('window').width}}>
+                    <View style={{flexDirection: 'row', top: 20, width: Dimensions.get('window').width}}>
                         <Second/>
 
                         <Third/>
                     </View>
 
-                    <View style={{left: Dimensions.get('window').width, top: -40, width: Dimensions.get('window').width}}>
+                    <View style={[globalStyles.shadows, {top: 40, backgroundColor: '#fff', paddingTop: 20, borderTopLeftRadius: 25, borderTopRightRadius: 25, width: Dimensions.get('window').width}]}>
+                        <View style={[{width: 30, marginLeft: 'auto', marginRight: 'auto', height: 5, backgroundColor: '#ddd', borderRadius: 100}]}></View>
                         <UtilisateurTagView navigation={props.navigation}/>   
                     </View>
-
-
-
-                    <View style={{height: 300}}></View>
-
                 </View>
             </ScrollView>
         </View>
@@ -148,6 +144,5 @@ const styles = StyleSheet.create({
     firstAffin: {
         marginLeft: 'auto',
         marginRight: 'auto',
-        top: -70
     }
   })

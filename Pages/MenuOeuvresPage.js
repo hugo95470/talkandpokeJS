@@ -141,7 +141,7 @@ export default function MenuOeuvres(props) {
                         <Image style={{height: 20, width: 20}} source={{uri : 'https://upload.wikimedia.org/wikipedia/commons/thumb/4/4c/Grey_close_x.svg/768px-Grey_close_x.svg.png'}}/>
                     </TouchableOpacity>
                 </View> 
-            </View>            
+            </View>
         </View>
     )
 }

@@ -65,14 +65,13 @@ export default function MessageriePage(props) {
 
             return(
                 <TouchableOpacity onPress={() => props.navigation.navigate('MessagePage', {_expediteurId: _expediteurId})}>
-                    <View style={[{marginBottom: 20}]}>
-                        <Image style={{height: 65, width: 65, marginBottom: 'auto', marginTop: 'auto', marginLeft: 10, marginRight: 20, borderRadius: 100}} source={{uri: image}}/>
+                    <View style={[{marginVertical: 10}]}>
+                        <Image style={[{height: 55, width: 55, marginLeft: 10, marginTop: 10, marginRight: 30, borderRadius: 100}]} source={{uri: image}}/>
 
                         <Text style={styles.Titre}>{pseudo}</Text>
-                        <Text style={styles.Message}>{toi}{message}</Text>
-                        <Text style={{marginLeft: 'auto', marginTop: 10, marginRight: 10, fontSize: 10}}>{_dateString}</Text>
+                        <Text style={styles.Message}>{toi}{message.includes('#@#')?"a partagé une affiche avec vous":(message.includes("#!#")?"Tu préfères ?":message)}</Text>
+                        <Text style={{position: 'absolute',right: 10,top: 30, marginLeft: 'auto', marginTop: -20, marginRight: 10, fontSize: 10}}>{_dateString}</Text>
                         <Notif etat={etat} expediteurId={expediteurId}/>
-                        <View style={[globalStyles.center, {marginTop: 10, width: '80%', height: 1, backgroundColor: "#fff"}]}></View>
                     </View>
 
                 </TouchableOpacity>
@@ -96,13 +95,9 @@ export default function MessageriePage(props) {
 
         return (
             <View>
-                <TopBarre navigation={props.navigation}/>
+                <TopBarre title={"Contacts"} navigation={props.navigation}/>
 
                 <View style={styles.container}>
-
-                        
-                    <Text style={styles.title}>Discussions</Text>
-
                         
                     <View style={{height: '78%'}}>
 
@@ -131,7 +126,7 @@ const styles = StyleSheet.create({
     },
     Titre: {
         position: 'absolute',
-        top: 10,
+        top: 5,
         left: 85,
         fontSize: 17,
         fontWeight: 'bold',
@@ -139,7 +134,7 @@ const styles = StyleSheet.create({
     },
     Message: {
         position: 'absolute',
-        top: 30,
+        top: 35,
         left: 85,
         fontSize: 15,
         fontFamily: 'sans-serif-light',

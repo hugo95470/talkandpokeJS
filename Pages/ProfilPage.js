@@ -11,7 +11,7 @@ export default function ProfilPage(props) {
 
     return(
         <View>
-            <TopBarre navigation={props.navigation}/>
+            <TopBarre title={"Profil"} navigation={props.navigation}/>
 
             <ProfilView profilId={context.utilisateurId} navigation={props.navigation}></ProfilView>
         </View>

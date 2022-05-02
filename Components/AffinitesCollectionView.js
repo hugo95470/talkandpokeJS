@@ -1,10 +1,11 @@
 import React, { useContext } from 'react';
 import { StyleSheet, TouchableOpacity, FlatList, Text, Image, View} from 'react-native';
-import { useEffect, useState, useRef  } from 'react';
+import { useEffect, useState  } from 'react';
 
 import Context from '../navigation/userContext';
 import { getUtilisateurAffinites } from '../service/UtilisateurService';
 import globalStyles from '../Styles/globalStyles';
+import AlertText from './AlertText';
 
 export default function AffinitesCollectionView(props) {
     
@@ -13,32 +14,17 @@ export default function AffinitesCollectionView(props) {
     //AFFICHAGE DES AFFINITES
     var [affinites, setAffinites] = useState("");
     
-    const mounted = useRef(false);
-
     useEffect(async () => {
-        mounted.current = true;
-
-        if(context.utilisateurToken != "")
-            await loadAffinites()
-
-        return () => {
-            mounted.current = false;
-        };
-    }, []);
-
-    useEffect(async () => {
-        if(props.reload == true){
-            await loadAffinites()
+        if(context.utilisateurToken != "") {
+            let data = await getUtilisateurAffinites(context.utilisateurToken)
+            setAffinites(data);
         }
-    }, [props.reload])
-
-    async function loadAffinites() {
-        setAffinites(await getUtilisateurAffinites(context.utilisateurToken));
-    }
+        
+    }, [context.utilisateurToken]);
             
     var ItemAffinite = ({ pseudo, image, pourcentage, contactId }) => (
         
-        <TouchableOpacity style={[{marginLeft: 10, marginRight: 10, marginBottom: 40, marginTop: 10}]} onPress={() => props.navigation.navigate('ContactPage', {_profilId: contactId, _image: image})}>
+        <TouchableOpacity style={[{marginLeft: 10, marginRight: 10, marginBottom: 0, marginTop: 10}]} onPress={() => props.navigation.navigate('ContactPage', {_profilId: contactId, _image: image})}>
             <View>
                 <View style={[globalStyles.shadows, globalStyles.cercle]}>
                     <Image source={{uri: image}} resizeMode="cover" style={styles.affiniteImage}/>
@@ -55,7 +41,11 @@ export default function AffinitesCollectionView(props) {
 
     if(affinites != false){
         return (
-            <FlatList style={{height: '140%'}} data={affinites} renderItem={renderItemAffinite} keyExtractor={item => item.OeuvreId} numColumns="10"/>
+            <View>
+                <AlertText title={"Compatibilités"}/>
+
+                <FlatList data={affinites} renderItem={renderItemAffinite} keyExtractor={item => item.UtilisateurId} numColumns="10"/>
+            </View>
         )
     }else{
         return (

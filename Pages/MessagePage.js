@@ -41,7 +41,7 @@ export default function MessagePage(props) {
         async function recupMessage() {
             await getUtilisateurMessages(_expediteurId, 40, context.utilisateurToken, date)
             .then((data) => {
-                if(data != ""){
+                if(data != "" && data != messages){
                     setDate(JSON.stringify(data[Object.keys(data).length -1].CreatedDate))
                     let newstate = [...messages, ...data]
                     setMessages(newstate);
@@ -190,24 +190,20 @@ export default function MessagePage(props) {
                     </View>
                 )
             }else{
-
                 return(
-                    <View style={{elevation: 3, backgroundColor: '#eee', borderBottomRightRadius: 19, borderBottomLeftRadius: 19}}>
-
-                        <TouchableOpacity onPress={() => props.navigation.pop()}>
-                            <Image style={{marginLeft: 'auto', marginRight: 'auto', marginTop: 50, height: 70, width: 70, borderRadius: 100}} source={{uri: image}}/>
+                    <View style={{flexDirection: 'row', elevation: 5, justifyContent: 'space-around', marginTop: 20, padding: 10}}>
+                        <TouchableOpacity style={{backgroundColor: '#FEA52A', height: 50, width: 50, borderRadius: 100}} onPress={() => props.navigation.pop()}>
+                            <Image style={[globalStyles.center, {height: 40, width: 40, opacity: 0.5}]} source={{uri: 'https://www.esnaturopathiemaroc.com/wp-content/uploads/2017/11/chevron_left_black.png'}}/>
                         </TouchableOpacity>
 
-                        <Text style={{marginLeft: 'auto', marginBottom: 10, marginRight: 'auto', fontSize: 20, fontFamily: 'sans-serif-light',}}>{pseudo}, {pourcentage}%</Text>
+                        <Text style={[globalStyles.center, {marginBottom: 10, marginRight: 0, fontSize: 20, fontFamily: 'sans-serif-light'}]}>{pseudo}, {pourcentage}%</Text>
 
-                        <TouchableOpacity style={[styles.logo, {position: 'absolute', top: 50, right: 20, backgroundColor: '#FEA52AAA', borderRadius: 5, padding: 3}]} onPress={() => props.navigation.navigate('TuPreferesPage', {MessageId: "", ContactId: _expediteurId, NotificationToken: utilisateur.Token,  ContactPseudo: utilisateur.Pseudo, Initialization: true})}>
+                        <TouchableOpacity style={{marginRight: 'auto'}}>
+                            <Image style={{height: 50, width: 50, borderRadius: 100}} source={{uri: image}}/>
+                        </TouchableOpacity>
+
+                        <TouchableOpacity style={[styles.logo, {backgroundColor: '#FEA52A', borderRadius: 5, padding: 3}]} onPress={() => props.navigation.navigate('TuPreferesPage', {MessageId: "", ContactId: _expediteurId, NotificationToken: utilisateur.Token,  ContactPseudo: utilisateur.Pseudo, Initialization: true})}>
                             <Image style={{height: 40, width: 40, opacity: 1, marginBottom: 'auto'}} source={require('../Images/SquareMenu.png')}/>
-                        </TouchableOpacity>
-                        
-                        <TouchableOpacity style={{position: 'absolute', backgroundColor: '#fffa', height: 50, width: 50, marginTop: 50, marginLeft: 20, borderRadius: 100}} onPress={() => props.navigation.pop()}>
-                            <View style={{height: 50, width: 50, borderRadius: 100, alignSelf: 'flex-end', backgroundColor: 'rgb(254, 165, 42)'}}>
-                                <Image style={{height: 50, width: 50, opacity: 0.5}} source={{uri: 'https://www.esnaturopathiemaroc.com/wp-content/uploads/2017/11/chevron_left_black.png'}}/>
-                            </View>
                         </TouchableOpacity>
                     </View>
                 )
@@ -305,7 +301,7 @@ export default function MessagePage(props) {
                             </View>
 
                             <TouchableOpacity style={{ padding: 15, paddingRight: 0}} onPress={() => sendMessage(message, isOeuvre)}>
-                                <Image style={{height: 20, width: 20, marginTop: 'auto', marginBottom: 'auto'}} source={require('../Images/sendMessageIcone.jpeg')}/>
+                                <Image style={{height: 20, width: 20, marginTop: 'auto', marginBottom: 'auto'}} source={require('../Images/sendMessageIcone.png')}/>
                             </TouchableOpacity>
                         </View>
 

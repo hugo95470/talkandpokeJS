@@ -75,10 +75,6 @@ export default function AfficheCollectionView(props) {
     var headerFlatList = () => {
         return (
             <View  style={{zIndex: 100}}>
-                <View style={{position: 'relative'}}>
-                    <AlertText title={"Compatibilités"} description={"c'est ici que vous pouvez voir qui sont les personnes avec qui vous avez des affinités, notre algorithme se fit sur vos réactions et celles des autres"}/>
-                </View>
-
                 <ScrollView horizontal={true} style={{height: 130, marginTop: 5}} showsHorizontalScrollIndicator={false}>
                     <AffinitesCollectionView reload={reload} navigation={props.navigation}/>
                 </ScrollView>

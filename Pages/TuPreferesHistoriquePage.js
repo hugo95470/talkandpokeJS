@@ -1,5 +1,5 @@
 import React, { useContext } from 'react';
-import { StyleSheet, View, TouchableOpacity, FlatList, Text, Image, Dimensions } from 'react-native';
+import { StyleSheet, View, TouchableOpacity, Modal, FlatList, Text, Image, Dimensions } from 'react-native';
 import { useEffect, useState } from 'react';
 
 import TopBarre from '../Components/TopBarre';
@@ -51,25 +51,41 @@ export default function TuPreferesHistoriquePage(props) {
         
     };
 
-    var finishModal = ({ item }) => {
-        if(Finish && !isRead){
+    var FinishModal = ({ item }) => {
+        if(Finish){
             return (
-                <Modal animationType="slide" transparent={true} visible={showSuggestion}>
+                <Modal animationType="slide" transparent={true} visible={!isRead}>
                     <View style={styles.background}></View>
 
-                    <View style={[globalStyles.center, {zIndex: 100, backgroundColor: '#FFF', borderRadius: 19, width: '90%'}]}>
+                    <View style={[globalStyles.center, {padding: 20, backgroundColor: '#FFF', borderRadius: 19, width: '90%'}]}>
                         <Text>Bien joué ! Il n'y a plus qu'a attendre la réponse de {ContactPseudo}</Text>
-                    </View>
 
-                    <TouchableOpacity onPress={() => setIsread(true)} style={{marginLeft: 'auto', backgroundColor: '#FEA52A', borderRadius: 19, paddingHorizontal: 20, paddingVertical: 10, marginRight: 20, marginBottom: 20, marginTop: 20}}>
-                        <Text>Ok</Text>
-                    </TouchableOpacity>
+                        <TouchableOpacity onPress={() => setIsread(true)} style={{marginLeft: 'auto', backgroundColor: '#FEA52A', borderRadius: 5, paddingHorizontal: 20, paddingVertical: 10, marginRight: 20, marginBottom: 10, marginTop: 20}}>
+                            <Text>Ok</Text>
+                        </TouchableOpacity>
+                    </View>
                 </Modal>
             )
         }else {
-            return (
-                <View></View>
-            )
+            if(isRead) {
+                return (
+                    <Modal animationType="slide" transparent={true} visible={!isRead}>
+                        <View style={styles.background}></View>
+
+                        <View style={[globalStyles.center, {padding: 20, backgroundColor: '#FFF', borderRadius: 19, width: '90%'}]}>
+                            <Text>Bien joué ! Il n'y a plus qu'a attendre la réponse de {ContactPseudo}</Text>
+
+                            <TouchableOpacity onPress={() => setIsread(true)} style={{marginLeft: 'auto', backgroundColor: '#FEA52A', borderRadius: 5, paddingHorizontal: 20, paddingVertical: 10, marginRight: 20, marginBottom: 10, marginTop: 20}}>
+                                <Text>Ok</Text>
+                            </TouchableOpacity>
+                        </View>
+                    </Modal>
+                )
+            }else {
+                return (
+                    <View></View>
+                )
+            }
         }
     };
 
@@ -77,6 +93,7 @@ export default function TuPreferesHistoriquePage(props) {
 
     return (
         <View>
+            <FinishModal/>
             <View style={{position: 'absolute'}}>
                 <BackArrowView navigation={props.navigation}/>
             </View>
@@ -95,5 +112,12 @@ const styles = StyleSheet.create({
         height: 240,
         width: Dimensions.get('window').width/2-30,
         borderRadius: 19,
-    }
+    },
+    background: {
+        position: 'absolute',
+        opacity: 0.8,
+        backgroundColor: '#eee',
+        height: '100%',
+        width: '100%',
+    },
 });

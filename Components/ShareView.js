@@ -6,6 +6,7 @@ import { LinearGradient } from "expo-linear-gradient";
 import Context from '../navigation/userContext';
 import { getNombreReaction } from '../service/ReactionService';
 import { updateFriend } from '../service/UtilisateurService';
+import globalStyles from '../Styles/globalStyles';
 
 export default function ShareView(props) {
 
@@ -53,7 +54,9 @@ export default function ShareView(props) {
     if(props.profilId != context.utilisateurId){
         return(
             <View>
-                <Text style={{marginLeft: 'auto', marginRight: 'auto', marginBottom: 10, paddingLeft: 15, backgroundColor: '#fff', elevation: 1, borderRadius: 19, padding: 10}}>{props.photo?props.photo.Description:""}</Text>
+                <View style={[globalStyles.center, {display: props.photo.Description==""?"none":"flex", backgroundColor: '#fff', elevation: 1, borderRadius: 100}]}>
+                    <Text style={{marginBottom: 10, marginTop: 10, borderRadius: 19, paddingHorizontal: 20}}>{props.photo?props.photo.Description:""}</Text>
+                </View>
                 
                 <View style={{flexDirection: 'row', marginTop: 10, justifyContent: 'space-evenly'}}>
                     <View>
@@ -73,11 +76,11 @@ export default function ShareView(props) {
                 <View>
                     <View style={{flexDirection: 'row', justifyContent: 'space-evenly', marginVertical: 10}}>
                         <TouchableOpacity style={{backgroundColor: 'rgb(254, 165, 42)', borderRadius: 6, minWidth: 110, paddingHorizontal: 30, paddingVertical: 10}} onPress={() => props.navigation.navigate('FollowersPage', {utilisateurId: props.profilId})}>
-                            <Text style={{marginTop: 'auto', marginBottom: 'auto', marginLeft: 'auto', marginRight: 'auto', fontSize: 18, color: 'white'}}>Followers</Text>
+                            <Text style={{marginTop: 'auto', marginBottom: 'auto', marginLeft: 'auto', marginRight: 'auto', fontSize: 18, color: 'white'}}>Abonnés</Text>
                         </TouchableOpacity>
 
                         <TouchableOpacity style={{backgroundColor: 'white', borderWidth: 3, borderColor: 'rgb(254, 165, 42)', borderRadius: 6, minWidth: 110, paddingHorizontal: 30, paddingVertical: 10}} onPress={() => props.navigation.navigate('FrFollowingPageiendPage', {utilisateurId: props.profilId})}>
-                            <Text style={{marginTop: 'auto', marginBottom: 'auto', marginLeft: 'auto', marginRight: 'auto', fontSize: 18, color: 'rgb(254, 165, 42)'}}>Following</Text>
+                            <Text style={{marginTop: 'auto', marginBottom: 'auto', marginLeft: 'auto', marginRight: 'auto', fontSize: 18, color: 'rgb(254, 165, 42)'}}>Abonnement</Text>
                         </TouchableOpacity>
                     </View>
 
@@ -99,9 +102,11 @@ export default function ShareView(props) {
     }else{
         return(
             
-            <View>
-                <Text style={{marginLeft: 'auto', marginRight: 'auto', marginBottom: 10, marginTop: 10, paddingLeft: 15, backgroundColor: '#fff', elevation: 1, borderRadius: 19, padding: 10}}>{props.photo?props.photo.Description:""}</Text>
-                
+            <View style={{top: -40}}>
+                <View style={[globalStyles.center, {display: props.photo.Description==""?"none":"flex", backgroundColor: '#fff', elevation: 1, borderRadius: 100}]}>
+                    <Text style={{marginBottom: 10, marginTop: 10, borderRadius: 19, paddingHorizontal: 20}}>{props.photo?props.photo.Description:""}</Text>
+                </View>
+
                 <View style={{flexDirection: 'row', marginTop: 10, justifyContent: 'space-evenly'}}>
                     <View>
                         <Image style={{marginLeft: 'auto', marginRight: 'auto', height: 30, width: 30}} source={{uri: 'https://emojis.wiki/emoji-pics/apple/thumbs-down-apple.png'}}/>
@@ -120,11 +125,11 @@ export default function ShareView(props) {
                 <View style={{flexDirection: 'row', justifyContent: 'space-evenly', marginVertical: 10}}>
                     
                     <TouchableOpacity style={{backgroundColor: 'rgb(254, 165, 42)', borderRadius: 6, minWidth: 110, paddingHorizontal: 30, paddingVertical: 10}} onPress={() => props.navigation.navigate('FollowersPage', {utilisateurId: props.profilId})}>
-                        <Text style={{marginTop: 'auto', marginBottom: 'auto', marginLeft: 'auto', marginRight: 'auto', fontSize: 18, color: 'white'}}>Followers</Text>
+                        <Text style={{marginTop: 'auto', marginBottom: 'auto', marginLeft: 'auto', marginRight: 'auto', fontSize: 18, color: 'white'}}>Abonnés</Text>
                     </TouchableOpacity>
 
                     <TouchableOpacity style={{backgroundColor: 'white', borderWidth: 3, borderColor: 'rgb(254, 165, 42)', borderRadius: 6, minWidth: 110, paddingHorizontal: 30, paddingVertical: 10}} onPress={() => props.navigation.navigate('FollowingPage', {utilisateurId: props.profilId})}>
-                        <Text style={{marginTop: 'auto', marginBottom: 'auto', marginLeft: 'auto', marginRight: 'auto', fontSize: 18, color: 'rgb(254, 165, 42)'}}>Following</Text>
+                        <Text style={{marginTop: 'auto', marginBottom: 'auto', marginLeft: 'auto', marginRight: 'auto', fontSize: 18, color: 'rgb(254, 165, 42)'}}>Abonnement</Text>
                     </TouchableOpacity>
 
                 </View>

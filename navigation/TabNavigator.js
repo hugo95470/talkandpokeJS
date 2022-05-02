@@ -1,10 +1,11 @@
 import React, { useContext } from "react";
-import { Image } from 'react-native';
+import { Image, View } from 'react-native';
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 
 import Context from './userContext';
 
 import { AcceuilStackNavigator, IntroStackNavigator, SwipeStackNavigator, MenuStackNavigator, ProfilStackNavigator, ConnexionStackNavigator } from "./StackNavigator";
+import globalStyles from "../Styles/globalStyles";
 
 
 const Tab = createBottomTabNavigator();
@@ -40,20 +41,21 @@ const BottomTabNavigator = () => {
       );
     }else{
       return (
-        <Tab.Navigator screenOptions={({ route }) => ({
-            tabBarIcon: () => {
+        <Tab.Navigator screenOptions={({ route }) => {
+          return ({
+            tabBarIcon: ({ focused }) => {
     
               if (route.name === 'Acceuil') {
-                return <Image style={{height: 40, width: 40, opacity: 0.6, marginTop: 10, marginBottom: 'auto'}} source={require('../Images/Acceuil.png')}/>;
+                return <View style={{borderTopWidth: 3, width: '75%', borderColor: focused?'#FEA52A':'transparent'}}><Image style={[globalStyles.center, {height: 40, borderTopWidth: 2, borderColor: 'orange', width: 40, opacity: 0.6, marginTop: 10, marginBottom: 'auto'}]} source={require('../Images/Acceuil.png')}/></View>;
               } 
               else if (route.name === 'Swipe') {
-                return <Image style={{height: 40, width: 40, opacity: 0.6, marginTop: 10, marginBottom: 'auto'}} source={require('../Images/Swipe.png')}/>;
+                return <View style={{borderTopWidth: 3, width: '75%', borderColor: focused?'#FEA52A':'transparent'}}><Image style={[globalStyles.center, {height: 40, width: 40, opacity: 0.6, marginTop: 10, marginBottom: 'auto'}]} source={require('../Images/Swipe.png')}/></View>;
               }
               else if (route.name === 'Menu') {
-                return <Image style={{height: 40, width: 40, opacity: 0.6, marginTop: 10, marginBottom: 'auto'}} source={require('../Images/Menu.png')}/>;
+                return <View style={{borderTopWidth: 3, width: '75%', borderColor: focused?'#FEA52A':'transparent'}}><Image style={[globalStyles.center, {height: 40, width: 40, opacity: 0.6, marginTop: 10, marginBottom: 'auto'}]} source={require('../Images/CompatibiliteIcone.png')}/></View>;
               }
               else if (route.name === 'Profil') {
-                return <Image style={{height: 40, width: 40, marginTop: 10, marginBottom: 'auto', backgroundColor: '#ddd', borderRadius: 100}} source={{uri: context.utilisateurPhoto?context.utilisateurPhoto:"https://oasys.ch/wp-content/uploads/2019/03/photo-avatar-profil.png"}}/>;
+                return <View style={{borderTopWidth: 3, width: '75%', borderColor: focused?'#FEA52A':'transparent'}}><Image style={[globalStyles.center, {height: 40, width: 40, marginTop: 10, marginBottom: 'auto', backgroundColor: '#ddd', borderRadius: 100}]} source={{uri: context.utilisateurPhoto?context.utilisateurPhoto:"https://oasys.ch/wp-content/uploads/2019/03/photo-avatar-profil.png"}}/></View>;
               }
     
             },
@@ -61,7 +63,7 @@ const BottomTabNavigator = () => {
             tabBarActiveTintColor: 'transparent',
             tabBarInactiveTintColor: 'transparent',
             tabBarHideOnKeyboard: true,
-          })}>
+          })}}>
     
     
                   

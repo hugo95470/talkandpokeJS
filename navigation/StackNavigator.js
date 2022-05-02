@@ -60,6 +60,7 @@ const ProfilStackNavigator = () => {
       <Stack.Screen name="ProfilPage" component={ProfilPage} options={{ headerShown: false }}/>
       <Stack.Screen name="ChangeProfilPage" component={ChangeProfilPage} options={{ headerShown: false }}/>
       <Stack.Screen name="MessageriePage" component={MessageriePage} options={{ headerShown: false }}/>
+      <Stack.Screen name="MenuOeuvresPage" component={MenuOeuvresPage} options={{ headerShown: false }}/>
       <Stack.Screen name="MessagePage" component={MessagePage} options={{ headerShown: false }}/>
       <Stack.Screen name="DetailsOeuvrePage" component={DetailsOeuvrePage} options={{ headerShown: false }}/>
       <Stack.Screen name="FollowersPage" component={FollowersPage} options={{ headerShown: false }}/>
