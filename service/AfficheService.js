@@ -8,8 +8,8 @@ export const getSwipeAffiches = async (nombre, tokenUtilisateur) => {
     return await fetchtalkandpokeapi('Affiche/GetSwipeAffiches.php', [['Nombre', nombre], ['TokenUtilisateur', tokenUtilisateur]])
 };
 
-export const getAffichesByTag = async (tagId) => {
-    return await fetchtalkandpokeapi('Affiche/GetAfficheByTag.php', [['TagId', tagId]])
+export const getAffichesByTag = async (tagId, limit = 20) => {
+    return await fetchtalkandpokeapi('Affiche/GetAfficheByTag.php', [['TagId', tagId], ['Limit', limit]])
 };
 
 export const getAffichesPhoto = async (afficheId) => {

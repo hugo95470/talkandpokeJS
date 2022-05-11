@@ -142,6 +142,7 @@ export default function CreationCompte({ navigation}) {
 
     var VerifMail = () => {
         if(verifMail){
+            setErreur("Ce mail est déjà utilisé")
             return(
                 <View>
                     <Text>Ce mail est déjà utilisé</Text>
@@ -149,12 +150,14 @@ export default function CreationCompte({ navigation}) {
             );
         }
         if((!/[@]/.test(mail) || !/[.]/.test(mail)) && mail != ""){
+            setErreur("Ceci n'est pas une adresse mail")
             return(
                 <View>
                     <Text>Ceci n'est pas une adresse mail</Text>
                 </View>
             )   
         }else{
+            setErreur("")
             return(
                 <View></View>
             )
@@ -164,12 +167,14 @@ export default function CreationCompte({ navigation}) {
 
     var VerifPseudo = () => {
         if(verifPseudo){
+            setErreur("Ce pseudo est déjà utilisé")
             return(
                 <View>
                     <Text>Ce pseudo est déjà utilisé</Text>
                 </View>
             );
         }else{
+            setErreur("")
             return(
                 <View></View>
             )
@@ -392,7 +397,7 @@ export default function CreationCompte({ navigation}) {
                                     <Text style={{marginBottom: 'auto', marginTop: 'auto'}}>Je reconnais avoir lu et compris les CGU et je les accepte</Text>
                                 </View>
 
-                                <Text style={{fontSize: 20, marginLeft: 'auto', marginRight: 'auto'}}>Il manque certaines informations ou ces informations ne sont pas valides</Text>
+                                <Text style={{fontSize: 20, marginLeft: 'auto', marginRight: 'auto'}}>{erreur}</Text>
                                 <View style={{flexDirection: 'row', justifyContent: 'flex-start', marginLeft: 45, marginTop: 20}}>
                                     <TouchableOpacity style={{backgroundColor: '#eee', paddingHorizontal: 20, paddingVertical: 10, borderRadius: 100}} onPress={()=> setIndex(index-1)}>
                                         <Text>Précédent</Text>

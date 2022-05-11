@@ -1,5 +1,5 @@
 import React, { useContext } from 'react';
-import { StyleSheet, TouchableOpacity, FlatList, Text, Image, View} from 'react-native';
+import { StyleSheet, TouchableOpacity, SafeAreaView, FlatList, Text, Image, View} from 'react-native';
 import { useEffect, useState  } from 'react';
 
 import Context from '../navigation/userContext';
@@ -41,11 +41,11 @@ export default function AffinitesCollectionView(props) {
 
     if(affinites != false){
         return (
-            <View>
+            <SafeAreaView>
                 <AlertText title={"Compatibilités"}/>
 
                 <FlatList data={affinites} renderItem={renderItemAffinite} keyExtractor={item => item.UtilisateurId} numColumns="10"/>
-            </View>
+            </SafeAreaView>
         )
     }else{
         return (

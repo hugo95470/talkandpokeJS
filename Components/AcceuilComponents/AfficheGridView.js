@@ -1,4 +1,4 @@
-import { StyleSheet, View, Image, FlatList, TouchableOpacity, Text, ImageBackground, Dimensions } from 'react-native';
+import { StyleSheet, SafeAreaView, View, Image, FlatList, TouchableOpacity, Text, ImageBackground, Dimensions } from 'react-native';
 import { useEffect, useState  } from 'react';
 
 import globalStyles from '../../Styles/globalStyles';
@@ -51,12 +51,12 @@ export default function AfficheGrideView(props) {
 
 
     return(
-        <View>
+        <SafeAreaView>
             <AlertText title={"Affiches"} description={"Decouvrez ici 9 affiches aléatoirement qui pourraient vous plairent :)"}/>
             
             <FlatList data={affiches} renderItem={renderItemAffiche} keyExtractor={item => item.Identifier} numColumns="3">
             </FlatList>
-        </View>
+        </SafeAreaView>
         
     ) 
 

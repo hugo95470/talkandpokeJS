@@ -18,10 +18,10 @@ export default function AcceuilPage(props) {
             <ScrollView style={{height: '90%'}}>
 
                 <AffinitesCollectionView navigation={props.navigation}/>
-                <RecommendedTag/>
-                <TagGridView/>
-                <RecentAfficheView/>
-                <AfficheGrideView/>
+                <RecommendedTag navigation={props.navigation}/>
+                <TagGridView navigation={props.navigation}/>
+                <RecentAfficheView navigation={props.navigation}/>
+                <AfficheGrideView navigation={props.navigation}/>
 
                 <View style={{height: 100}}></View>
             </ScrollView>

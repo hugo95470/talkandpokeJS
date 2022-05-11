@@ -81,7 +81,7 @@ export default function (props) {
                     <ImageBackground imageStyle={{ borderRadius: 19}} source={{uri: photo.Baniere}} style={styles.Affiche}>
 
                         <View style={{marginLeft: 'auto', bottom: -100, marginRight: 'auto'}}>
-                            <ImagePourcentage taille={150} image={props.Image} name={affinite.Pseudo} showPourcentage={true} pourcentage={affinite.Pourcentage}/>
+                            <ImagePourcentage taille={150} image={props.Image} name={affinite?affinite.Pseudo:""} showPourcentage={true} pourcentage={affinite?affinite.Pourcentage:""}/>
                         </View>
                     </ImageBackground>                    
                 </View>
@@ -93,7 +93,7 @@ export default function (props) {
                     <ImageBackground imageStyle={{ borderRadius: 19}} source={{uri: photo.Baniere}} style={styles.Affiche}>
 
                         <View style={{marginLeft: 'auto', bottom: -100, marginRight: 'auto'}}>
-                            <ImagePourcentage taille={150} image={context.utilisateurPhoto} name={affinite.Pseudo} showPourcentage={false} pourcentage={100}/>
+                            <ImagePourcentage taille={150} image={context.utilisateurPhoto} name={affinite?affinite.Pseudo:""} showPourcentage={false} pourcentage={100}/>
 
                             <TouchableOpacity style={{position: 'absolute', right: 0}} onPress={() => props.navigation.navigate("ChangeProfilPage")}>
                                     <LinearGradient colors={['rgb(254, 165, 42)', 'rgbrgb(254, 165, 42)']}start={{x: 0, y: 1}} end={{x: 1, y: -1}} style={{height: 40, width: 40, borderRadius: 100, alignSelf: 'flex-end'}}>

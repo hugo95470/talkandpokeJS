@@ -3,26 +3,22 @@ import * as SecureStore from 'expo-secure-store';
 import {
   SafeAreaView,
   ScrollView,
-  Text,
   StyleSheet,
   View,
-  ImageBackground,
   Animated,
   useWindowDimensions,
   Dimensions,
-  TouchableOpacity,
 } from "react-native";
+
 import globalStyles from "../Styles/globalStyles";
-
 import Context from '../navigation/userContext';
+import View1 from '../Components/StartComponents/View1';
+import View2 from '../Components/StartComponents/View2';
+import View3 from '../Components/StartComponents/View3';
+import View4 from '../Components/StartComponents/View4';
+import View5 from '../Components/StartComponents/View5';
 
-
-const images = ['https://images.unsplash.com/photo-1556740749-887f6717d7e4',
-                'https://images.unsplash.com/photo-1556740749-887f6717d7e4',
-                'https://images.unsplash.com/photo-1556740749-887f6717d7e4',
-                'https://images.unsplash.com/photo-1556740749-887f6717d7e4',
-                'https://images.unsplash.com/photo-1556740749-887f6717d7e4',
-                'https://images.unsplash.com/photo-1556740749-887f6717d7e4'];
+const images = ['', '', '', '', ''];
 
 const WizardView = () => {
 
@@ -37,21 +33,40 @@ const WizardView = () => {
     await SecureStore.setItemAsync('intro', '0')
   }
 
-  var LastCard = (imageIndex) => {
-    if(imageIndex.imageIndex >= 5) {
-      return(
-        <TouchableOpacity onPress={async () => await begin()} style={{position: 'absolute', right: 20, bottom: -60, height: 50, borderRadius: 100, width: 150, backgroundColor: 'white'}}>
-          <Text style={globalStyles.center}>Commencez !</Text>
-        </TouchableOpacity>
-      )
+  let Views = ({index}) => {
+
+    switch(index){
+      case 0:
+        return (
+          <View1/>
+        )
       
-    } else {
-      return(
-        <View></View>
-      )
+      case 1:
+        return (
+          <View2/>
+        )
+
+      case 2:
+        return (
+          <View3/>
+        )
+
+      case 3:
+        return (
+          <View4/>
+        )
+
+      case 4:
+        return (
+          <View5/>
+        )
+  
+      default:
+        return(
+          <View></View>
+        )
     }
-    
-  };
+  }
 
   return (
     <SafeAreaView style={styles.container}>
@@ -73,18 +88,9 @@ const WizardView = () => {
         >
           {images.map((image, imageIndex) => {
             return (
-              <View
-                style={[{ width: windowWidth, height: 250 }, globalStyles.center]}
-                key={imageIndex}
-              >
-                <ImageBackground source={{ uri: image }} style={[styles.card]}>
-                  <View style={styles.textContainer}>
-                    <Text style={styles.infoText}>
-                      {"Image - " + imageIndex}
-                    </Text>
-                  </View>
-                </ImageBackground>
-                <LastCard imageIndex={imageIndex}/>
+              <View style={[{ width: windowWidth, height: '100%' }, globalStyles.center]}
+                key={imageIndex}>
+                <Views index={imageIndex}/>
               </View>
             );
           })}
@@ -115,12 +121,13 @@ const WizardView = () => {
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
+    height: Dimensions.get('window').height,
+    width: '100%',
     alignItems: "center",
     justifyContent: "center",
   },
   scrollContainer: {
-    height: Dimensions.get('window').height - 150,
+    height: Dimensions.get('window').height,
     alignItems: "center",
     justifyContent: "center"
   },
@@ -148,7 +155,7 @@ const styles = StyleSheet.create({
     height: 8,
     width: 8,
     borderRadius: 4,
-    backgroundColor: "silver",
+    backgroundColor: "#fff",
     marginHorizontal: 4
   },
   indicatorContainer: {

@@ -77,12 +77,12 @@ export default function UtilisateurTagView(props) {
 
 const styles = StyleSheet.create({
     affiniteImage: {
-    height: 80,
-    width: 80,
-    marginLeft: 'auto',
-    marginRight: 'auto',
-    justifyContent: 'flex-end',
-    borderRadius: 100,          
+        height: 80,
+        width: 80,
+        marginLeft: 'auto',
+        marginRight: 'auto',
+        justifyContent: 'flex-end',
+        borderRadius: 100,          
     },
     containerAffiches: {
         flexDirection:'row',

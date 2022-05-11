@@ -2,20 +2,28 @@ import { StyleSheet, View, Image, SafeAreaView, FlatList, ScrollView, TouchableO
 import { useEffect, useState  } from 'react';
 
 import globalStyles from '../../Styles/globalStyles';
-import { getAffiches } from '../../service/AfficheService';
+import { getAffiches, getAffichesByTag } from '../../service/AfficheService';
 import AlertText from '../AlertText';
 import images from '../../Components/ImageTag';
 
 export default function RecommendedTag(props) {
 
     let [affiches, setAffiches] = useState("");
-    let [tags, setTags] = useState([{"Tag": "Architecture", "TagId": "1", "Image": "architecture"}, {"Tag": "Citation", "TagId": "2", "Image": "citation"}, {"Tag": "Animaux", "TagId": "3", "Image": "animaux"}, {"Tag": "Evenement", "TagId": "4", "Image": "evenement"}]);
-    let [tag, setTag] = useState("1");
+    let [tags, setTags] = useState([{"Tag": "Architecture", "TagId": "29bddfa9-561b-11ec-9700-ee87d8a3a860", "Image": "architecture"}, {"Tag": "Citation", "TagId": "930a69a7-8fdf-11ec-99ab-f6a869132479", "Image": "citation"}, {"Tag": "Animaux", "TagId": "8d3aa496-561b-11ec-9700-ee87d8a3a860", "Image": "animaux"}, {"Tag": "Evenement", "TagId": "d9cfa8b5-5c58-11ec-9700-ee87d8a3a860", "Image": "evenement"}]);
+    let [tag, setTag] = useState("29bddfa9-561b-11ec-9700-ee87d8a3a860");
 
     useEffect(async () => {
-        let data = await getAffiches("9");
-        setAffiches(data);
+        setTag(tags[0].TagId)
+        
+        await setAffichesTag(tags[0].TagId)
     }, []);
+
+    async function setAffichesTag(tagId) {
+        setTag(tagId)
+
+        let data = await getAffichesByTag(tagId, "9");
+        setAffiches(data);
+    }
 
     let limiteNews = new Date();
     // add a day
@@ -54,7 +62,7 @@ export default function RecommendedTag(props) {
     )
 
     let renderTag = ({ item }) => (
-        <TouchableOpacity onPress={() => setTag(item.TagId)} style={{height: 40, flexDirection: 'row', paddingHorizontal: 10, margin: 5, backgroundColor: tag==item.TagId?"#FEA52A":"#ccc", elevation: 3, borderRadius: 5}}>
+        <TouchableOpacity onPress={() => setAffichesTag(item.TagId)} style={{height: 40, flexDirection: 'row', paddingHorizontal: 10, margin: 5, backgroundColor: tag==item.TagId?"#FEA52A":"#ccc", elevation: 3, borderRadius: 5}}>
             
             <Image style={[globalStyles.center, {marginRight: 5, height: 25, width: 25, borderRadius: 100}]} source={images[item.Image]}/>
             
@@ -63,15 +71,15 @@ export default function RecommendedTag(props) {
     )
 
     return(
-        <SafeAreaView>
+        <View>
             <AlertText title={"Recommandés"}  description={"Decouvrez ici des tags qui vous sont recommandés"}/>
 
             <ScrollView horizontal={true} showsHorizontalScrollIndicator={false}>
                 <FlatList data={tags} renderItem={renderTag} keyExtractor={item => item.TagId} numColumns="20"></FlatList>
             </ScrollView>
             
-            <FlatList data={affiches} renderItem={renderItemAffiche} keyExtractor={item => item.TagId} numColumns="3"></FlatList>
-        </SafeAreaView>
+            <FlatList data={affiches} renderItem={renderItemAffiche} keyExtractor={item => item.AfficheId} numColumns="3"></FlatList>
+        </View>
         
     ) 
 

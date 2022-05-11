@@ -1,6 +1,6 @@
 import React, { useContext } from 'react';
 import { useState, useEffect } from 'react';
-import { StyleSheet, Text, View, Dimensions, RefreshControl, ScrollView, TouchableOpacity, Image } from 'react-native';
+import { StyleSheet, Text, View, Dimensions, RefreshControl, ScrollView, ImageBackground, TouchableOpacity, Image } from 'react-native';
 
 import Context from '../navigation/userContext';
 import TopBarre from '../Components/TopBarre';
@@ -70,7 +70,7 @@ export default function Menu(props) {
     var Second = () => {
         if(compatibilites[1] != undefined){
             return (
-                <TouchableOpacity style={{marginLeft: 20}} onPress={() => props.navigation.navigate('ContactPage', {_profilId: compatibilites[1].UtilisateurId, _image: compatibilites[1].Image})}>
+                <TouchableOpacity style={styles.secondAffin} onPress={() => props.navigation.navigate('ContactPage', {_profilId: compatibilites[1].UtilisateurId, _image: compatibilites[1].Image})}>
                     <Image style={{height: 120, width: 120, borderRadius: 100, marginTop: 10, marginBottom: 'auto'}} source={{uri: compatibilites[1].Image}}/>
                     <Text style={{marginLeft: 'auto', marginRight: 'auto'}}>{compatibilites[1].Pourcentage} %</Text>
                     <Text style={{marginLeft: 'auto', marginRight: 'auto'}}>{compatibilites[1].Pseudo}</Text>
@@ -87,7 +87,7 @@ export default function Menu(props) {
     var Third = () => {
         if(compatibilites[2] != undefined){
             return (
-                <TouchableOpacity style={[{position: 'absolute', right: 20, top: -40}]} onPress={() => props.navigation.navigate('ContactPage', {_profilId: compatibilites[2].UtilisateurId, _image: compatibilites[2].Image})}>
+                <TouchableOpacity style={styles.thirdAffin} onPress={() => props.navigation.navigate('ContactPage', {_profilId: compatibilites[2].UtilisateurId, _image: compatibilites[2].Image})}>
                     <Image style={{height: 120, width: 120, borderRadius: 100, marginTop: 10, marginBottom: 'auto'}} source={{uri: compatibilites[2].Image}}/>
                     <Text style={{marginLeft: 'auto', marginRight: 'auto'}}>{compatibilites[2].Pourcentage} %</Text>
                     <Text style={{marginLeft: 'auto', marginRight: 'auto'}}>{compatibilites[2].Pseudo}</Text>
@@ -113,8 +113,22 @@ export default function Menu(props) {
                 
 
                 {/* FIRST AFFINITE  */} 
-                {/* <View style={{left: - Dimensions.get('window').width, width: Dimensions.get('window').width * 3, backgroundColor: '#fff', minHeight: Dimensions.get('window').height, borderTopLeftRadius: 5000, borderTopRightRadius: 5000, top: 100}}>*/}
-                <View>
+                
+                <ImageBackground isBackground resizeMode="cover" style={{height: Dimensions.get('window').height - 250, top: -100, width: Dimensions.get('window').width}} source={require('../Images/Podium.jpeg')}>
+                    <First/>
+
+                    <Second/>
+
+                    <Third/>
+                </ImageBackground>
+
+                <View style={[globalStyles.shadows, {backgroundColor: '#fff', paddingTop: 20, borderTopLeftRadius: 25, top: -118, borderTopRightRadius: 25, width: Dimensions.get('window').width}]}>
+                    <View style={[{width: 30, marginLeft: 'auto', marginRight: 'auto', height: 5, backgroundColor: '#ddd', borderTopRightRadius: 100, borderTopLeftRadius: 100}]}></View>
+                    <UtilisateurTagView navigation={props.navigation}/>  
+                </View>
+
+
+                {/* <ImageBackground isBackground resizeMode="cover" style={{height: '70%', width: '100%'}} source={require('../Images/Podium.jpeg')}>
                     <View>
                         <First/>
                     </View>
@@ -129,7 +143,7 @@ export default function Menu(props) {
                         <View style={[{width: 30, marginLeft: 'auto', marginRight: 'auto', height: 5, backgroundColor: '#ddd', borderRadius: 100}]}></View>
                         <UtilisateurTagView navigation={props.navigation}/>   
                     </View>
-                </View>
+                </ImageBackground> */}
             </ScrollView>
         </View>
     )        
@@ -142,7 +156,18 @@ const styles = StyleSheet.create({
       width: '100%',
     },
     firstAffin: {
-        marginLeft: 'auto',
-        marginRight: 'auto',
+        position: 'absolute',
+        left: '24%',
+        top: '24%'
+    },
+    secondAffin: {
+        position: 'absolute',
+        left: '57%',
+        top: '43%'
+    },
+    thirdAffin: {
+        position: 'absolute',
+        left: '12%',
+        top: '62%'
     }
   })

@@ -424,7 +424,7 @@ function seeProfil(){
             </View>
 
             <View style={{bottom: 30, position: 'absolute', width: '100%', flexDirection: 'row'}}>
-              <TouchableOpacity onPress={() => setShowSuggestion(false)} style={{marginLeft: 'auto', marginRight: 'auto', marginVertical: 10, paddingHorizontal: 20}}>
+              <TouchableOpacity onPress={() => setShowSuggestion(false)} style={{marginLeft: 'auto', padding: 10, marginRight: 'auto', marginVertical: 10, paddingHorizontal: 20}}>
                 <Text>Nop</Text>
               </TouchableOpacity>
 

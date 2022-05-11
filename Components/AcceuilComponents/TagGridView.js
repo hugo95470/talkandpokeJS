@@ -18,10 +18,10 @@ export default function AfficheGrideView(props) {
     // add a day
     limiteNews.setDate(limiteNews.getDate() - 7);
 
-    let ItemAffiche = ({ image, tag }) => {  
+    let ItemAffiche = ({ image, tag, tagId }) => {  
         
         return(
-            <TouchableOpacity activeOpacity={1} onPress={() => props.navigation.navigate('DetailsOeuvrePage', {AfficheId: AfficheId, _Image: image})}>
+            <TouchableOpacity activeOpacity={1} onPress={() => props.navigation.navigate('OeuvresPage', {TagId: tagId, OeuvreTypeLibelle: tag, image: image})}>
                 <View style={[globalStyles.shadows, {margin: 10}]}>
 
                     <ImageBackground isBackground imageStyle={{ borderRadius: 15}} source={images[image]} resizeMode="cover" style={[styles.affiche, globalStyles.borderRadius]}>
@@ -34,7 +34,7 @@ export default function AfficheGrideView(props) {
     }
 
     let renderItemAffiche = ({ item }) => (
-        <ItemAffiche tag={item.Tag} image={item.Image}/>
+        <ItemAffiche tag={item.Tag} image={item.Image} tagId={item.TagId}/>
     )
 
 
