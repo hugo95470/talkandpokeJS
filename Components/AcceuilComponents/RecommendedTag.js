@@ -14,20 +14,20 @@ export default function RecommendedTag(props) {
     let [tags, setTags] = useState("");
     let [tag, setTag] = useState("");
 
-    useEffect(async () => {
+    useEffect(() => {
         
-        let tmpTags = await getRandomTag(4);
+        let tmpTags = getRandomTag(4);
 
         setTags(tmpTags);
         setTag(tmpTags[0].TagId);
 
-        await setAffichesTag(tmpTags[0].TagId);
+        setAffichesTag(tmpTags[0].TagId);
     }, []);
 
-    async function setAffichesTag(tagId) {
+    function setAffichesTag(tagId) {
         setTag(tagId)
 
-        let data = await getAfficheByTag(tagId, 9);
+        let data = getAfficheByTag(tagId, 9);
         setAffiches(data);
     }
 

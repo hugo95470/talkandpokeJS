@@ -10,6 +10,7 @@ import ImagePourcentage from './ImagePourcentage';
 import {getUtilisateurCoeurs, getUtilisateurLikes, getUtilisateurDislikes,getUtilisateurMes, getUtilisateurPokes} from '../service/ReactionService';
 import { getContactAffinites, getContactFriend, getUtilisateurInformations } from '../service/UtilisateurService';
 import globalStyles from '../Styles/globalStyles';
+import { getReactionsByEmotion } from '../service/OfflineReactionService'
 
 export default function (props) {
 
@@ -20,7 +21,7 @@ export default function (props) {
     var [_height, set_Height] = useState(100);
 
     var [reaction, setReaction] = useState('Coeur');
-    var [affiches, setAffiches] = useState('');
+    var [affiches, setAffiches] = useState([]);
 
     useEffect(async () => {
         if(props.profilId != context.utilisateurId){
@@ -31,34 +32,39 @@ export default function (props) {
     }, []);
 
     useEffect(async () => {
-        
-        switch(reaction) {
-            case 'Coeur' :
-                setAffiches(await getUtilisateurCoeurs(props.profilId, context.utilisateurId));
-                break;
-            
-            case 'Like' :
-                setAffiches(await getUtilisateurLikes(props.profilId, context.utilisateurId));
-                break;
-            
-            case 'Dislike' :
-                setAffiches(await getUtilisateurDislikes(props.profilId, context.utilisateurId));
-                break;
 
-            case 'Me' :
-                setAffiches(await getUtilisateurMes(props.profilId));
-                break;
+        if(props.profilId = context.utilisateurId) {
+            setAffiches(await getReactionsByEmotion(reaction));
 
-            case 'Poke' :
-                setAffiches(await getUtilisateurPokes(props.profilId));
-                break;
-
-            case 'Mine' :
-                setAffiches("")
-                break;
-
-            default:
-                break;
+        } else {
+            switch(reaction) {
+                case 'coeurs' :
+                    setAffiches(await getUtilisateurCoeurs(props.profilId, context.utilisateurId));
+                    break;
+                
+                case 'likes' :
+                    setAffiches(await getUtilisateurLikes(props.profilId, context.utilisateurId));
+                    break;
+                
+                case 'dislikes' :
+                    setAffiches(await getUtilisateurDislikes(props.profilId, context.utilisateurId));
+                    break;
+    
+                case 'mes' :
+                    setAffiches(await getUtilisateurMes(props.profilId));
+                    break;
+    
+                case 'pokes' :
+                    setAffiches(await getUtilisateurPokes(props.profilId));
+                    break;
+    
+                case 'mines' :
+                    setAffiches("")
+                    break;
+    
+                default:
+                    break;
+            }
         }
 
     }, [reaction]);    
@@ -120,7 +126,7 @@ export default function (props) {
     }
 
     var Mine = () => {
-        if(reaction == "Mine") {
+        if(reaction == "mines") {
             return (
                 <View style={[globalStyles.center]}>
                     <Text style={{fontSize: 20, margin: 20, textAlign: 'center'}}>Bientot ici vous pourez publier vos propre affiches !</Text>
@@ -148,34 +154,34 @@ export default function (props) {
                 <ShareView profilId={props.profilId} navigation={props.navigation} photo={photo}/>
 
                 <View style={{flexDirection: 'row', justifyContent: 'space-around', marginBottom: 10}}>
-                    <TouchableOpacity onPress={() => setReaction("Coeur")} style={{flexDirection: 'row', marginRight: 20, borderBottomWidth: reaction=="Coeur"?2:0, borderBottomColor: 'rgb(254, 165, 42)'}}>
+                    <TouchableOpacity onPress={() => setReaction("coeurs")} style={{flexDirection: 'row', marginRight: 20, borderBottomWidth: reaction=="coeurs"?2:0, borderBottomColor: 'rgb(254, 165, 42)'}}>
                         <Image style={{height: 20, width: 20, margin: 10, marginHorizontal: 0, marginRight: 3}} source={{uri: 'https://i.pinimg.com/originals/17/72/8f/17728faefb1638f17586ea58645b4e7e.png'}}/>
                         <Text style={{marginTop: 'auto', marginBottom: 'auto'}}>Coeur</Text>
                     </TouchableOpacity>
 
-                    <TouchableOpacity onPress={() => setReaction("Like")} style={{flexDirection: 'row', marginRight: 20, borderBottomWidth: reaction=="Like"?2:0, borderBottomColor: 'rgb(254, 165, 42)'}}>
+                    <TouchableOpacity onPress={() => setReaction("likes")} style={{flexDirection: 'row', marginRight: 20, borderBottomWidth: reaction=="likes"?2:0, borderBottomColor: 'rgb(254, 165, 42)'}}>
                         <Image style={{height: 20, width: 20, margin: 10, marginHorizontal: 0, marginRight: 3}} source={{uri: 'https://emojis.wiki/emoji-pics/apple/thumbs-up-apple.png'}}/>
                         <Text style={{marginTop: 'auto', marginBottom: 'auto'}}>Like</Text>
                     </TouchableOpacity>
 
-                    <TouchableOpacity onPress={() => setReaction("Dislike")} style={{flexDirection: 'row', marginRight: 20, borderBottomWidth: reaction=="Dislike"?2:0, borderBottomColor: 'rgb(254, 165, 42)'}}>
+                    <TouchableOpacity onPress={() => setReaction("dislikes")} style={{flexDirection: 'row', marginRight: 20, borderBottomWidth: reaction=="dislikes"?2:0, borderBottomColor: 'rgb(254, 165, 42)'}}>
                         <Image style={{height: 20, width: 20, margin: 10, marginHorizontal: 0, marginRight: 3}} source={{uri :'https://emojis.wiki/emoji-pics/apple/thumbs-down-apple.png'}}/>
                         <Text style={{marginTop: 'auto', marginBottom: 'auto'}}>Dislike</Text>
                     </TouchableOpacity>
                 </View>
 
                 <View style={{flexDirection: 'row', justifyContent: 'space-evenly'}}>
-                    <TouchableOpacity onPress={() => setReaction("Poke")} style={{flexDirection: 'row', marginRight: 20, marginLeft: 10, borderBottomWidth: reaction=="Poke"?2:0, borderBottomColor: 'rgb(254, 165, 42)'}}>
+                    <TouchableOpacity onPress={() => setReaction("pokes")} style={{flexDirection: 'row', marginRight: 20, marginLeft: 10, borderBottomWidth: reaction=="pokes"?2:0, borderBottomColor: 'rgb(254, 165, 42)'}}>
                         <Image style={{height: 20, width: 20, margin: 10, marginHorizontal: 0, marginRight: 3}} source={require('../Images/Poke.png')}/>
                         <Text style={{marginTop: 'auto', marginBottom: 'auto'}}>Poke</Text>
                     </TouchableOpacity>
 
-                    <TouchableOpacity onPress={() => setReaction("Me")} style={{flexDirection: 'row', marginRight: 20, borderBottomWidth: reaction=="Me"?2:0, borderBottomColor: 'rgb(254, 165, 42)'}}>
+                    <TouchableOpacity onPress={() => setReaction("mes")} style={{flexDirection: 'row', marginRight: 20, borderBottomWidth: reaction=="mes"?2:0, borderBottomColor: 'rgb(254, 165, 42)'}}>
                         <Image style={{height: 20, width: 20, margin: 10, marginHorizontal: 0, marginRight: 3}} source={require('../Images/DescribMe.png')}/>
                         <Text style={{marginTop: 'auto', marginBottom: 'auto'}}>Me</Text>
                     </TouchableOpacity>
 
-                    <TouchableOpacity onPress={() => setReaction("Mine")} style={{flexDirection: 'row', marginRight: 20, borderBottomWidth: reaction=="Mine"?2:0, borderBottomColor: 'rgb(254, 165, 42)'}}>
+                    <TouchableOpacity onPress={() => setReaction("mines")} style={{flexDirection: 'row', marginRight: 20, borderBottomWidth: reaction=="mines"?2:0, borderBottomColor: 'rgb(254, 165, 42)'}}>
                         <Image style={{height: 20, width: 20, margin: 10, marginHorizontal: 0, borderRadius: 100, marginRight: 3}} source={props.profilId != context.utilisateurId?{uri: props.Image}:{uri: context.utilisateurPhoto}}/>
                         <Text style={{marginTop: 'auto', marginBottom: 'auto'}}>Mine</Text>
                     </TouchableOpacity>

@@ -7,6 +7,7 @@ import ImagePourcentage from '../Components/ImagePourcentage';
 import { loadTagUtilisateurDescription } from '../service/TagService';
 import { getSwipeAffiches } from '../service/AfficheService';
 import globalStyles from '../Styles/globalStyles';
+import { getAfficheNotReacted } from '../service/OfflineAfficheService';
 
 //TO REFACTOR
 
@@ -30,21 +31,25 @@ export default function SwipeAfficheView(props) {
   }, []);
 
 
-   function getAffiches(nombre = 1) {
-    getSwipeAffiches(nombre, context.utilisateurToken)
-    .then((response) => {
-      if(JSON.stringify(response) == '[]'){
-        let newstate = [...cards, ...[{"Identifier":"bc3df039-174a-11ec-995a-f5a558c8e420","AfficheId":"0","Description":"Vous avez déjà réagis à toutes ce qu'on pouvait vous proposer ! revenez prochainement pour de nouvelles","Image":"https://hugocabaret.onthewifi.com/TalkAndPoke/Affiches/Fin.png","AfficheTitre":"Plus d'oeuvre : ("}]]
-        setCards(newstate)
-      }else{
-        if(cards == '') {
-          setCards(response);
-        } else {
-          let newstate = [...cards, ...response]
-          setCards(newstate);
-        }
+  async function getAffiches(limit = 1) {
+    let affiches = await getAfficheNotReacted(limit + 10);
+
+    affiches =  affiches.filter(a => !lastCards.includes(a.AfficheId))
+                       .sort(() => .5 - Math.random()).slice(0,limit);
+
+    if(affiches != []) {
+      if(cards == '') {
+        setCards(affiches);
+      } else {
+        let newstate = [...cards, ...affiches]
+        setCards(newstate);
       }
-    });
+      affiches.forEach(affiche => lastCards.push(affiche.AfficheId))
+
+    } else {
+      let newstate = [...cards, ...[{"Identifier":"bc3df039-174a-11ec-995a-f5a558c8e420","Code": "Fin","AfficheId":"0","Description":"Vous avez déjà réagis à toutes ce qu'on pouvait vous proposer ! revenez prochainement pour de nouvelles","Image":"https://hugocabaret.onthewifi.com/TalkAndPoke/Affiches/Fin.png","AfficheTitre":"Plus d'oeuvre : ("}]]
+      setCards(newstate)
+    }
   }
 
   const pan = useRef(new Animated.ValueXY()).current;
@@ -87,12 +92,6 @@ export default function SwipeAfficheView(props) {
       {useNativeDriver: false}
     ),
     onPanResponderRelease: (evt, gestureState) => {
-
-      //On recup une liste des 5 dernieres affiche passé pour les supprimer au cas ou ils repassent
-      let newstate = [...lastCards, ...[cards[state].AfficheId]]
-      if(newstate.length > 5)
-        newstate.shift()
-      setLastCards(newstate);
 
       if (gestureState.dx > 60) {
         Animated.spring(pan, {
@@ -216,7 +215,7 @@ export default function SwipeAfficheView(props) {
                       source={{uri : item[1].Image}}
                     />
 
-                <TouchableOpacity style={{height: 30, borderRadius: 100, width: 100, backgroundColor: 'lightgrey', position: 'absolute', bottom: 10, left: 10}} onPress={() => props.navigation.push('DetailsOeuvrePage', {AfficheId: item[1].AfficheId, _Image: item[1].Image})}>
+                <TouchableOpacity style={{height: 30, borderRadius: 100, width: 100, backgroundColor: 'lightgrey', position: 'absolute', bottom: 10, left: 10}} onPress={() => props.navigation.push('DetailsOeuvrePage', {AfficheId: item[1].AfficheId, _Image: item[1].Code})}>
                   <Text style={{marginLeft: 'auto', marginRight: 'auto', marginTop: 'auto', marginBottom: 'auto', fontWeight: '700', fontFamily: 'sans-serif-light'}}>+ Info</Text>
                 </TouchableOpacity>
 

@@ -1,17 +1,17 @@
 import { StyleSheet, View, SafeAreaView, Image, FlatList, TouchableOpacity, Text, ImageBackground, Dimensions } from 'react-native';
 import { useEffect, useState  } from 'react';
 
-import { getRandomAffiche } from '../../service/OfflineAfficheService';
+
 import AlertText from '../AlertText';
 import AfficheSmall from '../AfficheSmall';
+import { getLatestAffiches } from '../../service/OfflineHistoryService';
 
 export default function RecentAfficheView(props) {
 
     let [affiches, setAffiches] = useState("");
 
     useEffect(async () => {
-        let data = await getRandomAffiche(9);
-        setAffiches(data);
+        setAffiches(await getLatestAffiches());
     }, []);
 
     let limiteNews = new Date();

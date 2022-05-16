@@ -10,7 +10,9 @@ import ImagesCollectionView from '../Components/ImagesCollectionView';
 import ContactsCollectionView from '../Components/ContactsCollectionView';
 import CommentairesCollectionView from '../Components/CommentairesCollectionView';
 import Context from '../navigation/userContext';
-
+import { addLatestAffiche } from '../service/OfflineHistoryService';
+import { getAfficheDetails } from '../service/OfflineAfficheService';
+import afficheImage from '../Mapper/AfficheImageMapper';
 
 //TODO: REFACTOR
 
@@ -27,26 +29,19 @@ export default function DetailsOeuvrePage ({ route, navigation }) {
         var [follow, setFollow] = useState("");
         var [image, setImage] = useState("");
 
-
         useEffect(() => {
-            if(_Image != undefined) {
-                setImage(_Image) 
-            }
-        }, [_Image]);
+            setAffiche(getAfficheDetails(AfficheId));
 
-        //Charger la photo de L'utilisateur
-        useEffect(() => {
-            fetch(global.apiUrl + 'Affiche/GetInfosAffiche.php?AfficheId=' + AfficheId + '&TokenUtilisateur=' + context.utilisateurToken)
-            .then((response) => response.json())
-            .then((data) => setAffiche(data));
+            addLatestAffiche(AfficheId);
 
-        }, [AfficheId]);
 
-        useEffect(() => {
-            console.log(context.utilisateurToken)
             fetch(global.apiUrl + 'Affiche/Follow.php?UtilisateurId=' + context.utilisateurId + '&AfficheId=' + AfficheId + '&TokenUtilisateur=' + context.utilisateurToken)
             .then((response) => response.json())
             .then((data) => setFollow(data));
+
+            if(_Image != undefined) {
+                setImage(_Image) 
+            }
         }, []);
 
         return (
@@ -55,7 +50,7 @@ export default function DetailsOeuvrePage ({ route, navigation }) {
 
                 <View style={styles.container}>
 
-                    <ImageBackground source={{uri : _Image}} style={styles.image}>
+                    <ImageBackground source={afficheImage[_Image]} style={styles.image}>
 
                         <ScrollView >
 

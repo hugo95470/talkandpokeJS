@@ -1,8 +1,9 @@
 import React from 'react';
-import { StyleSheet, View, TouchableOpacity, FlatList, Text, ImageBackground} from 'react-native';
+import { StyleSheet, View, Dimensions, FlatList, Text, ImageBackground} from 'react-native';
 import { useEffect, useState } from 'react';
 
-import { getAffichesPhoto } from '../service/AfficheService';
+import { getAffichePhoto } from '../service/OfflineAfficheService';
+import afficheImage from '../Mapper/AfficheImageMapper';
 
 export default function ImagesCollectionView(props) {
         
@@ -10,23 +11,21 @@ export default function ImagesCollectionView(props) {
         var [news, setNews] = useState("");
 
         useEffect(async () => {
-            setNews(await getAffichesPhoto(props.AfficheId));         
+            setNews(getAffichePhoto(props.AfficheId));
         }, []);
                 
-        var ItemNews = ({ image }) => {
+        var ItemNews = ({ imageCode }) => {
 
             return(
-                <TouchableOpacity style={{marginHorizontal: 20, marginBottom: 30}}>
-                    <ImageBackground imageStyle={{ borderRadius: 15, height: 150, width: 100}} source={{uri: image}} resizeMode="cover" style={styles.affiche}>
-                    </ImageBackground>
-                </TouchableOpacity>
+                <ImageBackground imageStyle={{ borderRadius: 15}} source={afficheImage[imageCode]} resizeMode="cover" style={styles.affiche}>
+                </ImageBackground>
             );
         }
 
 
 
         var renderItemNews = ({ item }) => (
-            <ItemNews title={item.Titre} image={item.Image}/>
+            <ItemNews imageCode={item}/>
         );
 
         return (
@@ -41,8 +40,9 @@ export default function ImagesCollectionView(props) {
 
 const styles = StyleSheet.create({
     affiche: {
-        height: 140,
-        width: 85,
+        height: 170,
+        width: Dimensions.get('window').width/3 - 6,
+        margin: 3,
         justifyContent: 'flex-end',
     },
     TitreNoir: {

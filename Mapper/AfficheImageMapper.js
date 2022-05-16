@@ -109,7 +109,7 @@ const afficheImage = {
     "Vacances" : Vacances,
     "FeteForaine" : FeteForaine,
     "TRex" : TRex,
-    "Patesto" : PatesPesto,
+    "PatesPesto" : PatesPesto,
     "Rio" : Rio,
     "Piment" : Piment,
     "Tigres" : Tigres,

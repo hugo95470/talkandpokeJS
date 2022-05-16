@@ -10,8 +10,8 @@ export default function AfficheGrideView(props) {
 
     let [tags, setTags] = useState("");
 
-    useEffect(async () => {
-        setTags(await getRandomTag(4));
+    useEffect(() => {
+        setTags(getRandomTag(4));
     }, []);
 
     let limiteNews = new Date();
