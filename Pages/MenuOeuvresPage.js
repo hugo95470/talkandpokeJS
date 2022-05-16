@@ -1,7 +1,7 @@
 import { StyleSheet, Text, Image, TextInput, FlatList, TouchableOpacity, ImageBackground, View, Dimensions } from 'react-native';
 import { useState, useEffect } from 'react';
 
-import images from '../Components/ImageTag'
+import images from '../Components/ImageTagMapper'
 import AlertText from '../Components/AlertText';
 import AfficheMedium from '../Components/AfficheMedium';
 import globalStyles from '../Styles/globalStyles';

@@ -5,7 +5,7 @@ import { useEffect, useState } from 'react';
 import Context from '../navigation/userContext';
 import { getUtilisateurTagScoreByTag } from '../service/UtilisateurTagScoreService';
 import globalStyles from '../Styles/globalStyles';
-import images from '../Components/ImageTag'
+import images from '../Components/ImageTagMapper'
 
 export default function UtilisateurTagView(props) {
 

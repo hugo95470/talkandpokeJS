@@ -1,12 +1,13 @@
 import React, { useContext } from 'react';
 import { useState, useEffect } from 'react';
-import { StyleSheet, Text, View, Dimensions, RefreshControl, ScrollView, ImageBackground, TouchableOpacity, Image } from 'react-native';
+import { StyleSheet, Text, View, Dimensions, FlatList, RefreshControl, TextInput, ScrollView, ImageBackground, TouchableOpacity, Image } from 'react-native';
 
 import Context from '../navigation/userContext';
 import TopBarre from '../Components/TopBarre';
 import UtilisateurTagView from '../Components/UtilisateurTagView';
 import AlertText from '../Components/AlertText';
 import globalStyles from '../Styles/globalStyles';
+import { getUtilisateurBySearch } from '../service/UtilisateurService';
 
 
 //TODO: REFACTOR
@@ -17,6 +18,8 @@ export default function Menu(props) {
     const context = useContext(Context)
 
     let [refreshing, setRefreshing] = React.useState(false);
+    var [recherche, setRecherche] = useState("");
+    var [utilisateursSearch, setUtilisateursSearch] = useState("");
 
     let [compatibilites, setCompatibilites] = useState("");
 
@@ -60,7 +63,7 @@ export default function Menu(props) {
         }else {
             return (
                 <TouchableOpacity onPress={() => props.navigation.navigate('SwipePage')} style={styles.firstAffin}>
-                    <Text style={{margin: 20}}>Aucune affinité pour l'instant ? a͟l͟l͟e͟z͟ v͟o͟u͟s͟ e͟n͟ f͟a͟i͟r͟e͟ ! 😁👍</Text>
+                    <Text style={{marginVertical: 20}}>Aucune affinité pour l'instant ? a͟l͟l͟e͟z͟ v͟o͟u͟s͟ e͟n͟ f͟a͟i͟r͟e͟ ! 😁👍</Text>
                 </TouchableOpacity>
             );
         }
@@ -100,6 +103,49 @@ export default function Menu(props) {
         }
         
     };
+    
+    useEffect(()=> {
+        if(recherche != "") {
+            getUtilisateurBySearch(recherche)
+            .then((data) => setUtilisateursSearch(data));
+        }
+    }, [recherche])
+
+    var SearchBar = () => (
+        <View style={{flexDirection: 'row', width: '90%', marginLeft: 'auto', marginRight: 10, marginBottom: 20, backgroundColor: 'white', borderRadius: 100, elevation: 5, padding: 10}}>
+            <Image style={{height: 20, width: 20, marginTop: 'auto', marginBottom: 'auto', marginRight: 20}} source={require("../Images/Loupe.png")}/>
+            <TextInput style={{fontSize: 15, width: '100%', fontFamily: 'sans-serif-light'}} placeholder={"Recherche un utilisateur"} value={recherche} onChangeText={setRecherche}/>
+            <TouchableOpacity style={{position: 'absolute', right: 13, top: 13}} onPress={() => setRecherche("")}>
+                <Image style={{height: 20, width: 20}} source={{uri : 'https://upload.wikimedia.org/wikipedia/commons/thumb/4/4c/Grey_close_x.svg/768px-Grey_close_x.svg.png'}}/>
+            </TouchableOpacity>
+        </View> 
+    )
+
+    var ItemUtilisateur = ({ pseudo, image, utilisateurId }) => {
+        return(
+            <TouchableOpacity style={[globalStyles.shadows, globalStyles.center, {flexDirection: 'row', backgroundColor: 'white', marginBottom: 10, width: '90%'}]} activeOpacity={1} onPress={() => props.navigation.navigate('ContactPage', {_profilId: utilisateurId, _image: image})}>
+                <Image style={{height: 80, width: 80, marginHorizontal: 15, marginVertical: 10, borderRadius: 1000}} source={{uri: image}}/>
+                <Text style={[globalStyles.title, globalStyles.center]}>{pseudo}</Text>
+            </TouchableOpacity>
+        );
+        
+    }
+
+    var renderItemUtilsateur = ({ item }) => (
+        <ItemUtilisateur pseudo={item.Pseudo} image={item.Image} utilisateurId={item.UtilisateurId}/>
+    );
+
+    var UtilisateurView = () => {
+        if(recherche != "") {
+            return(
+                <FlatList data={utilisateursSearch} renderItem={renderItemUtilsateur} keyExtractor={item => item.Identifier} numColumns="1"/>
+                )
+        }else {
+            return (
+                <UtilisateurTagView navigation={props.navigation}/>  
+            )
+        }
+    }
 
     return (
         <View>
@@ -113,38 +159,30 @@ export default function Menu(props) {
                 
 
                 {/* FIRST AFFINITE  */} 
-                
-                <ImageBackground isBackground resizeMode="cover" style={{height: Dimensions.get('window').height - 250, top: -100, width: Dimensions.get('window').width}} source={require('../Images/Podium.jpeg')}>
-                    <First/>
-
-                    <Second/>
-
-                    <Third/>
-                </ImageBackground>
-
-                <View style={[globalStyles.shadows, {backgroundColor: '#fff', paddingTop: 20, borderTopLeftRadius: 25, top: -118, borderTopRightRadius: 25, width: Dimensions.get('window').width}]}>
-                    <View style={[{width: 30, marginLeft: 'auto', marginRight: 'auto', height: 5, backgroundColor: '#ddd', borderTopRightRadius: 100, borderTopLeftRadius: 100}]}></View>
-                    <UtilisateurTagView navigation={props.navigation}/>  
-                </View>
-
-
-                {/* <ImageBackground isBackground resizeMode="cover" style={{height: '70%', width: '100%'}} source={require('../Images/Podium.jpeg')}>
-                    <View>
+                <View style={{backgroundColor: '#FEA52A'}}>
+                    <ImageBackground style={{height: Dimensions.get('window').height - 250, top: -100, width: Dimensions.get('window').width}} source={require('../Images/Podium.jpeg')}>
                         <First/>
-                    </View>
 
-                    <View style={{flexDirection: 'row', top: 20, width: Dimensions.get('window').width}}>
                         <Second/>
 
                         <Third/>
-                    </View>
+                    </ImageBackground>
 
-                    <View style={[globalStyles.shadows, {top: 40, backgroundColor: '#fff', paddingTop: 20, borderTopLeftRadius: 25, borderTopRightRadius: 25, width: Dimensions.get('window').width}]}>
-                        <View style={[{width: 30, marginLeft: 'auto', marginRight: 'auto', height: 5, backgroundColor: '#ddd', borderRadius: 100}]}></View>
-                        <UtilisateurTagView navigation={props.navigation}/>   
-                    </View>
-                </ImageBackground> */}
+                </View>
+                
+
+                <View style={[globalStyles.shadows, {backgroundColor: '#fff', paddingTop: 20, paddingBottom: 300, borderTopLeftRadius: 25, top: -118, borderTopRightRadius: 25, width: Dimensions.get('window').width}]}>
+                    <View style={[{width: 30, marginLeft: 'auto', marginRight: 'auto', marginBottom: 10, height: 5, backgroundColor: '#ddd', borderRadius: 100}]}></View>
+                    
+                    <UtilisateurView/>
+
+
+                </View>
             </ScrollView>
+
+            <View style={[{width: '100%', position: 'absolute', bottom: 0}]}>
+                <SearchBar/>
+            </View>
         </View>
     )        
 }

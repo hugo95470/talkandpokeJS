@@ -14,8 +14,7 @@ const BottomTabNavigator = () => {
 
   const context = useContext(Context)
 
-  //if(context.intro == null) {
-    if(true) {
+  if(context.intro == null) {
     return (
       <Tab.Navigator>
 

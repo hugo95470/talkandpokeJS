@@ -22,8 +22,11 @@ export default function View1(props) {
                 <Image style={[styles.affiche, styles.affiche4]} source={{uri: 'https://hugocabaret.onthewifi.com/TalkAndPoke/Affiches/ImageJpeg/Printemps.jpeg'}}/>
 
                 <Image style={[styles.affiche, styles.affiche5]} source={{uri: 'https://hugocabaret.onthewifi.com/TalkAndPoke/Affiches/ImageJpeg/Lion 2.jpeg'}}/>
+                <View style={[styles.affiche, styles.affiche5Right]}/>
 
                 <Image style={[styles.affiche, styles.affiche6]} source={{uri: 'https://hugocabaret.onthewifi.com/TalkAndPoke/Affiches/ImageJpeg/Perroquet.jpeg'}}/>
+                <View style={[styles.affiche, styles.affiche6Right]}/>
+                
             </View>
 
             <Text style={[styles.center, {fontSize: 23, marginBottom: 0, fontWeight: '600'}]}>Talk&Poke</Text>
@@ -79,8 +82,24 @@ const styles = StyleSheet.create({
     top: -afficheHeigth/3,
     right: -afficheWidth/5
   },
+  affiche5Right: {
+    top: -afficheHeigth/3,
+    right: -afficheWidth/5,
+    width: 26,
+    borderBottomLeftRadius: 0,
+    borderTopLeftRadius: 0,
+    backgroundColor: '#FEA52A'
+  },
   affiche6: {
     top: afficheHeigth*2/3 + space,
     right: -afficheWidth/5
+  },
+  affiche6Right: {
+    top: afficheHeigth*2/3 + space,
+    right: -afficheWidth/5,
+    width: 26,
+    borderBottomLeftRadius: 0,
+    borderTopLeftRadius: 0,
+    backgroundColor: '#FEA52A'
   }
 });

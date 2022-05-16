@@ -6,6 +6,10 @@ export const getUtilisateurInformations = async (utilisateurId) => {
     return await fetchtalkandpokeapi('Utilisateur/GetUtilisateur.php', [["UtilisateurId", utilisateurId]])
 };
 
+export const getUtilisateurBySearch = async (search) => {
+    return await fetchtalkandpokeapi('Utilisateur/RechercheUtilisateur.php', [["Recherche", search]])
+};
+
 export const getUtilisateurFollowers = async (utilisateurId) => {
     return await fetchtalkandpokeapi('Utilisateur/GetFollowers.php', [["UtilisateurId", utilisateurId]])
 };

@@ -3,7 +3,7 @@ import { StyleSheet, Text, ImageBackground, FlatList, View, TouchableOpacity, Im
 import { LinearGradient } from "expo-linear-gradient";
 import { useState, useEffect } from 'react';
 
-import images from '../Components/ImageTag';
+import images from '../Components/ImageTagMapper';
 import AlertText from '../Components/AlertText';
 import AfficheMedium from '../Components/AfficheMedium';
 import { getAffichesByTag } from '../service/AfficheService';

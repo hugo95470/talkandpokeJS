@@ -20,7 +20,7 @@ export default function View4(props) {
               <Text style={[styles.center, {fontSize: 30}]}>Compare !</Text>
             </View>
 
-            <View style={{position: 'absolute', backgroundColor: '#eee', top: 400, left: 60}}>
+            <View style={[{position: 'absolute', backgroundColor: '#eee', top: 400, left: 60}]}>
               <Image style={[styles.affiche]} source={{uri: 'https://hugocabaret.onthewifi.com/TalkAndPoke/Affiches/Lion.png'}}/>
             </View>
             
@@ -33,7 +33,7 @@ export default function View4(props) {
             <View style={[{position: 'absolute', bottom: 50, width: '100%'}]}>
               <Text style={globalStyles.center}>Avec une petite description ici : )</Text>
             </View>
-            
+
           </View>
         </View>
     )

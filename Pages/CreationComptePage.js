@@ -6,7 +6,7 @@ import bcrypt from 'react-native-bcrypt';
 import CheckBox from 'expo-checkbox'; 
 
 import CGU from '../CGU.js';
-
+import globalStyles from '../Styles/globalStyles';
 
 //TODO: TO REFACTOR
 
@@ -29,7 +29,9 @@ export default function CreationCompte({ navigation}) {
 
     var [index, setIndex] = useState(1);
 
-    var [erreur, setErreur] = useState("");
+    var [erreurMail, setErreurMail] = useState("");
+    var [erreurPseudo, setErreurPseudo] = useState("");
+    var [erreurMdp, setErreurMdp] = useState("");
 
 
     function selectAleaImage(){
@@ -95,7 +97,7 @@ export default function CreationCompte({ navigation}) {
 
             navigation.navigate("ConnexionPage")
         }else{
-            setErreur("Les mots de passe indiqué sont différents")
+            setErreurMdp("Les mots de passe indiqué sont différents")
         }
     }
 
@@ -142,22 +144,22 @@ export default function CreationCompte({ navigation}) {
 
     var VerifMail = () => {
         if(verifMail){
-            setErreur("Ce mail est déjà utilisé")
+            setErreurMail("Ce mail est déjà utilisé")
             return(
                 <View>
-                    <Text>Ce mail est déjà utilisé</Text>
+                    <Text style={styles.error}>Ce mail est déjà utilisé</Text>
                 </View>
             );
         }
         if((!/[@]/.test(mail) || !/[.]/.test(mail)) && mail != ""){
-            setErreur("Ceci n'est pas une adresse mail")
+            setErreurMail("Ceci n'est pas une adresse mail")
             return(
                 <View>
-                    <Text>Ceci n'est pas une adresse mail</Text>
+                    <Text style={styles.error}>Ceci n'est pas une adresse mail</Text>
                 </View>
             )   
         }else{
-            setErreur("")
+            setErreurMail("")
             return(
                 <View></View>
             )
@@ -167,14 +169,14 @@ export default function CreationCompte({ navigation}) {
 
     var VerifPseudo = () => {
         if(verifPseudo){
-            setErreur("Ce pseudo est déjà utilisé")
+            setErreurPseudo("Ce pseudo est déjà utilisé")
             return(
                 <View>
-                    <Text>Ce pseudo est déjà utilisé</Text>
+                    <Text style={styles.error}>Ce pseudo est déjà utilisé</Text>
                 </View>
             );
         }else{
-            setErreur("")
+            setErreurPseudo("")
             return(
                 <View></View>
             )
@@ -209,7 +211,6 @@ export default function CreationCompte({ navigation}) {
                 </TouchableOpacity>
             </View>
         )
-        
     }
 
     switch (index) {
@@ -217,9 +218,6 @@ export default function CreationCompte({ navigation}) {
             return(
                 <View style={styles.container}>
 
-                    <View style={{marginLeft: 'auto', marginRight: 'auto'}}>
-                        <Text>{erreur}</Text>
-                    </View>
                     
                     <View style={{marginRight: 50, marginLeft: 50}}>
                     <View>
@@ -247,10 +245,6 @@ export default function CreationCompte({ navigation}) {
             return(
                 <View style={styles.container}>
 
-                    <View style={{marginLeft: 'auto', marginRight: 'auto'}}>
-                        <Text>{erreur}</Text>
-                    </View>
-
                     <Text style={{fontSize: 20, marginLeft: 50, marginBottom: 20}}>Choisir une image de profil</Text>
 
                     <View style={styles.inputImage}>
@@ -268,7 +262,7 @@ export default function CreationCompte({ navigation}) {
                             </View>
 
                             <View style={{flexDirection: 'row', justifyContent: 'space-around', marginTop: 20}}>
-                                <TouchableOpacity style={{backgroundColor: '#eee', paddingHorizontal: 20, paddingVertical: 10, borderRadius: 100}} onPress={()=> setIndex(index-1)}>
+                                <TouchableOpacity style={{backgroundColor: 'transparent', paddingHorizontal: 20, paddingVertical: 10, borderRadius: 100}} onPress={()=> setIndex(index-1)}>
                                     <Text>Précédent</Text>
                                 </TouchableOpacity>
                                 <TouchableOpacity style={{backgroundColor: '#eee', paddingHorizontal: 20, paddingVertical: 10, borderRadius: 100}} onPress={()=> {verifPhoto?setIndex(index+1):verifPhotoCommand()}}>
@@ -288,7 +282,7 @@ export default function CreationCompte({ navigation}) {
                 <View style={styles.container}>
 
                     <View style={{marginLeft: 'auto', marginRight: 'auto'}}>
-                        <Text>{erreur}</Text>
+                        <Text style={styles.error}>{erreurMdp}</Text>
                     </View>
                     
                     <View style={{marginRight: 50, marginLeft: 50}}>
@@ -327,20 +321,21 @@ export default function CreationCompte({ navigation}) {
                 return (
                     <View style={styles.container}>
 
-                        <View style={{marginLeft: 'auto', marginRight: 'auto'}}>
-                            <Text>{erreur}</Text>
-                        </View>
                         
                         <View style={{marginRight: 50, marginLeft: 50}}>
                             <View>
                                 <Text style={{fontSize: 25}}>Récapitulatif</Text>
             
                                 <Text style={{marginLeft: 10, fontSize: 18, marginTop: 30}}>Mail</Text>
+                                <Text style={styles.error}>{erreurMail}</Text>
                                 <Text style={{marginLeft: 20}}>{mail}</Text>
 
                                 <Text style={{marginLeft: 10, fontSize: 18, marginTop: 30}}>Pseudo</Text>
+                                <Text style={styles.error}>{erreurPseudo}</Text>
                                 <Text style={{marginLeft: 20, marginBottom: 30}}>{pseudo}</Text>
             
+                                <Text style={styles.error}>{erreurMdp}</Text>
+
                                 <View style={styles.inputCheckBox}>
                                     <CheckBox
                                     onPress={alert(cgu)}
@@ -372,32 +367,31 @@ export default function CreationCompte({ navigation}) {
             }else{
                 return (
                     <View style={styles.container}>
-
-                        <View style={{marginLeft: 'auto', marginRight: 'auto'}}>
-                            <Text>{erreur}</Text>
-                        </View>
                         
                         <View style={{marginRight: 50, marginLeft: 50}}>
                             <View>
                                 <Text style={{fontSize: 25}}>Récapitulatif</Text>
                 
                                 <Text style={{marginLeft: 10, fontSize: 18, marginTop: 30}}>Mail</Text>
+                                <Text style={styles.error}>{erreurMail}</Text>
                                 <Text style={{marginLeft: 20}}>{mail}</Text>
 
                                 <Text style={{marginLeft: 10, fontSize: 18, marginTop: 30}}>Pseudo</Text>
+                                <Text style={styles.error}>{erreurPseudo}</Text>
                                 <Text style={{marginLeft: 20, marginBottom: 30}}>{pseudo}</Text>
+
+                                <Text style={styles.error}>{erreurMdp}</Text>
 
                                 <View style={styles.inputCheckBox}>
                                     <CheckBox
                                     onPress={checkBox?alert(cgu):""}
-                                    color={'#FEA52A'}
+                                    color={'#eee'}
                                     value={checkBox}
                                     onValueChange={setCheckBox}
                                     />
                                     <Text style={{marginBottom: 'auto', marginTop: 'auto'}}>Je reconnais avoir lu et compris les CGU et je les accepte</Text>
                                 </View>
 
-                                <Text style={{fontSize: 20, marginLeft: 'auto', marginRight: 'auto'}}>{erreur}</Text>
                                 <View style={{flexDirection: 'row', justifyContent: 'flex-start', marginLeft: 45, marginTop: 20}}>
                                     <TouchableOpacity style={{backgroundColor: '#eee', paddingHorizontal: 20, paddingVertical: 10, borderRadius: 100}} onPress={()=> setIndex(index-1)}>
                                         <Text>Précédent</Text>
@@ -427,7 +421,7 @@ const styles = StyleSheet.create({
     container: {
         flex: 1,
         justifyContent: 'center',
-        backgroundColor: '#eee',
+        backgroundColor: '#FEA52A',
     },
     input: {
         elevation: 5,
@@ -454,4 +448,7 @@ const styles = StyleSheet.create({
         marginLeft: 'auto',
         flexDirection: 'row',
     },
+    error: {
+        color: 'red'
+    }
 })

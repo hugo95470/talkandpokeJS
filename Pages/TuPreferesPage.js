@@ -149,7 +149,7 @@ export default function TuPreferesPage(props) {
         </View>
 
         
-        <View style={{position: 'absolute', backgroundColor: '#eee', top: 380, left: 80}}>
+        <View style={{position: 'absolute', backgroundColor: '#ddd', borderRadius: 19, top: 380, left: 80}}>
             <WizardImageView images={images1} width={200} height={300}>
                 <TouchableOpacity style={{width: '100%', height: '100%'}} onPress={async () => chooseAffiche(afficheId1, image1)}>
 
@@ -161,7 +161,7 @@ export default function TuPreferesPage(props) {
             </View>
         </View>
         
-        <View style={{position: 'absolute', backgroundColor: '#eee', top: 130, right: 40}} >
+        <View style={{position: 'absolute', backgroundColor: '#ddd', borderRadius: 19, top: 130, right: 40}} >
           <View>
                 <WizardImageView chooseAffiche={chooseAffiche} images={images2} width={200} height={300}>
                     <TouchableOpacity style={{width: '100%', height: '100%'}} onPress={async () => chooseAffiche(afficheId2, image2)}>

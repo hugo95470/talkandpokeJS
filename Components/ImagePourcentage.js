@@ -2,7 +2,7 @@ import React from 'react';
 import { Text, View, StyleSheet, ImageBackground } from 'react-native';
 import { useState, useEffect } from 'react';
 
-import images from '../Components/ImageTag'
+import images from '../Components/ImageTagMapper'
 
 export default function ImagePourcentage(props) {
   let diametre = props.taille;
