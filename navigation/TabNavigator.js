@@ -14,7 +14,7 @@ const BottomTabNavigator = () => {
 
   const context = useContext(Context)
 
-  if(context.intro == null) {
+  if(context.intro == undefined) {
     return (
       <Tab.Navigator>
 
@@ -27,7 +27,7 @@ const BottomTabNavigator = () => {
       </Tab.Navigator>
     );
   }else {
-    if(context.utilisateurId == null || context.utilisateurId == false || context.utilisateurId == false){
+    if(context.utilisateurId == undefined || context.utilisateurId == undefined || context.utilisateurId == undefined){
       return (
         <Tab.Navigator>
 

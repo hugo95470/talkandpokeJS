@@ -1,7 +1,6 @@
 import React from 'react';
 import { View, ScrollView } from 'react-native';
 
-import AfficheCollectionview from '../Components/AfficheCollectionView';
 import TopBarre from '../Components/TopBarre';
 import AfficheGrideView from '../Components/AcceuilComponents/AfficheGridView';
 import AffinitesCollectionView from '../Components/AffinitesCollectionView';

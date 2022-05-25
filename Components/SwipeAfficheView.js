@@ -5,9 +5,10 @@ import { useEffect, useState, useRef } from 'react';
 import Context from '../navigation/userContext';
 import ImagePourcentage from '../Components/ImagePourcentage';
 import { loadTagUtilisateurDescription } from '../service/TagService';
-import { getSwipeAffiches } from '../service/AfficheService';
 import globalStyles from '../Styles/globalStyles';
 import { getAfficheNotReacted } from '../service/OfflineAfficheService';
+import { addReaction } from '../service/OfflineReactionService';
+import images from '../Mapper/AfficheImageMapper';
 
 //TO REFACTOR
 
@@ -23,7 +24,6 @@ export default function SwipeAfficheView(props) {
   let [count, setCount] = useState(0);
 
   var [cards, setCards] = useState("");
-  let [lastCards, setLastCards] = useState([]);
 
   //CHARGER LES AFFICHES
   useEffect(() => {
@@ -32,23 +32,13 @@ export default function SwipeAfficheView(props) {
 
 
   async function getAffiches(limit = 1) {
-    let affiches = await getAfficheNotReacted(limit + 10);
+    let affiches = await getAfficheNotReacted(limit);
 
-    affiches =  affiches.filter(a => !lastCards.includes(a.AfficheId))
-                       .sort(() => .5 - Math.random()).slice(0,limit);
-
-    if(affiches != []) {
-      if(cards == '') {
-        setCards(affiches);
-      } else {
-        let newstate = [...cards, ...affiches]
-        setCards(newstate);
-      }
-      affiches.forEach(affiche => lastCards.push(affiche.AfficheId))
-
+    if(cards == '') {
+      setCards(affiches);
     } else {
-      let newstate = [...cards, ...[{"Identifier":"bc3df039-174a-11ec-995a-f5a558c8e420","Code": "Fin","AfficheId":"0","Description":"Vous avez déjà réagis à toutes ce qu'on pouvait vous proposer ! revenez prochainement pour de nouvelles","Image":"https://hugocabaret.onthewifi.com/TalkAndPoke/Affiches/Fin.png","AfficheTitre":"Plus d'oeuvre : ("}]]
-      setCards(newstate)
+      let newstate = [...cards, ...affiches]
+      setCards(newstate);
     }
   }
 
@@ -107,7 +97,7 @@ export default function SwipeAfficheView(props) {
           setState(state +1)
 
         })
-
+        addReaction(cards[state].AfficheId, 'likes')
         getAffiches(1)
         loadSuggestion()
         fetch(global.apiUrl + 'Reaction/AddReaction.php?AfficheId=' + cards[state].AfficheId + '&Emotion=like&UtilisateurId=' + context.utilisateurId + '&TokenUtilisateur=' + context.utilisateurToken)
@@ -125,10 +115,10 @@ export default function SwipeAfficheView(props) {
           setState(state + 1)
 
         })
+        addReaction(cards[state].AfficheId, 'dislikes')
         fetch(global.apiUrl + 'Reaction/AddReaction.php?AfficheId=' + cards[state].AfficheId + '&Emotion=dislike&UtilisateurId=' + context.utilisateurId + '&TokenUtilisateur=' + context.utilisateurToken)
         loadSuggestion()
         getAffiches(1)
-        //alert("ici l'evennement pour la gauche")
 
       }else if (gestureState.dy < -60) {
         Animated.spring(pan, {
@@ -143,6 +133,7 @@ export default function SwipeAfficheView(props) {
             }).start()
           setState(state + 1)
         })
+        addReaction(cards[state].AfficheId, 'coeurs')
         fetch(global.apiUrl + 'Reaction/AddReaction.php?AfficheId=' + cards[state].AfficheId + '&Emotion=coeur&UtilisateurId=' + context.utilisateurId + '&TokenUtilisateur=' + context.utilisateurToken)
         loadSuggestion()
         getAffiches(1)
@@ -212,7 +203,7 @@ export default function SwipeAfficheView(props) {
                         resizeMode: "cover",
                         borderRadius: 20,
                       }}
-                      source={{uri : item[1].Image}}
+                      source={images[item[1].Code]}
                     />
 
                 <TouchableOpacity style={{height: 30, borderRadius: 100, width: 100, backgroundColor: 'lightgrey', position: 'absolute', bottom: 10, left: 10}} onPress={() => props.navigation.push('DetailsOeuvrePage', {AfficheId: item[1].AfficheId, _Image: item[1].Code})}>
@@ -299,7 +290,7 @@ export default function SwipeAfficheView(props) {
                 backgroundColor: '#aaa',
                 borderRadius: 20,
               }}
-              source={{uri : item[1].Image}}
+              source={images[item[1].Code]}
             />
             <View style={{backgroundColor: 'lightgrey', opacity: 0.8, borderBottomLeftRadius: 50, borderTopLeftRadius: 50, height: 70, position: 'absolute', right: 0, bottom: 100}}>
               <Text style={{fontSize: 23, marginBottom: 'auto', marginTop: 'auto', marginHorizontal: 30}}>{item[1].AfficheTitre}</Text>

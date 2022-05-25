@@ -1,4 +1,4 @@
-import { StyleSheet, View, Image, SafeAreaView, FlatList, ScrollView, TouchableOpacity, Text, ImageBackground, Dimensions } from 'react-native';
+import { View, Image, FlatList, ScrollView, TouchableOpacity, Text } from 'react-native';
 import { useEffect, useState  } from 'react';
 
 import globalStyles from '../../Styles/globalStyles';

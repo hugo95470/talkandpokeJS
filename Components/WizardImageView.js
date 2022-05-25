@@ -1,21 +1,15 @@
 import React, { useContext, useRef } from "react";
-import * as SecureStore from 'expo-secure-store';
 import {
   SafeAreaView,
   ScrollView,
-  Text,
   StyleSheet,
   View,
   ImageBackground,
-  Animated,
-  useWindowDimensions,
-  Dimensions,
-  TouchableOpacity,
+  Animated
 } from "react-native";
 import globalStyles from "../Styles/globalStyles";
 
 import Context from '../navigation/userContext';
-import { backgroundColor } from "react-native/Libraries/Components/View/ReactNativeStyleAttributes";
 
 
 

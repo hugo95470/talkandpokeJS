@@ -1,6 +1,7 @@
 import React, { useContext } from 'react';
 import { StyleSheet, Text, View, FlatList, TouchableOpacity, Image, TextInput, ScrollView } from 'react-native';
 import { useEffect, useState, useRef } from 'react';
+import * as Notifications from 'expo-notifications';
 
 import Context from '../navigation/userContext';
 import { getUtilisateurInformations } from '../service/UtilisateurService';
@@ -29,7 +30,8 @@ export default function MessagePage(props) {
         let isOeuvre = _isOeuvre;
 
         //Affiches
-        var [messages, setMessages] = useState("");
+        var [messages, setMessages] = useState([]);
+        var [notification, setNotification] = useState("");
         var [date, setDate] = useState("");
         var [utilisateur, setUtilisateur] = useState("");
         var [oeuvre, setOeuvre] = useState("");
@@ -61,21 +63,30 @@ export default function MessagePage(props) {
             })
         }
 
+        const notificationListener = useRef();
+
         useEffect(() => {
+            if(notification != "") {
+                setMessages([...messages, ...notification])
+                setNotification("")
+            }
+        }, [notification]);
+
+        useEffect(() => {
+
+            notificationListener.current = Notifications.addNotificationReceivedListener(notification => {
+                if(JSON.parse(notification.request.trigger.remoteMessage.data.body).utilisateurId == _expediteurId) {
+                    let _message = [{Message: notification.request.trigger.remoteMessage.data.Message,
+                                    ExpediteurId: JSON.parse(notification.request.trigger.remoteMessage.data.body).ExpediteurId,
+                                    CreatedDate: 'now'}];
+                    setNotification(_message);
+                }
+            });
 
             setMoiInfo(getUtilisateurInformations(context.utilisateurToken));
 
-            const interval = setInterval(() => {
-                if(!isOeuvre){
-                    recupMessage()
-                    readMessage(context.utilisateurToken, _expediteurId)
-                }else{
-                    recupMessageOeuvre()
-                }
-            }, 5000);
-
             return () => {
-                clearInterval(interval);
+                Notifications.removeNotificationSubscription(notificationListener.current);
             };
         }, []);
 
@@ -87,7 +98,7 @@ export default function MessagePage(props) {
                     fetch(global.apiUrl + 'Message/SendMessage.php?ExpediteurId=' + context.utilisateurId + '&DestinataireId=' + _expediteurId + '&Message=' +  encodeURIComponent(_message + imageToSend) + '&TokenUtilisateur=' + context.utilisateurToken)
 
                     if(utilisateur.Token != ""){
-                        sendPushNotification(utilisateur.Token, _message, 'message de ' + moiInfo.Pseudo)
+                        sendPushNotification(utilisateur.Token, _message, 'message de ' + moiInfo.Pseudo, {utilisateurId: context.utilisateurId})
                     }
                 }
                 if(messages == ""){

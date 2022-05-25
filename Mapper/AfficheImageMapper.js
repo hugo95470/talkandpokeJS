@@ -196,7 +196,7 @@ const afficheImage = {
     "Caire" : Caire,
     "Escalade" : Escalade,
     "Fennec" : Fennec,
-    //"InstrumentDeMusique" : InstrumentDeMusique,
+//  "InstrumentDeMusique" : InstrumentDeMusique,
     "Pates" : Pates,
     "21" : VingtEtUn,
     "PatesCarbonara" : PatesCarbonara

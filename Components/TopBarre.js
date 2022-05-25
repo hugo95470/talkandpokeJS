@@ -3,55 +3,42 @@ import { StyleSheet, View, Image, Text, TouchableOpacity } from 'react-native';
 import { useEffect, useState } from 'react';
 
 import Context from '../navigation/userContext';
-import { getUtilisateurNotification } from '../service/MessageService';
 import globalStyles from '../Styles/globalStyles';
 
 export default function TopBarre(props) {
 
     const context = useContext(Context)
 
-    var [notif, setNotif] = useState(false);
-
-    useEffect(async () => {
-        await recupNotif()
-    }, []);
-
-    async function recupNotif() {
-        setNotif(await getUtilisateurNotification(context.utilisateurToken));
-        
-        setTimeout(recupNotif, 10000);
-    }
-
-        var Notif = () => {
-            if(notif){
-                return(
-                    <View style={{height: 10, width: 10, borderRadius: 100, backgroundColor: 'red', position: 'absolute', top: 0, left: 0}}></View>
-                );
-            }else{
-                return(
-                    <View></View>
-                )
-            }
-
-            
+    var Notif = () => {
+        if(context.notif){
+            return(
+                <View style={{height: 10, width: 10, borderRadius: 100, backgroundColor: 'red', position: 'absolute', top: 0, left: 0}}></View>
+            );
+        }else{
+            return(
+                <View></View>
+            )
         }
 
-        return (
-            <View style={styles.containerNavBarre}>
+        
+    }
 
-                <Image style={{height: 30, width: 30, borderRadius: 100, marginLeft: 30, marginTop: 0, backgroundColor: 'rgba(255, 255, 255, 0)',}} source={require('../assets/GrandLogoTP.png')}/>
+    return (
+        <View style={styles.containerNavBarre}>
 
-                <Text style={[globalStyles.center, globalStyles.fontFamily, {fontSize: 20, color: "#888"}]}>{props.title}</Text>
+            <Image style={{height: 30, width: 30, borderRadius: 100, marginLeft: 30, marginTop: 0, backgroundColor: 'rgba(255, 255, 255, 0)',}} source={require('../assets/GrandLogoTP.png')}/>
 
-                <TouchableOpacity onPress={() => props.navigation.navigate('MessageriePage')}>
-                    <View style={[globalStyles.shadows, globalStyles.cercle, styles.logo]}>
-                        <Image style={{height: 30, width: 30, borderRadius: 100, backgroundColor: 'rgba(255, 255, 255, 0)', marginTop: 'auto', marginBottom: 'auto'}} source={{uri : "https://media.istockphoto.com/vectors/send-message-mail-icon-button-sign-paper-plane-navigation-logo-symbol-vector-id1227514358?k=6&m=1227514358&s=170667a&w=0&h=zK01wrL-BiUQIQv3JAEoUG2AdnDHE0JmWODhU6T2yNE="}}/>
-                        <Notif/>
-                    </View>
-                </TouchableOpacity>
+            <Text style={[globalStyles.center, globalStyles.fontFamily, {fontSize: 20, color: "#888"}]}>{props.title}</Text>
 
-            </View>
-        )    
+            <TouchableOpacity onPress={() => props.navigation.navigate('MessageriePage')}>
+                <View style={[globalStyles.shadows, globalStyles.cercle, styles.logo]}>
+                    <Image style={{height: 30, width: 30, borderRadius: 100, backgroundColor: 'rgba(255, 255, 255, 0)', marginTop: 'auto', marginBottom: 'auto'}} source={{uri : "https://media.istockphoto.com/vectors/send-message-mail-icon-button-sign-paper-plane-navigation-logo-symbol-vector-id1227514358?k=6&m=1227514358&s=170667a&w=0&h=zK01wrL-BiUQIQv3JAEoUG2AdnDHE0JmWODhU6T2yNE="}}/>
+                    <Notif/>
+                </View>
+            </TouchableOpacity>
+
+        </View>
+    )    
 }
 
 const styles = StyleSheet.create({

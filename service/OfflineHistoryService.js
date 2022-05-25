@@ -22,7 +22,6 @@ export const addLatestAffiche = async (afficheId) => {
 
 
     if(lastAffiches != null) {
-
         if(lastAffiches.includes(afficheId)) {
             let tmp = [];
 
@@ -40,6 +39,7 @@ export const addLatestAffiche = async (afficheId) => {
             lastAffiches.unshift(afficheId);
         }
     } else {
+        lastAffiches = [];
         lastAffiches.unshift(afficheId);
     }
 

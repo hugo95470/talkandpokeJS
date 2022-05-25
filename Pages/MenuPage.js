@@ -111,16 +111,6 @@ export default function Menu(props) {
         }
     }, [recherche])
 
-    var SearchBar = () => (
-        <View style={{flexDirection: 'row', width: '90%', marginLeft: 'auto', marginRight: 10, marginBottom: 20, backgroundColor: 'white', borderRadius: 100, elevation: 5, padding: 10}}>
-            <Image style={{height: 20, width: 20, marginTop: 'auto', marginBottom: 'auto', marginRight: 20}} source={require("../Images/Loupe.png")}/>
-            <TextInput style={{fontSize: 15, width: '100%', fontFamily: 'sans-serif-light'}} placeholder={"Recherche un utilisateur"} value={recherche} onChangeText={setRecherche}/>
-            <TouchableOpacity style={{position: 'absolute', right: 13, top: 13}} onPress={() => setRecherche("")}>
-                <Image style={{height: 20, width: 20}} source={{uri : 'https://upload.wikimedia.org/wikipedia/commons/thumb/4/4c/Grey_close_x.svg/768px-Grey_close_x.svg.png'}}/>
-            </TouchableOpacity>
-        </View> 
-    )
-
     var ItemUtilisateur = ({ pseudo, image, utilisateurId }) => {
         return(
             <TouchableOpacity style={[globalStyles.shadows, globalStyles.center, {flexDirection: 'row', backgroundColor: 'white', marginBottom: 10, width: '90%'}]} activeOpacity={1} onPress={() => props.navigation.navigate('ContactPage', {_profilId: utilisateurId, _image: image})}>
@@ -180,9 +170,17 @@ export default function Menu(props) {
                 </View>
             </ScrollView>
 
+            {/* SEARCH BAR */}
             <View style={[{width: '100%', position: 'absolute', bottom: 0}]}>
-                <SearchBar/>
+                <View style={{flexDirection: 'row', width: '90%', marginLeft: 'auto', marginRight: 10, marginBottom: 20, backgroundColor: 'white', borderRadius: 100, elevation: 5, padding: 10}}>
+                    <Image style={{height: 20, width: 20, marginTop: 'auto', marginBottom: 'auto', marginRight: 20}} source={require("../Images/Loupe.png")}/>
+                    <TextInput style={{fontSize: 15, width: '100%', fontFamily: 'sans-serif-light'}} placeholder={"Recherche un utilisateur"} value={recherche} onChangeText={setRecherche}/>
+                    <TouchableOpacity style={{position: 'absolute', right: 13, top: 13}} onPress={() => setRecherche("")}>
+                        <Image style={{height: 20, width: 20}} source={{uri : 'https://upload.wikimedia.org/wikipedia/commons/thumb/4/4c/Grey_close_x.svg/768px-Grey_close_x.svg.png'}}/>
+                    </TouchableOpacity>
+                </View> 
             </View>
+            
         </View>
     )        
 }

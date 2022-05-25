@@ -28,17 +28,15 @@ export default function MessageriePage(props) {
 
         var Notif = ({ etat, expediteurId }) => {
 
-            if(etat == 'Envoyé' && expediteurId != context.utilisateurId){
+            if(context.notif.filter(n => n.ExpediteurId == expediteurId).length > 0){
                 return(
-                    <View style={{height: 10, width: 10, backgroundColor: 'red', borderRadius: 100, position: 'absolute', left: 0, top: 0}}>
+                    <View style={{height: 10, width: 10, backgroundColor: 'red', borderRadius: 100, position: 'absolute', left: 10, top: 10}}>
     
                     </View>
                 );
             }else{
                 return(
-                    <View>
-    
-                    </View>
+                    <View></View>
                 );
             }
             
@@ -71,7 +69,7 @@ export default function MessageriePage(props) {
                         <Text style={styles.Titre}>{pseudo}</Text>
                         <Text style={styles.Message}>{toi}{message.includes('#@#')?"a partagé une affiche avec vous":(message.includes("#!#")?"Tu préfères ?":message)}</Text>
                         <Text style={{position: 'absolute',right: 10,top: 30, marginLeft: 'auto', marginTop: -20, marginRight: 10, fontSize: 10}}>{_dateString}</Text>
-                        <Notif etat={etat} expediteurId={expediteurId}/>
+                        <Notif etat={etat} expediteurId={_expediteurId}/>
                     </View>
 
                 </TouchableOpacity>

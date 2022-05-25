@@ -1,12 +1,12 @@
 import React from 'react';
-import { StyleSheet, Text, ImageBackground, FlatList, View, TouchableOpacity, Image, ScrollView, Dimensions } from 'react-native';
+import { StyleSheet, ImageBackground, FlatList, View, TouchableOpacity, Image, ScrollView, Dimensions } from 'react-native';
 import { LinearGradient } from "expo-linear-gradient";
 import { useState, useEffect } from 'react';
 
 import images from '../Components/ImageTagMapper';
 import AlertText from '../Components/AlertText';
 import AfficheMedium from '../Components/AfficheMedium';
-import { getAffichesByTag } from '../service/AfficheService';
+import { getAfficheByTag } from '../service/OfflineAfficheService';
 
 export default function OeuvresPage({ route, navigation }) {
     
@@ -17,7 +17,7 @@ export default function OeuvresPage({ route, navigation }) {
     var [affiches, setAffiches] = useState("");
 
     useEffect(async ()=> {
-        setAffiches(await getAffichesByTag(TagId));
+        setAffiches(await getAfficheByTag(TagId));
     }, [])
 
     var ImageTag = ({image}) => {

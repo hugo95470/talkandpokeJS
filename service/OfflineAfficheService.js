@@ -46,7 +46,7 @@ export const getAffichePhoto = (afficheId) => {
     return affichesPhotoCode;
 }
 
-export const getAfficheByTag = (tagId, limit = 9) => {
+export const getAfficheByTag = (tagId, limit = 100) => {
     let affiches = JSON.parse(Affiches);
     let afficheTag = JSON.parse(AfficheTag)
   
@@ -62,7 +62,10 @@ export const getAfficheNotReacted = async (limit = 1) => {
     let likes = JSON.parse(await SecureStore.getItemAsync('likes'));
     let dislikes = JSON.parse(await SecureStore.getItemAsync('dislikes'));
 
-    affiches.filter(a => coeurs.includes(a.AfficheId) || likes.includes(a.AfficheId) || dislikes.includes(a.AfficheId))
-  
-    return affiches.sort(() => .5 - Math.random()).slice(0,limit);
+    afficheNotReacted = affiches.filter(a => !coeurs.includes(a.AfficheId) && !likes.includes(a.AfficheId) && !dislikes.includes(a.AfficheId));
+    
+    if(afficheNotReacted == [])
+        afficheNotReacted.push({"Identifier":"bc3df039-174a-11ec-995a-f5a558c8e420","Code": "Fin","AfficheId":"0","Description":"Vous avez déjà réagis à toutes ce qu'on pouvait vous proposer ! revenez prochainement pour de nouvelles","Image":"https://hugocabaret.onthewifi.com/TalkAndPoke/Affiches/Fin.png","AfficheTitre":"Plus d'oeuvre : ("})
+
+    return afficheNotReacted.sort(() => .5 - Math.random()).slice(0,limit);
 }

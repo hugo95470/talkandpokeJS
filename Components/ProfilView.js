@@ -20,7 +20,7 @@ export default function (props) {
     var [affinite, setAffinite] = useState(0);
     var [_height, set_Height] = useState(100);
 
-    var [reaction, setReaction] = useState('Coeur');
+    var [reaction, setReaction] = useState('coeurs');
     var [affiches, setAffiches] = useState([]);
 
     useEffect(async () => {
@@ -33,9 +33,8 @@ export default function (props) {
 
     useEffect(async () => {
 
-        if(props.profilId = context.utilisateurId) {
+        if(props.profilId == context.utilisateurId) {
             setAffiches(await getReactionsByEmotion(reaction));
-
         } else {
             switch(reaction) {
                 case 'coeurs' :
@@ -84,21 +83,21 @@ export default function (props) {
         if(props.profilId != context.utilisateurId){
             return(
                 <View style={{width: '98%', marginTop: 10}}>
-                    <ImageBackground imageStyle={{ borderRadius: 19}} source={{uri: photo.Baniere}} style={styles.Affiche}>
+                    {/* <ImageBackground imageStyle={{ borderRadius: 19}} source={{uri: photo?photo.Baniere:""}} style={styles.Affiche}> */}
 
-                        <View style={{marginLeft: 'auto', bottom: -100, marginRight: 'auto'}}>
+                        <View style={{marginLeft: 'auto', bottom: 0, marginRight: 'auto'}}>
                             <ImagePourcentage taille={150} image={props.Image} name={affinite?affinite.Pseudo:""} showPourcentage={true} pourcentage={affinite?affinite.Pourcentage:""}/>
                         </View>
-                    </ImageBackground>                    
+                    {/* </ImageBackground>                     */}
                 </View>
             )
             
         }else{
             return(
                 <View style={{width: '98%'}}>
-                    <ImageBackground imageStyle={{ borderRadius: 19}} source={{uri: photo.Baniere}} style={styles.Affiche}>
+                    {/* <ImageBackground imageStyle={{ borderRadius: 19}} source={{uri: photo?photo.Baniere:""}} style={styles.Affiche}> */}
 
-                        <View style={{marginLeft: 'auto', bottom: -100, marginRight: 'auto'}}>
+                        <View style={{marginLeft: 'auto', bottom: 0, marginRight: 'auto'}}>
                             <ImagePourcentage taille={150} image={context.utilisateurPhoto} name={affinite?affinite.Pseudo:""} showPourcentage={false} pourcentage={100}/>
 
                             <TouchableOpacity style={{position: 'absolute', right: 0}} onPress={() => props.navigation.navigate("ChangeProfilPage")}>
@@ -107,7 +106,7 @@ export default function (props) {
                                     </LinearGradient>
                             </TouchableOpacity>
                         </View>
-                    </ImageBackground>
+                    {/* </ImageBackground> */}
                     
                 </View>
             )
@@ -147,7 +146,7 @@ export default function (props) {
 
                 <BackArrowView profilId={props.profilId} navigation={props.navigation}/>
 
-                <View style={{height: 350}}>
+                <View style={{height: 250}}>
                     <ImageProfil/>
                 </View>
 

@@ -12,7 +12,7 @@ export default function AffinitesCollectionView(props) {
     const context = useContext(Context)
 
     //AFFICHAGE DES AFFINITES
-    var [affinites, setAffinites] = useState("");
+    var [affinites, setAffinites] = useState([]);
     
     useEffect(async () => {
         if(context.utilisateurToken != "") {
@@ -39,7 +39,7 @@ export default function AffinitesCollectionView(props) {
         <ItemAffinite style={styles.containerAffiches} pseudo={item.Pseudo} image={item.Image} pourcentage={item.Pourcentage} contactId={item.UtilisateurId} />
     );
 
-    if(affinites != false){
+    if(affinites != false || affinites == []){
         return (
             <SafeAreaView>
                 <AlertText title={"Compatibilités"}/>

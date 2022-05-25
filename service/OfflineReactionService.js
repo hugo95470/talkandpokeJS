@@ -4,7 +4,13 @@ import { getAffiche } from '../service/OfflineAfficheService';
 
 //GET
 export const getReactionCount = async (reaction) => {
-    return JSON.parse(await SecureStore.getItemAsync(reaction)).length();
+    let count = 0;
+    let reactions = JSON.parse(await SecureStore.getItemAsync(reaction));
+
+    if(reactions != null)
+        count = reactions.length;
+
+    return count;
 }
 
 export const getReactionsByEmotion = async (reaction) => {

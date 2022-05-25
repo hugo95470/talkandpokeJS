@@ -1,5 +1,5 @@
 import React, { useContext } from 'react';
-import { StyleSheet, View, Dimensions, FlatList, ScrollView, Text, TouchableOpacity, Image } from 'react-native';
+import { StyleSheet, View, FlatList, ScrollView, Text, TouchableOpacity, Image } from 'react-native';
 import { useEffect, useState, useRef } from 'react';
 
 import Context from '../navigation/userContext';

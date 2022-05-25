@@ -4,9 +4,10 @@ import { useEffect, useState } from 'react';
 import { LinearGradient } from "expo-linear-gradient";
 
 import Context from '../navigation/userContext';
-import { getNombreReaction } from '../service/ReactionService';
+import { getReactionCount } from '../service/OfflineReactionService';
 import { updateFriend } from '../service/UtilisateurService';
 import globalStyles from '../Styles/globalStyles';
+import { getNombreReaction } from '../service/ReactionService';
 
 export default function ShareView(props) {
 
@@ -19,12 +20,20 @@ export default function ShareView(props) {
     var [nombreDislike, setNombreDislike] = useState(0);
 
     useEffect(async () => {
-        await getNombreReaction(props.profilId, context.utilisateurToken)
-        .then((data) => {
-            setNombreLike(data[0]['Nombre'])
-            setNombreDislike(data[1]['Nombre'])
-            setNombreCoeur(data[2]['Nombre'])
-        });
+        if(props.profilId != context.utilisateurId) {
+            await getNombreReaction(props.profilId, context.utilisateurToken)
+            .then((data) => {
+                setNombreLike(data[0]['Nombre']);
+                setNombreDislike(data[1]['Nombre']);
+                setNombreCoeur(data[2]['Nombre']);
+            });
+        } else {
+            setNombreLike(await getReactionCount('likes'));
+            setNombreDislike(await getReactionCount('dislikes'));
+            setNombreCoeur(await getReactionCount('coeurs'));
+        }
+
+        
 
         await getContactFriend(context.utilisateurToken, context.utilisateurId, props.profilId)
         .then((data) => data.FriendId == props.profilId ? setFriend(true):setFriend(false));
@@ -54,7 +63,7 @@ export default function ShareView(props) {
     if(props.profilId != context.utilisateurId){
         return(
             <View>
-                <View style={[globalStyles.center, {display: props.photo.Description==""?"none":"flex", backgroundColor: '#fff', elevation: 1, borderRadius: 100}]}>
+                <View style={[globalStyles.center, {display: props.photo?props.photo.Description==""?"none":"flex":"none", backgroundColor: '#fff', elevation: 1, borderRadius: 100}]}>
                     <Text style={{marginBottom: 10, marginTop: 10, borderRadius: 19, paddingHorizontal: 20}}>{props.photo?props.photo.Description:""}</Text>
                 </View>
                 
@@ -103,7 +112,7 @@ export default function ShareView(props) {
         return(
             
             <View style={{top: -40}}>
-                <View style={[globalStyles.center, {display: props.photo.Description==""?"none":"flex", backgroundColor: '#fff', elevation: 1, borderRadius: 100}]}>
+                <View style={[globalStyles.center, {display: props.photo?props.photo.Description==""?"none":"flex":"none", backgroundColor: '#fff', elevation: 1, borderRadius: 100}]}>
                     <Text style={{marginBottom: 10, marginTop: 10, borderRadius: 19, paddingHorizontal: 20}}>{props.photo?props.photo.Description:""}</Text>
                 </View>
 
