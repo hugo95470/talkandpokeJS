@@ -32,7 +32,7 @@ export const addLatestAffiche = async (afficheId) => {
             lastAffiches = tmp;
     
         } else {
-            if(lastAffiches.length > 9) {
+            if(lastAffiches.length >= 9) {
                 lastAffiches.shift();
             }
             

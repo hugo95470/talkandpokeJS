@@ -10,7 +10,7 @@ export default function TopBarre(props) {
     const context = useContext(Context)
 
     var Notif = () => {
-        if(context.notif){
+        if(context.notif && context.notif != ""){
             return(
                 <View style={{height: 10, width: 10, borderRadius: 100, backgroundColor: 'red', position: 'absolute', top: 0, left: 0}}></View>
             );

@@ -8,6 +8,7 @@ import { getUtilisateurInformations } from '../service/UtilisateurService';
 import { getAfficheMessageByDate, getMessageAfficheAssociation, getUtilisateurMessages, readMessage } from '../service/MessageService';
 import globalStyles from '../Styles/globalStyles';
 import { sendPushNotification } from '../service/NotificationService';
+import { addMessage, getMessagesContact, updateMessagesContact } from '../service/OfflineMessageService';
 //TODO: REFACTOR
 
 
@@ -72,25 +73,77 @@ export default function MessagePage(props) {
             }
         }, [notification]);
 
-        useEffect(() => {
+        useEffect(async () => {
+            if(context.notif != null && context.notif != undefined) {
+                if(JSON.stringify(context.notif.filter(n => n == _expediteurId)) != "[]") {
+                    //Get Messages from api
+                    let _message = await getUtilisateurMessages(_expediteurId, '20', context.utilisateurToken, "");
 
+                    let _messageContact = {
+                        Pseudo: _expediteurId,
+                        Image: utilisateur.Image,
+                        Messages: _message
+                    }
+                    updateMessagesContact(_messageContact, _expediteurId)
+                    setMessages(_message);
+
+                } else {
+                    let _message = await getMessagesContact(_expediteurId);
+                    //Get Messages from local
+                    if(_message != undefined)
+                        setMessages(_message);
+                }
+
+                let _notif = context.notif.filter(n => n != _expediteurId)
+                context.setNotif(_notif);
+
+                await readMessage(context.utilisateurToken, _expediteurId)
+            }
+
+            //Add notification trigger
             notificationListener.current = Notifications.addNotificationReceivedListener(notification => {
-                if(JSON.parse(notification.request.trigger.remoteMessage.data.body).utilisateurId == _expediteurId) {
-                    let _message = [{Message: notification.request.trigger.remoteMessage.data.Message,
-                                    ExpediteurId: JSON.parse(notification.request.trigger.remoteMessage.data.body).ExpediteurId,
-                                    CreatedDate: 'now'}];
-                    setNotification(_message);
+                if(JSON.parse(notification.request.trigger.remoteMessage.data.body).ExpediteurId == _expediteurId) {
+                    let _notif = JSON.parse(notification.request.trigger.remoteMessage.data.body);
+
+                    let _message = {Message: _notif.Message,
+                                    ExpediteurId: _notif.ExpediteurId,
+                                    CreatedDate: _notif.CreatedDate};
+
+                    addMessage(_message,
+                                {
+                                    ContactId: _expediteurId,
+                                    Pseudo: utilisateur.Pseudo,
+                                    Image: utilisateur.Image,
+                                })
+
+                    setNotification([_message]);
                 }
             });
 
-            setMoiInfo(getUtilisateurInformations(context.utilisateurToken));
+            //Get Contact informations
+            fetch(global.apiUrl + 'Utilisateur/GetAffinite.php?UtilisateurId=' + context.utilisateurId +'&ContactId=' + _expediteurId + '&TokenUtilisateur=' + context.utilisateurToken)
+            .then((response) => response.json())
+            .then(async (data) => {
+                setUtilisateur(data)
 
+                setMoiInfo(getUtilisateurInformations(context.utilisateurToken));
+            });
+
+            //Remove Notification trigger
             return () => {
                 Notifications.removeNotificationSubscription(notificationListener.current);
             };
         }, []);
 
         function sendMessage(_message, _isOeuvre) {
+            let bodyMessage = {
+                ExpediteurId: _expediteurId, 
+                Pseudo: utilisateur.Pseudo, 
+                Image: utilisateur.Image,
+                Message: _message, 
+                CreatedDate: new Date()
+            }
+
             if(_message != ""){
                 if(_isOeuvre){
                     fetch(global.apiUrl + 'Message/SendMessageAffiche.php?ExpediteurId=' + context.utilisateurId + '&OeuvreId=' + _oeuvreId + '&Message=' + encodeURIComponent(_message + imageToSend) + '&TokenUtilisateur=' + context.utilisateurToken)
@@ -101,13 +154,29 @@ export default function MessagePage(props) {
                         sendPushNotification(utilisateur.Token, _message, 'message de ' + moiInfo.Pseudo, {utilisateurId: context.utilisateurId})
                     }
                 }
-                if(messages == ""){
-                    let mess = [{"Message" : message,"CreatedDate" : date,"ExpediteurId" : context.utilisateurId}]
-                    setDate(JSON.stringify(mess[Object.keys(mess).length -1].CreatedDate))
-                    let newstate = [...messages, ...mess]
-    
-                    setMessages(newstate);
-                }
+
+                addMessage({
+                                ExpediteurId: context.utilisateurId,
+                                Message: _message,
+                                CreatedDate: new Date().toString()
+                            },
+                            {
+                                ContactId: _expediteurId,
+                                Pseudo: context.Pseudo,
+                                Image: utilisateur.Image,
+                            })
+                
+                let mess = [{
+                    Message: message, 
+                    CreatedDate: date, 
+                    ExpediteurId: context.utilisateurId
+                }]
+
+                setDate(JSON.stringify(date))
+                let newstate = [...messages, ...mess]
+
+                setMessages(newstate);
+
                 setImageToSend("");
                 setMessage("");
             }        
@@ -151,6 +220,7 @@ export default function MessagePage(props) {
         }
 
         var ItemAffiche = ({message, CreatedDate, photo, expediteurId, messageId}) => {
+
             if(expediteurId == context.utilisateurId){
                 return(
                     <View style={[styles.messageRight, globalStyles.shadows]}>
@@ -210,7 +280,7 @@ export default function MessagePage(props) {
                         <Text style={[globalStyles.center, {marginBottom: 10, marginRight: 0, fontSize: 20, fontFamily: 'sans-serif-light'}]}>{pseudo}, {pourcentage}%</Text>
 
                         <TouchableOpacity style={{marginRight: 'auto'}}>
-                            <Image style={{height: 50, width: 50, borderRadius: 100}} source={{uri: image}}/>
+                            <Image style={[globalStyles.center, {height: 40, width: 40, right: -30, borderRadius: 100}]} source={{uri: image}}/>
                         </TouchableOpacity>
 
                         <TouchableOpacity style={[styles.logo, {backgroundColor: '#FEA52A', borderRadius: 5, padding: 3}]} onPress={() => props.navigation.navigate('TuPreferesPage', {MessageId: "", ContactId: _expediteurId, NotificationToken: utilisateur.Token,  ContactPseudo: utilisateur.Pseudo, Initialization: true})}>
@@ -226,47 +296,46 @@ export default function MessagePage(props) {
             <ItemAffiche style={styles.containerAffiches} messageId={item.MessageId} photo={item.Image} message={item.Message} CreatedDate={item.CreatedDate} expediteurId={item.ExpediteurId}/>
         );
 
-        let mounted = true;
-        useEffect(() => {
-
-            if(mounted){
-                if(isOeuvre){
-                    fetch(global.apiUrl + 'Message/GetMessagesAffiche.php?AfficheId=' + _oeuvreId + '&Limite=20' + '&TokenUtilisateur=' + context.utilisateurToken)
-                    .then((response) => response.json())
-                    .then((data) => {
-                        if(data != ""){
-                            setMessages(data)
-                            setDate(JSON.stringify(data[Object.keys(data).length -1].CreatedDate))
-                        }
-                    });
+        // let mounted = true;
+        // useEffect(() => {
+        //     if(mounted){
+        //         if(isOeuvre){
+        //             fetch(global.apiUrl + 'Message/GetMessagesAffiche.php?AfficheId=' + _oeuvreId + '&Limite=20' + '&TokenUtilisateur=' + context.utilisateurToken)
+        //             .then((response) => response.json())
+        //             .then((data) => {
+        //                 if(data != ""){
+        //                     setMessages(data)
+        //                     setDate(JSON.stringify(data[Object.keys(data).length -1].CreatedDate))
+        //                 }
+        //             });
     
-                    fetch(global.apiUrl + 'Affiche/GetInfosAffiche.php?AfficheId=' + _oeuvreId + '&TokenUtilisateur=' + context.utilisateurToken)
-                    .then((response) => response.json())
-                    .then((data) => {
-                        setOeuvre(data)
-                    });
+        //             fetch(global.apiUrl + 'Affiche/GetInfosAffiche.php?AfficheId=' + _oeuvreId + '&TokenUtilisateur=' + context.utilisateurToken)
+        //             .then((response) => response.json())
+        //             .then((data) => {
+        //                 setOeuvre(data)
+        //             });
     
-                }else{
-                    fetch(global.apiUrl + 'Message/GetMessagesDiscussion.php?DestinataireId=' + _expediteurId + '&ExpediteurId=' + context.utilisateurId +'&Nombre=20&CreatedDate=2021-07-31 22:12:20' + '&TokenUtilisateur=' + context.utilisateurToken)
-                    .then((response) => response.json())
-                    .then((data) => {
-                        if(data != ""){
-                            setMessages(data)
-                            setDate(JSON.stringify(data[Object.keys(data).length -1].CreatedDate))
-                        }
-                    });     
+        //         }else{
+        //             fetch(global.apiUrl + 'Message/GetMessagesDiscussion.php?DestinataireId=' + _expediteurId + '&ExpediteurId=' + context.utilisateurId +'&Nombre=20&CreatedDate=2021-07-31 22:12:20' + '&TokenUtilisateur=' + context.utilisateurToken)
+        //             .then((response) => response.json())
+        //             .then((data) => {
+        //                 if(data != ""){
+        //                     setMessages(data)
+        //                     setDate(JSON.stringify(data[Object.keys(data).length -1].CreatedDate))
+        //                 }
+        //             });     
                     
-                    fetch(global.apiUrl + 'Utilisateur/GetAffinite.php?UtilisateurId=' + context.utilisateurId +'&ContactId=' + _expediteurId + '&TokenUtilisateur=' + context.utilisateurToken)
-                    .then((response) => response.json())
-                    .then((data) => {
-                        setUtilisateur(data)
-                    });    
-                }
-            }
+        //             fetch(global.apiUrl + 'Utilisateur/GetAffinite.php?UtilisateurId=' + context.utilisateurId +'&ContactId=' + _expediteurId + '&TokenUtilisateur=' + context.utilisateurToken)
+        //             .then((response) => response.json())
+        //             .then((data) => {
+        //                 setUtilisateur(data)
+        //             });    
+        //         }
+        //     }
             
-            return () => mounted = false;
+        //     return () => mounted = false;
             
-        }, [_expediteurId, isOeuvre]);
+        // }, [_expediteurId, isOeuvre]);
 
         var ImageToSend = () => {
             if(imageToSend.includes('http')) {
@@ -282,6 +351,19 @@ export default function MessagePage(props) {
             }
         }
 
+        var headerFlatList = () => {
+            if(messages.length >= 13) {
+                return (
+                    <TouchableOpacity><Text style={[globalStyles.center, {backgroundColor: 'orange', paddingHorizontal: 20, paddingVertical: 10, marginBottom: 20, borderRadius: 100}]}>Voir Plus +</Text></TouchableOpacity>
+                )
+            } else {
+                return (
+                    <View></View>
+                )
+            }
+            
+        }
+
         return (
 
             <View>
@@ -294,7 +376,7 @@ export default function MessagePage(props) {
 
                     <ScrollView ref={flatlistRef} onContentSizeChange={() =>  flatlistRef.current.scrollToEnd({animated: true})} style={{maxHeight: '100%', width: '100%'}}>
                         <View style={{marginBottom: 50}}>
-                            <FlatList style={{paddingTop: 10}} data={messages} renderItem={renderItemAffiche} keyExtractor={item => item.Identifier} numColumns="1"/>
+                            <FlatList ListHeaderComponent={headerFlatList} style={{paddingTop: 10}} data={messages} renderItem={renderItemAffiche} keyExtractor={item => item.Identifier} numColumns="1"/>
                         </View>
                     </ScrollView>
 

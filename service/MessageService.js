@@ -36,5 +36,5 @@ export const AddTuPreferes = async (contactId, tokenUtilisateur) => {
 
 //Read
 export const readMessage = async (tokenUtilisateur, contactId) => {
-    return await fetchtalkandpokeapi('Message/GetNotification.php', [["TokenUtilisateur", tokenUtilisateur], ["ContactId", contactId]])
+    return await fetchtalkandpokeapi('Message/ReadMessage.php', [["TokenUtilisateur", tokenUtilisateur], ["ContactId", contactId]])
 };

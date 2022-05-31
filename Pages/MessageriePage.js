@@ -1,11 +1,13 @@
 import React, { useContext } from 'react';
 import { StyleSheet, Text, View, RefreshControl, FlatList, TouchableOpacity, Image } from 'react-native';
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useRef } from 'react';
+import * as Notifications from 'expo-notifications';
 
 import TopBarre from '../Components/TopBarre';
 import Context from '../navigation/userContext';
 import { getUtilisateursContacts } from '../service/MessageService';
 import globalStyles from '../Styles/globalStyles';
+import { getContacts, updateLastMessageContact } from '../service/OfflineMessageService';
 
 
 //TODO: REFACTOR
@@ -15,25 +17,72 @@ export default function MessageriePage(props) {
 
         const context = useContext(Context)
 
+        const notificationListener = useRef();
+
+        //contacts
+        var [contacts, setcontacts] = useState([]);
+        var [notification, setNotification] = useState("");
+
         useEffect(async () => {
-            await loadContacts()    
+            if(notification != "") {
+                updateLastMessageContact(notification.Message, notification.CreatedDate, notification.ExpediteurId);
+
+                setcontacts([{
+                    ContactId: notification.ExpediteurId, 
+                    Pseudo: notification.Pseudo, 
+                    Image: notification.Image, 
+                    Message: notification.Message,
+                    CreatedDate: notification.CreatedDate
+                }
+                , ...contacts.filter(c => c.ContactId != notification.ExpediteurId)]);
+
+                setNotification("");
+            }
+            
+
+        }, [notification]);
+
+        useEffect(async () => {
+            await loadContacts();
+            
+            notificationListener.current = Notifications.addNotificationReceivedListener(async notification => {
+                let _notif = JSON.parse(notification.request.trigger.remoteMessage.data.body);
+          
+                setNotification(_notif);
+              });
+          
+              return () => {
+                Notifications.removeNotificationSubscription(notificationListener.current);
+              };
         }, []);
 
         async function loadContacts(){
-            setcontacts(await getUtilisateursContacts(context.utilisateurToken));
+            await getContacts(9)
+            .then(async (data) => {
+                if(JSON.stringify(context.notif) != "[]") {
+                    if(data.filter(c => context.notif.includes(c.ContactId)) == []) {
+                        data = await getUtilisateursContacts(context.UtilisateurId);
+                    }
+                }
+                setcontacts(data);
+            });        
         }
-
-        //Affiches
-        var [contacts, setcontacts] = useState("");
 
         var Notif = ({ etat, expediteurId }) => {
 
-            if(context.notif.filter(n => n.ExpediteurId == expediteurId).length > 0){
-                return(
-                    <View style={{height: 10, width: 10, backgroundColor: 'red', borderRadius: 100, position: 'absolute', left: 10, top: 10}}>
-    
-                    </View>
-                );
+            if(context.notif != null && context.notif != undefined){
+                if(context.notif.filter(n => n == expediteurId).length > 0) {
+                    return(
+                        <View style={{height: 10, width: 10, backgroundColor: 'red', borderRadius: 100, position: 'absolute', left: 10, top: 10}}>
+        
+                        </View>
+                    );
+                }
+                else {
+                    return(
+                        <View></View>
+                    );
+                }
             }else{
                 return(
                     <View></View>
@@ -44,7 +93,9 @@ export default function MessageriePage(props) {
             
         var ItemAffiche = ({ _expediteurId, image, pseudo, date, message, expediteurId, etat }) => {
 
-            var _date = new Date(date.substring(0, 10) + 'T' + date.substring(11) + 'Z') 
+            var _date = new Date()
+            if(date != undefined)
+                _date = new Date(date.substring(0, 10) + 'T' + date.substring(11) + 'Z') 
 
             var _dateString = ''
             var today = new Date()
@@ -67,7 +118,7 @@ export default function MessageriePage(props) {
                         <Image style={[{height: 55, width: 55, marginLeft: 10, marginTop: 10, marginRight: 30, borderRadius: 100}]} source={{uri: image}}/>
 
                         <Text style={styles.Titre}>{pseudo}</Text>
-                        <Text style={styles.Message}>{toi}{message.includes('#@#')?"a partagé une affiche avec vous":(message.includes("#!#")?"Tu préfères ?":message)}</Text>
+                        <Text style={styles.Message}>{toi}{message?message.includes('#@#')?"a partagé une affiche avec vous":(message.includes("#!#")?"Tu préfères ?":message):""}</Text>
                         <Text style={{position: 'absolute',right: 10,top: 30, marginLeft: 'auto', marginTop: -20, marginRight: 10, fontSize: 10}}>{_dateString}</Text>
                         <Notif etat={etat} expediteurId={_expediteurId}/>
                     </View>
@@ -77,7 +128,7 @@ export default function MessageriePage(props) {
         }
 
         var renderItemAffiche = ({ item }) => (
-            <ItemAffiche _expediteurId={item.UtilisateurId} image={item.Image} pseudo={item.Pseudo} message={item.Message} date={item.CreatedDate} expediteurId={item.ExpediteurId} etat={item.Etat} />
+            <ItemAffiche _expediteurId={item.ContactId} image={item.Image} pseudo={item.Pseudo} message={item.Message} date={item.CreatedDate} expediteurId={item.ExpediteurId} etat={item.Etat} />
         );
         
         const onRefresh = React.useCallback(async () => {
@@ -115,12 +166,6 @@ const styles = StyleSheet.create({
     container: {
       height: '100%',
       width: '100%',
-    },
-    title: {
-        fontSize: 25,
-        marginLeft: 20,
-        fontFamily: 'sans-serif-light',
-        fontWeight: "600",
     },
     Titre: {
         position: 'absolute',
